@@ -2,20 +2,21 @@ Here is the corrected and improved version of your text:
 
 ---
 
-# IoT\_Kit
+# IoT_Kit
 
 A project for an IoT dashboard featuring various UI components such as charts, tables, and more. It also includes multiple hardware use cases that connect to the dashboard.
 
 ## Technologies
 
-* HTML, CSS, JavaScript (for the dashboard)
-* C++ (for hardware)
-* Firebase (as the database)
-* Authentication: supports Google and username/password login
+- HTML, CSS, JavaScript
+- React (for the dashboard)
+- C++ (for hardware)
+- Firebase (as the database)
+- Authentication: supports Google and username/password login
 
 ## Hardware
 
-* ESP32
+- ESP32
 
 ---
 
