@@ -4,15 +4,11 @@ import { ModeToggle } from "@/components/ModeToggle";
 
 export default function MainLayout() {
 	return (
-		<div>
+		<div className="relative">
 			<Navbar />
-			<div className="flex-1 flex flex-col relative">
-				<main className="flex-1 p-4 overflow-auto">
-					<Outlet />
-				</main>
-				<div className="fixed bottom-3 right-3">
-					<ModeToggle />
-				</div>
+			<Outlet />
+			<div className="fixed bottom-3 right-3">
+				<ModeToggle />
 			</div>
 		</div>
 	);
