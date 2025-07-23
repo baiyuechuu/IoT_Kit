@@ -74,9 +74,9 @@ export function Navbar() {
 					</button>
 
 					<div className="flex items-center gap-3">
-						<FaGithub className="h-5 w-5 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 cursor-pointer transition-colors" />
-						<FaTwitter className="h-5 w-5 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 cursor-pointer transition-colors" />
-						<FaLinkedin className="h-5 w-5 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 cursor-pointer transition-colors" />
+						<Link to="https://github.com/baiyuechuu/IoT_Kit">
+							<FaGithub className="h-6 w-6 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 cursor-pointer transition-colors" />
+						</Link>
 					</div>
 				</div>
 

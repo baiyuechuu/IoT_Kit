@@ -1,5 +1,5 @@
 import { RainbowButton } from "@/components/magicui/rainbow-button";
-import { ShinyButton } from "@/components/magicui/shiny-button";
+import { Link } from "react-router-dom";
 
 export default function Home() {
 	return (
@@ -30,9 +30,13 @@ export default function Home() {
 					smart project
 				</p>
 			</div>
-			<div className="flex flex-col md:flex-row items-center justify-center gap-5">  
-				<RainbowButton>Explore UI Kit</RainbowButton>
-				<RainbowButton variant={"reverse"}>Browse Dashboard</RainbowButton>
+			<div className="flex flex-col md:flex-row items-center justify-center gap-5">
+				<Link to="/uikit">
+					<RainbowButton>Explore UI Kit</RainbowButton>
+				</Link>
+				<Link to="/dashboard">
+					<RainbowButton variant={"reverse"}>Browse Dashboard</RainbowButton>
+				</Link>
 			</div>
 		</div>
 	);
