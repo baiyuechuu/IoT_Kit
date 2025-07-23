@@ -1,5 +1,5 @@
 import { FaUikit } from "react-icons/fa";
-import { FaGithub, FaTwitter, FaLinkedin } from "react-icons/fa";
+import { FaGithub} from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
 import { useLocation, Link } from "react-router-dom";
@@ -74,7 +74,7 @@ export function Navbar() {
 					</button>
 
 					<div className="flex items-center gap-3">
-						<Link to="https://github.com/baiyuechuu/IoT_Kit">
+						<Link to="https://github.com/baiyuechuu/IoT_Kit" target="_blank">
 							<FaGithub className="h-6 w-6 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 cursor-pointer transition-colors" />
 						</Link>
 					</div>
