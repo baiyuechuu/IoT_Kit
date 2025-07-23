@@ -1,10 +1,15 @@
-import { Button } from "@/components/ui/button";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { RouterProvider } from "react-router-dom";
+import { router } from "@/routes";
+import { Suspense } from "react";
 
 function App() {
 	return (
-		<div className="flex min-h-svh flex-col items-center justify-center">
-			<Button>Click me</Button>
-		</div>
+		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+			<Suspense fallback={<div className="p-4">Đang tải...</div>}>
+				<RouterProvider router={router} />
+			</Suspense>
+		</ThemeProvider>
 	);
 }
 
