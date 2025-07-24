@@ -7,6 +7,7 @@ import { uikitRoute } from "./uikit.routes";
 import { loginRoute } from "./login.routes";  
 import { signupRoute } from "./signup.routes";
 import { showcaseRoute } from "./showcase.routes";
+import { notFoundRoute } from "./notfound.routes";
 
 export const routes = [
 	homeRoute,
@@ -17,6 +18,7 @@ export const routes = [
   loginRoute,
   signupRoute,
   showcaseRoute,
+  notFoundRoute, // This should be last to catch all unmatched routes
 ];
 
 export const router = createBrowserRouter(routes);
