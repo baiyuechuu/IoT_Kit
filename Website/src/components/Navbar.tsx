@@ -1,9 +1,10 @@
 import { FaUikit } from "react-icons/fa";
-import { FaGithub} from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
 import { useLocation, Link } from "react-router-dom";
 import { useState } from "react";
+import { ModeToggle } from "./ModeToggle";
 
 export function Navbar() {
 	const location = useLocation();
@@ -14,6 +15,7 @@ export function Navbar() {
 		{ name: "About", path: "/about" },
 		{ name: "UI Kit", path: "/uikit" },
 		{ name: "Dashboard", path: "/dashboard" },
+		{ name: "Showcase", path: "/showcase" },
 		{ name: "Contact", path: "/contact" },
 	];
 
@@ -60,23 +62,26 @@ export function Navbar() {
 				</div>
 				{/* Desktop Right Side */}
 				<div className="hidden md:flex items-center gap-4">
-					{/* Search button */}
-					<button
-						className="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-gray-200 dark:hover:bg-gray-700/30 border border-gray-300 dark:border-gray-700/60 rounded-lg transition-all duration-200 text-gray-600 dark:text-gray-300"
-						title="Search pages and posts (Ctrl+K)"
-					>
-						<IoSearchOutline className="h-4 w-4" />
-						<span className="hidden lg:block">Search</span>
-						<div className="hidden lg:flex items-center gap-0.5 text-xs opacity-60">
-							<span>⌘</span>
-							<span>K</span>
-						</div>
-					</button>
-
 					<div className="flex items-center gap-3">
 						<Link to="https://github.com/baiyuechuu/IoT_Kit" target="_blank">
 							<FaGithub className="h-6 w-6 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 cursor-pointer transition-colors" />
 						</Link>
+					</div>
+					<div className="flex items-center gap-2">
+						{/* Search button */}
+						<button
+							className="flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-gray-200 dark:hover:bg-gray-700/30 border border-gray-300 dark:border-gray-700/60 rounded-lg transition-all duration-200 text-gray-600 dark:text-gray-300"
+							title="Search pages and posts (Ctrl+K)"
+						>
+							<IoSearchOutline className="h-4 w-4" />
+							<span className="hidden lg:block">Search</span>
+							<div className="hidden lg:flex items-center gap-0.5 text-xs opacity-60">
+								<span>⌘</span>
+								<span>K</span>
+							</div>
+						</button>
+						{/* Mode Toggle */}
+						<ModeToggle />
 					</div>
 				</div>
 
