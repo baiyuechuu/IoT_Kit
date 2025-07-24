@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Geist:wght@100..900&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -47,15 +47,21 @@
 	--color-color-3: var(--color-3);
 	--color-color-2: var(--color-2);
 	--color-color-1: var(--color-1);
-  @keyframes rainbow {
-  0% {
-    background-position: 0%;
+	@keyframes rainbow {
+		0% {
+			background-position: 0%;
 		}
-  100% {
-    background-position: 200%;
+		100% {
+			background-position: 200%;
 		}
 	}
-}
+	--animate-shiny-text: shiny-text 8s infinite
+;
+  @keyframes shiny-text {
+  0%, 90%, 100% {
+    background-position: calc(-100% - var(--shiny-width)) 0;}
+  30%, 60% {
+    background-position: calc(100% + var(--shiny-width)) 0;}}}
 
 :root {
 	--radius: 0.625rem;
@@ -147,4 +153,8 @@
 
 .font-geist {
 	font-family: "Geist", sans-serif;
+}
+
+.font-bitter {
+	font-family: "Bitter", sans-serif;
 }
