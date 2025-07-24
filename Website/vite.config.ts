@@ -11,4 +11,29 @@ export default defineConfig({
 			"@": path.resolve(__dirname, "./src"),
 		},
 	},
+	build: {
+		outDir: 'dist',
+		assetsDir: 'assets',
+		sourcemap: false,
+		// Ensure proper handling of dynamic imports
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					vendor: ['react', 'react-dom'],
+					router: ['react-router-dom'],
+					ui: ['@radix-ui/react-dropdown-menu', '@radix-ui/react-label', '@radix-ui/react-slot'],
+				},
+			},
+		},
+	},
+	// Configure dev server for SPA routing during development
+	server: {
+		historyApiFallback: true,
+	},
+	// Configure preview server for SPA routing
+	preview: {
+		port: 4173,
+		host: true,
+		cors: true,
+	},
 });
