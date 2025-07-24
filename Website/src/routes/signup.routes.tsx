@@ -1,11 +1,11 @@
 import { lazy } from "react";
-import MainLayout from "@/layouts/MainLayout";
+import LoginLayout from "@/layouts/LoginLayout";
 
 const SignupPage = lazy(() => import("@/pages/signup/Sign"));
 
 export const signupRoute = {
 	path: "/sign",
-	element: <MainLayout />,
+	element: <LoginLayout />,
 	children: [
 		{
 			index: true,
