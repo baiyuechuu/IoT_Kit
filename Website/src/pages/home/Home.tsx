@@ -1,15 +1,10 @@
 import { RainbowButton } from "@/components/magicui/rainbow-button";
 import { Link } from "react-router-dom";
 import TechSection from "./components/TechSection";
-import { TestAuth } from "@/test-auth";
 
 export default function Home() {
 	return (
 		<div className="h-screen flex flex-col items-center justify-center relative gap-6 overflow-hidden">
-			{/* Temporary test component - XÓA sau khi fix OAuth */}
-			<div className="fixed top-4 right-4 z-50 bg-white dark:bg-gray-800 p-4 rounded shadow">
-				<TestAuth />
-			</div>
 			<div
 				className="absolute inset-0 z-0"
 				style={{

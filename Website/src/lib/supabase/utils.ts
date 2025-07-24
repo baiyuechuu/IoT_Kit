@@ -1,5 +1,5 @@
 import { supabase } from './client';
-import type { AuthError, User } from '@supabase/supabase-js';
+import type { User } from '@supabase/supabase-js';
 
 export interface AuthResponse {
   success: boolean;
@@ -67,7 +67,7 @@ export const auth = {
   // Đăng nhập với Google
   async signInWithGoogle(): Promise<AuthResponse> {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/dashboard`,
@@ -90,7 +90,7 @@ export const auth = {
   // Đăng nhập với GitHub
   async signInWithGitHub(): Promise<AuthResponse> {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
           redirectTo: `${window.location.origin}/dashboard`,
@@ -150,10 +150,11 @@ export const auth = {
   },
 
   // Xác thực OAuth user (có thể mở rộng để thêm logic kiểm tra)
-  async validateOAuthUser(user: User): Promise<OAuthValidation> {
+  async validateOAuthUser(_user: User): Promise<OAuthValidation> {
     try {
       // Có thể thêm logic xác thực tùy chỉnh tại đây
       // Ví dụ: kiểm tra domain email, danh sách whitelist, etc.
+      // Parameter _user có thể được sử dụng cho validation logic
       
       return { valid: true };
     } catch (error) {
