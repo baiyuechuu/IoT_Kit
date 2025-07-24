@@ -28,7 +28,8 @@ export default defineConfig({
 	},
 	// Configure dev server for SPA routing during development
 	server: {
-		historyApiFallback: true,
+		port: 5173,
+		host: true,
 	},
 	// Configure preview server for SPA routing
 	preview: {
