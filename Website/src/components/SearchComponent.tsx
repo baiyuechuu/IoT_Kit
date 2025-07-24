@@ -172,7 +172,7 @@ export function SearchComponent({
 								<button
 									key={item.id}
 									onClick={() => handleSelect(item)}
-									className={`w-full p-3 rounded-lg text-left transition-colors ${
+									className={`w-full p-3 rounded-lg text-left transition-colors mb-1 ${
 										index === selectedIndex
 											? "bg-gray-50/30 dark:bg-gray-800/30 border border-gray-300 dark:border-gray-700/60"
 											: "hover:bg-gray-50/80 dark:hover:bg-gray-800/50"
