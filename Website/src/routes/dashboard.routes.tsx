@@ -1,6 +1,5 @@
 import { lazy } from "react";
 import MainLayout from "@/layouts/MainLayout";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 const DashboardPage = lazy(() => import("@/pages/dashboard/Dashboard"));
 
@@ -10,11 +9,7 @@ export const dashboardRoute = {
 	children: [
 		{
 			index: true,
-			element: (
-				<ProtectedRoute>
-					<DashboardPage />
-				</ProtectedRoute>
-			),
+			element: <DashboardPage />,
 		},
 	],
 };

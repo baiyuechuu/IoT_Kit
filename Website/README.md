@@ -16,15 +16,11 @@ A modern React + TypeScript application for managing IoT devices with secure aut
 
 ## Authentication System
 
-This application implements a **restricted authentication system** that only allows access to specific users:
-
-### Allowed Users
-- **Email**: `ebevutru@gmail.com` (for email/password and Google OAuth)
-- **GitHub**: `@baiyuechuu` (for GitHub OAuth)
+This application implements a **multi-provider authentication system** that allows all users to register and login:
 
 ### Authentication Features
-- Multiple sign-in methods (Email, Google, GitHub)
-- Automatic OAuth user validation
+- Multiple sign-in methods (Email and GitHub)
+- OAuth integration with GitHub
 - Protected dashboard routes
 - Session management with persistent login
 - Secure logout functionality
@@ -114,8 +110,8 @@ src/
 
 ## Authentication Flow
 
-1. **Login/Signup**: Users can sign in using email/password or OAuth providers
-2. **Validation**: The system validates users against the allowed list
+1. **Login/Signup**: Users can sign in using email/password or GitHub OAuth
+2. **Authentication**: The system processes login credentials securely
 3. **Redirect**: Successful authentication redirects to the dashboard
 4. **Protection**: Protected routes automatically redirect unauthenticated users
 5. **Session**: Authentication state is managed globally with the `useAuth` hook
@@ -173,11 +169,11 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 ## Security Notes
 
-- Authentication is restricted to specific users only
-- OAuth users are validated after successful authentication
-- Unauthorized users are automatically signed out
+- Authentication is open to all users
+- OAuth integration provides secure GitHub login
 - All routes to the dashboard are protected
 - Environment variables contain sensitive Supabase credentials
+- Session tokens are managed securely by Supabase
 
 ## Contributing
 

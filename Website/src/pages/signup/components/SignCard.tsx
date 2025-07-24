@@ -1,191 +1,44 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ShineBorder } from "@/components/magicui/shine-border";
-import { auth } from "@/lib/supabase/utils";
 
 export function SignCard() {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const [success, setSuccess] = useState<string | null>(null);
 	const navigate = useNavigate();
-
-	// Handle auth state changes
-	useEffect(() => {
-		const {
-			data: { subscription },
-		} = auth.onAuthStateChange(async (event, session) => {
-			if (event === "SIGNED_IN" && session?.user) {
-				// Validate OAuth users
-				if (
-					session.user.app_metadata?.provider &&
-					session.user.app_metadata.provider !== "email"
-				) {
-					const validation = await auth.validateOAuthUser(session.user);
-					if (!validation.valid) {
-						setError(validation.error || "Authentication failed");
-						return;
-					}
-				}
-				navigate("/dashboard");
-			}
-		});
-
-		return () => subscription?.unsubscribe();
-	}, [navigate]);
-
-	const validateForm = () => {
-		if (!email || !password || !confirmPassword) {
-			setError("Please fill in all fields");
-			return false;
-		}
-
-		if (password !== confirmPassword) {
-			setError("Passwords do not match");
-			return false;
-		}
-
-		if (password.length < 6) {
-			setError("Password must be at least 6 characters long");
-			return false;
-		}
-
-		return true;
-	};
-
-	const handleEmailSignup = async (e: React.FormEvent) => {
-		e.preventDefault();
-		setLoading(true);
-		setError(null);
-		setSuccess(null);
-
-		if (!validateForm()) {
-			setLoading(false);
-			return;
-		}
-
-		try {
-			const { data, error } = await auth.signUp(email, password);
-			if (error) {
-				setError(error.message || "Registration failed");
-			} else if (data?.user) {
-				if (data.user.email_confirmed_at) {
-					// User is immediately confirmed (like in development)
-					navigate("/dashboard");
-				} else {
-					// User needs to confirm email
-					setSuccess(
-						"Registration successful! Please check your email to confirm your account.",
-					);
-				}
-			}
-		} catch (err) {
-			setError("An unexpected error occurred");
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const handleGoogleSignup = async () => {
-		setLoading(true);
-		setError(null);
-
-		try {
-			const { error } = await auth.signInWithGoogle();
-			if (error) {
-				setError(error.message || "Google signup failed");
-			}
-		} catch (err) {
-			setError("An unexpected error occurred");
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const handleGitHubSignup = async () => {
-		setLoading(true);
-		setError(null);
-
-		try {
-			const { error } = await auth.signInWithGitHub();
-			if (error) {
-				setError(error.message || "GitHub signup failed");
-			}
-		} catch (err) {
-			setError("An unexpected error occurred");
-		} finally {
-			setLoading(false);
-		}
-	};
 
 	return (
 		<Card className="relative overflow-hidden max-w-[350px] w-full">
 			<ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
 			<div className="w-full flex flex-col items-center justify-center gap-1 border-b pb-5">
 				<h2 className="text-2xl font-bold">Sign Up</h2>
-				<p className="text-sm text-center text-gray-700 dark:text-gray-400">Create an account to get started</p>
+				<p className="text-sm text-center text-gray-700 dark:text-gray-400">
+					Create an account to get started
+				</p>
 			</div>
 			<CardContent>
-				<form onSubmit={handleEmailSignup}>
+				<form>
 					<div className="grid gap-3">
-						{error && (
-							<div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-								{error}
-							</div>
-						)}
-						{success && (
-							<div className="p-3 text-sm text-green-600 bg-green-50 border border-green-200 rounded-md">
-								{success}
-							</div>
-						)}
 						<div className="grid gap-2">
 							<Label htmlFor="email">Email</Label>
 							<Input
 								id="email"
 								type="email"
-								placeholder="ebevutru@gmail.com"
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
-								disabled={loading}
+								placeholder="name@example.com"
 								required
 							/>
-							<p className="text-xs text-muted-foreground">
-								Registration is restricted to authorized users only
-							</p>
 						</div>
 						<div className="grid gap-2">
 							<Label htmlFor="password">Password</Label>
-							<Input
-								id="password"
-								type="password"
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-								disabled={loading}
-								required
-								minLength={6}
-							/>
+							<Input id="password" type="password" required minLength={6} />
 						</div>
 						<div className="grid gap-2">
 							<Label htmlFor="confirmPassword">Confirm Password</Label>
 							<Input
 								id="confirmPassword"
 								type="password"
-								value={confirmPassword}
-								onChange={(e) => setConfirmPassword(e.target.value)}
-								disabled={loading}
 								required
 								minLength={6}
 							/>
@@ -194,14 +47,6 @@ export function SignCard() {
 				</form>
 			</CardContent>
 			<CardFooter className="flex flex-col gap-3">
-				<Button
-					className="w-full"
-					onClick={handleEmailSignup}
-					disabled={loading}
-				>
-					{loading ? "Creating Account..." : "Create Account"}
-				</Button>
-
 				<div className="relative w-full">
 					<div className="absolute inset-0 flex items-center">
 						<span className="w-full border-t" />
@@ -214,12 +59,7 @@ export function SignCard() {
 				</div>
 
 				<div className="grid grid-cols-2 gap-2 w-full">
-					<Button
-						variant="outline"
-						onClick={handleGoogleSignup}
-						disabled={loading}
-						className="w-full"
-					>
+					<Button variant="outline" className="w-full">
 						<svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
 							<path
 								fill="currentColor"
@@ -240,12 +80,7 @@ export function SignCard() {
 						</svg>
 						Google
 					</Button>
-					<Button
-						variant="outline"
-						onClick={handleGitHubSignup}
-						disabled={loading}
-						className="w-full"
-					>
+					<Button variant="outline" className="w-full">
 						<svg
 							className="mr-2 h-4 w-4"
 							fill="currentColor"
