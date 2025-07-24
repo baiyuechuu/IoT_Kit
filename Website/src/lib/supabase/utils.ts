@@ -44,21 +44,7 @@ export const auth = {
   }
 }
 
-// Database utilities
-export const db = {
-  // Generic select function
-  select: (table: string) => supabase.from(table).select(),
-  
-  // Generic insert function
-  insert: (table: string, data: any) => supabase.from(table).insert(data),
-  
-  // Generic update function
-  update: (table: string, data: any) => supabase.from(table).update(data),
-  
-  // Generic delete function
-  delete: (table: string) => supabase.from(table).delete(),
-}
-
-// Export the supabase client for direct access
+// Export the supabase client for direct database operations
+// Use it like: supabase.from('your_table').select('*')
 export { supabase }
 export default supabase 
