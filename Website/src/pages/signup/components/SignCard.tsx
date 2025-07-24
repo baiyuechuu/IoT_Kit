@@ -1,48 +1,146 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ShineBorder } from "@/components/magicui/shine-border";
+import { auth } from "@/lib/supabase/utils";
 
 export function SignCard() {
 	const navigate = useNavigate();
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState("");
+	const [success, setSuccess] = useState("");
+
+	const handleEmailSignup = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setLoading(true);
+		setError("");
+		setSuccess("");
+
+		// Validation
+		if (password !== confirmPassword) {
+			setError("Mật khẩu xác nhận không khớp");
+			setLoading(false);
+			return;
+		}
+
+		if (password.length < 6) {
+			setError("Mật khẩu phải có ít nhất 6 ký tự");
+			setLoading(false);
+			return;
+		}
+
+		const result = await auth.signUp(email, password);
+		
+		if (result.success) {
+			setSuccess("Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.");
+			// Reset form
+			setEmail("");
+			setPassword("");
+			setConfirmPassword("");
+		} else {
+			setError(result.error || "Đăng ký thất bại");
+		}
+		
+		setLoading(false);
+	};
+
+	const handleGoogleSignup = async () => {
+		setLoading(true);
+		setError("");
+
+		const result = await auth.signInWithGoogle();
+		
+		if (!result.success) {
+			setError(result.error || "Đăng ký Google thất bại");
+			setLoading(false);
+		}
+		// OAuth sẽ redirect tự động, không cần xử lý success case
+	};
+
+	const handleGitHubSignup = async () => {
+		setLoading(true);
+		setError("");
+
+		const result = await auth.signInWithGitHub();
+		
+		if (!result.success) {
+			setError(result.error || "Đăng ký GitHub thất bại");
+			setLoading(false);
+		}
+		// OAuth sẽ redirect tự động, không cần xử lý success case
+	};
 
 	return (
 		<Card className="relative overflow-hidden max-w-[350px] w-full">
 			<ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
 			<div className="w-full flex flex-col items-center justify-center gap-1 border-b pb-5">
-				<h2 className="text-2xl font-bold">Sign Up</h2>
+				<h2 className="text-2xl font-bold">Đăng ký</h2>
 				<p className="text-sm text-center text-gray-700 dark:text-gray-400">
-					Create an account to get started
+					Tạo tài khoản mới để bắt đầu
 				</p>
 			</div>
 			<CardContent>
-				<form>
+				<form onSubmit={handleEmailSignup}>
 					<div className="grid gap-3">
+						{error && (
+							<div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md dark:bg-red-900/20 dark:border-red-900 dark:text-red-400">
+								{error}
+							</div>
+						)}
+						{success && (
+							<div className="p-3 text-sm text-green-600 bg-green-50 border border-green-200 rounded-md dark:bg-green-900/20 dark:border-green-900 dark:text-green-400">
+								{success}
+							</div>
+						)}
 						<div className="grid gap-2">
 							<Label htmlFor="email">Email</Label>
 							<Input
 								id="email"
 								type="email"
 								placeholder="name@example.com"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
 								required
+								disabled={loading}
 							/>
 						</div>
 						<div className="grid gap-2">
-							<Label htmlFor="password">Password</Label>
-							<Input id="password" type="password" required minLength={6} />
+							<Label htmlFor="password">Mật khẩu</Label>
+							<Input 
+								id="password" 
+								type="password" 
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								required 
+								minLength={6} 
+								disabled={loading}
+							/>
 						</div>
 						<div className="grid gap-2">
-							<Label htmlFor="confirmPassword">Confirm Password</Label>
+							<Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
 							<Input
 								id="confirmPassword"
 								type="password"
+								value={confirmPassword}
+								onChange={(e) => setConfirmPassword(e.target.value)}
 								required
 								minLength={6}
+								disabled={loading}
 							/>
 						</div>
+						<Button 
+							type="submit" 
+							className="w-full" 
+							disabled={loading}
+						>
+							{loading ? "Đang đăng ký..." : "Đăng ký"}
+						</Button>
 					</div>
 				</form>
 			</CardContent>
@@ -59,7 +157,13 @@ export function SignCard() {
 				</div>
 
 				<div className="grid grid-cols-2 gap-2 w-full">
-					<Button variant="outline" className="w-full">
+					<Button 
+						variant="outline" 
+						className="w-full" 
+						onClick={handleGoogleSignup}
+						disabled={loading}
+						type="button"
+					>
 						<svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
 							<path
 								fill="currentColor"
@@ -80,7 +184,13 @@ export function SignCard() {
 						</svg>
 						Google
 					</Button>
-					<Button variant="outline" className="w-full">
+					<Button 
+						variant="outline" 
+						className="w-full" 
+						onClick={handleGitHubSignup}
+						disabled={loading}
+						type="button"
+					>
 						<svg
 							className="mr-2 h-4 w-4"
 							fill="currentColor"
@@ -93,13 +203,13 @@ export function SignCard() {
 				</div>
 
 				<p className="text-xs text-center text-muted-foreground">
-					Already have an account?{" "}
+					Đã có tài khoản?{" "}
 					<button
 						type="button"
 						className="text-primary hover:underline"
 						onClick={() => navigate("/login")}
 					>
-						Sign in
+						Đăng nhập
 					</button>
 				</p>
 			</CardFooter>
