@@ -40,22 +40,27 @@ export function SearchComponent({
 				return;
 			}
 
-			e.preventDefault();
+			// Only prevent default for navigation keys, not typing keys
 			switch (e.key) {
 				case "Escape":
+					e.preventDefault();
 					handleClose();
 					break;
 				case "ArrowDown":
+					e.preventDefault();
 					setSelectedIndex((prev) => Math.min(prev + 1, filteredItems.length - 1));
 					break;
 				case "ArrowUp":
+					e.preventDefault();
 					setSelectedIndex((prev) => Math.max(prev - 1, 0));
 					break;
 				case "Enter":
+					e.preventDefault();
 					if (filteredItems[selectedIndex]) {
 						handleSelect(filteredItems[selectedIndex]);
 					}
 					break;
+				// Don't prevent default for other keys (typing keys)
 			}
 		};
 
@@ -72,8 +77,15 @@ export function SearchComponent({
 		};
 
 		if (isOpen) {
-			document.addEventListener("mousedown", handleClickOutside);
-			return () => document.removeEventListener("mousedown", handleClickOutside);
+			// Add delay to prevent immediate closing when opening
+			const timeoutId = setTimeout(() => {
+				document.addEventListener("mousedown", handleClickOutside);
+			}, 100);
+			
+			return () => {
+				clearTimeout(timeoutId);
+				document.removeEventListener("mousedown", handleClickOutside);
+			};
 		}
 	}, [isOpen]);
 
@@ -134,13 +146,13 @@ export function SearchComponent({
 
 			{/* Search Modal */}
 			{isOpen && (
-				<div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-start justify-center pt-[10vh] px-4">
+				<div className="fixed inset-0 z-50 bg-white/40 dark:bg-black/80 backdrop-blur-sm flex items-start justify-center pt-[10vh] px-4">
 					<div
 						ref={searchRef}
-						className="w-full max-w-2xl mx-4 bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700"
+						className="w-full max-w-2xl mx-4 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700/40"
 					>
 						{/* Search Input */}
-						<div className="p-4 border-b border-gray-200 dark:border-gray-700">
+						<div className="p-4 border-b border-gray-200 dark:border-gray-700/40">
 							<div className="flex items-center gap-3">
 								<IoSearchOutline className="h-5 w-5 text-gray-400" />
 								<input
@@ -155,15 +167,15 @@ export function SearchComponent({
 						</div>
 
 						{/* Search Results */}
-						<div className="max-h-96 overflow-y-auto p-2">
+						<div className="max-h-96 overflow-y-auto p-2 no-scrollbar">
 							{filteredItems.map((item, index) => (
 								<button
 									key={item.id}
 									onClick={() => handleSelect(item)}
 									className={`w-full p-3 rounded-lg text-left transition-colors ${
 										index === selectedIndex
-											? "bg-gray-100 dark:bg-gray-800"
-											: "hover:bg-gray-50 dark:hover:bg-gray-800/50"
+											? "bg-gray-50/30 dark:bg-gray-800/30 border border-gray-300 dark:border-gray-700/60"
+											: "hover:bg-gray-50/80 dark:hover:bg-gray-800/50"
 									}`}
 								>
 									<div className="flex items-center gap-3">
@@ -189,22 +201,22 @@ export function SearchComponent({
 						</div>
 
 						{/* Footer */}
-						<div className="p-3 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400">
+						<div className="p-3 border-t border-gray-200 dark:border-gray-700/40 text-xs text-gray-500 dark:text-gray-400">
 							<div className="flex items-center gap-4">
 								<div className="flex items-center gap-1">
-									<kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs">
+									<kbd className="px-1.5 py-0.5 rounded text-xs">
 										↑↓
 									</kbd>
 									<span>navigate</span>
 								</div>
 								<div className="flex items-center gap-1">
-									<kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs">
+									<kbd className="px-1.5 py-0.5 rounded text-xs">
 										↵
 									</kbd>
 									<span>select</span>
 								</div>
 								<div className="flex items-center gap-1">
-									<kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs">
+									<kbd className="px-1.5 py-0.5 rounded text-xs">
 										esc
 									</kbd>
 									<span>close</span>
