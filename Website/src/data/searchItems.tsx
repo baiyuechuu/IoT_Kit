@@ -1,0 +1,160 @@
+import { RiRadioButtonLine } from "react-icons/ri";
+import { BiCard } from "react-icons/bi";
+import { FiEdit3 } from "react-icons/fi";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { HiSparkles } from "react-icons/hi2";
+import {
+	FaHome,
+	FaInfoCircle,
+	FaUikit,
+	FaTachometerAlt,
+	FaEye,
+	FaEnvelope,
+	FaSignInAlt,
+	FaUserPlus,
+} from "react-icons/fa";
+
+import type { SearchItem } from "@/types";
+// Define all searchable items
+const searchItems: SearchItem[] = [
+	// Pages
+	{
+		id: "home",
+		title: "Home",
+		description: "Main landing page with overview",
+		type: "page",
+		path: "/",
+		icon: <FaHome className="w-4 h-4" />,
+		keywords: ["home", "main", "landing", "overview"],
+	},
+	{
+		id: "about",
+		title: "About",
+		description: "Learn more about our IoT Kit project",
+		type: "page",
+		path: "/about",
+		icon: <FaInfoCircle className="w-4 h-4" />,
+		keywords: ["about", "info", "information", "project", "team"],
+	},
+	{
+		id: "uikit",
+		title: "UI Kit",
+		description: "Collection of UI components and design system",
+		type: "page",
+		path: "/uikit",
+		icon: <FaUikit className="w-4 h-4" />,
+		keywords: ["ui", "components", "design", "system", "kit"],
+	},
+	{
+		id: "dashboard",
+		title: "Dashboard",
+		description: "User dashboard with personalized content",
+		type: "page",
+		path: "/dashboard",
+		icon: <FaTachometerAlt className="w-4 h-4" />,
+		keywords: ["dashboard", "user", "personal", "profile"],
+	},
+	{
+		id: "showcase",
+		title: "Showcase",
+		description: "Project showcase and portfolio",
+		type: "page",
+		path: "/showcase",
+		icon: <FaEye className="w-4 h-4" />,
+		keywords: ["showcase", "portfolio", "projects", "gallery"],
+	},
+	{
+		id: "contact",
+		title: "Contact",
+		description: "Get in touch with us",
+		type: "page",
+		path: "/contact",
+		icon: <FaEnvelope className="w-4 h-4" />,
+		keywords: ["contact", "reach", "touch", "message", "email"],
+	},
+	{
+		id: "login",
+		title: "Sign In",
+		description: "Login to your account",
+		type: "page",
+		path: "/login",
+		icon: <FaSignInAlt className="w-4 h-4" />,
+		keywords: ["login", "signin", "sign", "in", "authenticate", "auth"],
+	},
+	{
+		id: "signup",
+		title: "Sign Up",
+		description: "Create a new account",
+		type: "page",
+		path: "/sign",
+		icon: <FaUserPlus className="w-4 h-4" />,
+		keywords: ["signup", "register", "create", "account", "join"],
+	},
+	// UI Kit Components
+	{
+		id: "buttons-component",
+		title: "Buttons",
+		description: "Various button components with different styles and variants",
+		type: "component",
+		path: "/uikit?section=buttons",
+		icon: <RiRadioButtonLine className="w-4 h-4" />,
+		keywords: [
+			"button",
+			"click",
+			"action",
+			"primary",
+			"secondary",
+			"destructive",
+			"outline",
+			"ghost",
+			"rainbow",
+			"shiny",
+		],
+	},
+	{
+		id: "cards-component",
+		title: "Cards",
+		description: "Card components for displaying content in containers",
+		type: "component",
+		path: "/uikit?section=cards",
+		icon: <BiCard className="w-4 h-4" />,
+		keywords: ["card", "container", "content", "box", "panel"],
+	},
+	{
+		id: "inputs-component",
+		title: "Form Inputs",
+		description: "Input components for forms and user interaction",
+		type: "component",
+		path: "/uikit?section=inputs",
+		icon: <FiEdit3 className="w-4 h-4" />,
+		keywords: ["input", "form", "text", "email", "password", "number", "field"],
+	},
+	{
+		id: "dropdowns-component",
+		title: "Dropdown Menus",
+		description: "Dropdown components for navigation and selection",
+		type: "component",
+		path: "/uikit?section=dropdowns",
+		icon: <MdKeyboardArrowDown className="w-4 h-4" />,
+		keywords: ["dropdown", "menu", "select", "navigation", "options"],
+	},
+	{
+		id: "effects-component",
+		title: "Magic Effects",
+		description: "Special effect components with animations and styling",
+		type: "component",
+		path: "/uikit?section=effects",
+		icon: <HiSparkles className="w-4 h-4" />,
+		keywords: [
+			"effects",
+			"magic",
+			"animation",
+			"shine",
+			"border",
+			"rainbow",
+			"special",
+		],
+	},
+];
+
+export default searchItems;
