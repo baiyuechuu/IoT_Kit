@@ -178,7 +178,7 @@ export function SearchComponent({
 											: "hover:bg-gray-50/80 dark:hover:bg-gray-800/50"
 									}`}
 								>
-									<div className="flex items-center gap-3">
+									<div className="flex items-center gap-4">
 										<div className="text-gray-600 dark:text-gray-400">{item.icon}</div>
 										<div className="flex-1 min-w-0">
 											<div className="flex items-center gap-2 mb-1">

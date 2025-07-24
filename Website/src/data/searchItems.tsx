@@ -24,7 +24,7 @@ const searchItems: SearchItem[] = [
 		description: "Main landing page with overview",
 		type: "page",
 		path: "/",
-		icon: <FaHome className="w-4 h-4" />,
+		icon: <FaHome className="w-6 h-6" />,
 		keywords: ["home", "main", "landing", "overview"],
 	},
 	{
@@ -33,7 +33,7 @@ const searchItems: SearchItem[] = [
 		description: "Learn more about our IoT Kit project",
 		type: "page",
 		path: "/about",
-		icon: <FaInfoCircle className="w-4 h-4" />,
+		icon: <FaInfoCircle className="w-6 h-6" />,
 		keywords: ["about", "info", "information", "project", "team"],
 	},
 	{
@@ -42,7 +42,7 @@ const searchItems: SearchItem[] = [
 		description: "Collection of UI components and design system",
 		type: "page",
 		path: "/uikit",
-		icon: <FaUikit className="w-4 h-4" />,
+		icon: <FaUikit className="w-6 h-6" />,
 		keywords: ["ui", "components", "design", "system", "kit"],
 	},
 	{
@@ -51,7 +51,7 @@ const searchItems: SearchItem[] = [
 		description: "User dashboard with personalized content",
 		type: "page",
 		path: "/dashboard",
-		icon: <FaTachometerAlt className="w-4 h-4" />,
+		icon: <FaTachometerAlt className="w-6 h-6" />,
 		keywords: ["dashboard", "user", "personal", "profile"],
 	},
 	{
@@ -60,7 +60,7 @@ const searchItems: SearchItem[] = [
 		description: "Project showcase and portfolio",
 		type: "page",
 		path: "/showcase",
-		icon: <FaEye className="w-4 h-4" />,
+		icon: <FaEye className="w-6 h-6" />,
 		keywords: ["showcase", "portfolio", "projects", "gallery"],
 	},
 	{
@@ -69,7 +69,7 @@ const searchItems: SearchItem[] = [
 		description: "Get in touch with us",
 		type: "page",
 		path: "/contact",
-		icon: <FaEnvelope className="w-4 h-4" />,
+		icon: <FaEnvelope className="w-6 h-6" />,
 		keywords: ["contact", "reach", "touch", "message", "email"],
 	},
 	{
@@ -78,7 +78,7 @@ const searchItems: SearchItem[] = [
 		description: "Login to your account",
 		type: "page",
 		path: "/login",
-		icon: <FaSignInAlt className="w-4 h-4" />,
+		icon: <FaSignInAlt className="w-6 h-6" />,
 		keywords: ["login", "signin", "sign", "in", "authenticate", "auth"],
 	},
 	{
@@ -87,7 +87,7 @@ const searchItems: SearchItem[] = [
 		description: "Create a new account",
 		type: "page",
 		path: "/sign",
-		icon: <FaUserPlus className="w-4 h-4" />,
+		icon: <FaUserPlus className="w-6 h-6" />,
 		keywords: ["signup", "register", "create", "account", "join"],
 	},
 	// UI Kit Components
@@ -97,7 +97,7 @@ const searchItems: SearchItem[] = [
 		description: "Various button components with different styles and variants",
 		type: "component",
 		path: "/uikit?section=buttons",
-		icon: <RiRadioButtonLine className="w-4 h-4" />,
+		icon: <RiRadioButtonLine className="w-6 h-6" />,
 		keywords: [
 			"button",
 			"click",
@@ -117,7 +117,7 @@ const searchItems: SearchItem[] = [
 		description: "Card components for displaying content in containers",
 		type: "component",
 		path: "/uikit?section=cards",
-		icon: <BiCard className="w-4 h-4" />,
+		icon: <BiCard className="w-6 h-6" />,
 		keywords: ["card", "container", "content", "box", "panel"],
 	},
 	{
@@ -126,7 +126,7 @@ const searchItems: SearchItem[] = [
 		description: "Input components for forms and user interaction",
 		type: "component",
 		path: "/uikit?section=inputs",
-		icon: <FiEdit3 className="w-4 h-4" />,
+		icon: <FiEdit3 className="w-6 h-6" />,
 		keywords: ["input", "form", "text", "email", "password", "number", "field"],
 	},
 	{
@@ -135,7 +135,7 @@ const searchItems: SearchItem[] = [
 		description: "Dropdown components for navigation and selection",
 		type: "component",
 		path: "/uikit?section=dropdowns",
-		icon: <MdKeyboardArrowDown className="w-4 h-4" />,
+		icon: <MdKeyboardArrowDown className="w-6 h-6" />,
 		keywords: ["dropdown", "menu", "select", "navigation", "options"],
 	},
 	{
@@ -144,7 +144,7 @@ const searchItems: SearchItem[] = [
 		description: "Special effect components with animations and styling",
 		type: "component",
 		path: "/uikit?section=effects",
-		icon: <HiSparkles className="w-4 h-4" />,
+		icon: <HiSparkles className="w-6 h-6" />,
 		keywords: [
 			"effects",
 			"magic",
