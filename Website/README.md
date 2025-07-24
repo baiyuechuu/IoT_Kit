@@ -67,3 +67,9 @@ export default tseslint.config([
   },
 ])
 ```
+
+- To generate TypeScript types from your actual database schema:
+
+```bash
+bunx supabase gen types typescript --project-id YOUR_PROJECT_ID > src/types/supabase.ts
+```

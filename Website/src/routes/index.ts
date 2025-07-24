@@ -4,6 +4,8 @@ import { aboutRoute } from "./about.routes";
 import { contactRoute } from "./contact.routes";
 import { dashboardRoute } from "./dashboard.routes";
 import { uikitRoute } from "./uikit.routes";
+import { loginRoute } from "./login.routes";  
+import { signupRoute } from "./signup.routes";
 
 export const routes = [
 	homeRoute,
@@ -11,6 +13,8 @@ export const routes = [
 	contactRoute,
 	dashboardRoute,
 	uikitRoute,
+  loginRoute,
+  signupRoute,
 ];
 
 export const router = createBrowserRouter(routes);
