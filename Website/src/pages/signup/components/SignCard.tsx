@@ -6,98 +6,190 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ShineBorder } from "@/components/magicui/shine-border";
 import { auth } from "@/lib/supabase/utils";
+import { 
+  validateEmail, 
+  validatePassword, 
+  validatePasswordConfirmation, 
+  validateDisplayName,
+  getPasswordStrength 
+} from "@/lib/supabase/validation";
 
 export function SignCard() {
 	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
+	const [displayName, setDisplayName] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState("");
+	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+	// Real-time validation as user types
+	const validateField = (field: string, value: string) => {
+		let validation;
+		
+		switch (field) {
+			case 'email':
+				validation = validateEmail(value);
+				break;
+			case 'password':
+				validation = validatePassword(value);
+				break;
+			case 'confirmPassword':
+				validation = validatePasswordConfirmation(password, value);
+				break;
+			case 'displayName':
+				validation = validateDisplayName(value);
+				break;
+			default:
+				return;
+		}
+
+		setFieldErrors(prev => ({
+			...prev,
+			[field]: validation.isValid ? '' : validation.error || ''
+		}));
+	};
 
 	const handleEmailSignup = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setLoading(true);
 		setError("");
 		setSuccess("");
+		setFieldErrors({});
 
-		// Validation
-		if (password !== confirmPassword) {
-			setError("Mật khẩu xác nhận không khớp");
+		// Comprehensive validation
+		const emailValidation = validateEmail(email);
+		const passwordValidation = validatePassword(password);
+		const confirmPasswordValidation = validatePasswordConfirmation(password, confirmPassword);
+		const displayNameValidation = validateDisplayName(displayName);
+
+		const errors: Record<string, string> = {};
+		
+		if (!emailValidation.isValid) errors.email = emailValidation.error!;
+		if (!passwordValidation.isValid) errors.password = passwordValidation.error!;
+		if (!confirmPasswordValidation.isValid) errors.confirmPassword = confirmPasswordValidation.error!;
+		if (!displayNameValidation.isValid) errors.displayName = displayNameValidation.error!;
+		
+		if (Object.keys(errors).length > 0) {
+			setFieldErrors(errors);
 			setLoading(false);
 			return;
 		}
 
-		if (password.length < 6) {
-			setError("Mật khẩu phải có ít nhất 6 ký tự");
-			setLoading(false);
-			return;
-		}
-
-		const result = await auth.signUp(email, password);
+		const result = await auth.signUp({
+			email,
+			password,
+			displayName
+		});
 		
 		if (result.success) {
-			setSuccess("Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.");
+			// Check if user was created and is confirmed (email confirmation disabled)
+			// or if user needs email confirmation
+			if (result.user && result.user.email_confirmed_at) {
+				setSuccess("Sign up successful! You can log in immediately.");
+			} else {
+				setSuccess("Sign up successful! Please check your email to confirm your account or disable email confirmation in Supabase dashboard.");
+			}
+			
 			// Reset form
 			setEmail("");
 			setPassword("");
 			setConfirmPassword("");
+			setDisplayName("");
+			
+			// Redirect to login after 3 seconds
+			setTimeout(() => {
+				navigate("/login", { 
+					state: { 
+						message: result.user?.email_confirmed_at 
+							? "Account created successfully. Please log in." 
+							: "Account created successfully. If email confirmation is disabled, you can log in immediately."
+					}
+				});
+			}, 3000);
 		} else {
-			setError(result.error || "Đăng ký thất bại");
+			setError(result.error || "Sign up failed");
 		}
 		
 		setLoading(false);
 	};
 
+	// Get password strength for UI feedback
+	const passwordStrength = password ? getPasswordStrength(password) : null;
+
 	const handleGoogleSignup = async () => {
 		setLoading(true);
 		setError("");
 
-		const result = await auth.signInWithGoogle();
+		const result = await auth.signUpWithGoogle();
 		
 		if (!result.success) {
-			setError(result.error || "Đăng ký Google thất bại");
+			setError(result.error || "Google sign up failed");
 			setLoading(false);
 		}
-		// OAuth sẽ redirect tự động, không cần xử lý success case
+		// OAuth will redirect automatically, no need to handle success case
 	};
 
 	const handleGitHubSignup = async () => {
 		setLoading(true);
 		setError("");
 
-		const result = await auth.signInWithGitHub();
+		const result = await auth.signUpWithGitHub();
 		
 		if (!result.success) {
-			setError(result.error || "Đăng ký GitHub thất bại");
+			setError(result.error || "GitHub sign up failed");
 			setLoading(false);
 		}
-		// OAuth sẽ redirect tự động, không cần xử lý success case
+		// OAuth will redirect automatically, no need to handle success case
 	};
 
 	return (
-		<Card className="relative overflow-hidden max-w-[350px] w-full">
+		<Card className="relative overflow-hidden max-w-[400px] w-full">
 			<ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
 			<div className="w-full flex flex-col items-center justify-center gap-1 border-b pb-5">
-				<h2 className="text-2xl font-bold">Đăng ký</h2>
+				<h2 className="text-2xl font-bold">Sign Up</h2>
 				<p className="text-sm text-center text-gray-700 dark:text-gray-400">
-					Tạo tài khoản mới để bắt đầu
+					Create a new account to get started
 				</p>
 			</div>
 			<CardContent>
 				<form onSubmit={handleEmailSignup}>
 					<div className="grid gap-3">
 						{error && (
-							<div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md dark:bg-red-900/20 dark:border-red-900 dark:text-red-400">
+							<div className="p-3 text-[12px] text-red-600 bg-red-50 border border-red-200 rounded-md dark:bg-red-900/20 dark:border-red-900 dark:text-red-400">
 								{error}
 							</div>
 						)}
 						{success && (
-							<div className="p-3 text-sm text-green-600 bg-green-50 border border-green-200 rounded-md dark:bg-green-900/20 dark:border-green-900 dark:text-green-400">
+							<div className="p-3 text-[12px] text-green-600 bg-green-50 border border-green-200 rounded-md dark:bg-green-900/20 dark:border-green-900 dark:text-green-400">
 								{success}
 							</div>
 						)}
+
+						{/* Display Name Field */}
+						<div className="grid gap-2">
+							<Label htmlFor="displayName">Display Name</Label>
+							<Input
+								id="displayName"
+								type="text"
+								placeholder="Enter your display name"
+								value={displayName}
+								onChange={(e) => {
+									setDisplayName(e.target.value);
+									validateField('displayName', e.target.value);
+								}}
+								required
+								disabled={loading}
+								className={fieldErrors.displayName ? 'border-red-500' : ''}
+							/>
+							{fieldErrors.displayName && (
+								<p className="text-[12px] text-red-500">{fieldErrors.displayName}</p>
+							)}
+						</div>
+
+						{/* Email Field */}
 						<div className="grid gap-2">
 							<Label htmlFor="email">Email</Label>
 							<Input
@@ -105,41 +197,88 @@ export function SignCard() {
 								type="email"
 								placeholder="name@example.com"
 								value={email}
-								onChange={(e) => setEmail(e.target.value)}
+								onChange={(e) => {
+									setEmail(e.target.value);
+									validateField('email', e.target.value);
+								}}
 								required
 								disabled={loading}
+								className={fieldErrors.email ? 'border-red-500' : ''}
 							/>
+							{fieldErrors.email && (
+								<p className="text-[12px] text-red-600">{fieldErrors.email}</p>
+							)}
 						</div>
+
+						{/* Password Field with Strength Indicator */}
 						<div className="grid gap-2">
-							<Label htmlFor="password">Mật khẩu</Label>
+							<Label htmlFor="password">Password</Label>
 							<Input 
 								id="password" 
 								type="password" 
+								placeholder="Enter password (at least 8 characters)"
 								value={password}
-								onChange={(e) => setPassword(e.target.value)}
+								onChange={(e) => {
+									setPassword(e.target.value);
+									validateField('password', e.target.value);
+								}}
 								required 
-								minLength={6} 
 								disabled={loading}
+								className={fieldErrors.password ? 'border-red-500' : ''}
 							/>
+							{password && (
+								<div className="flex items-center gap-2">
+									<div className="flex-1 h-1 bg-gray-200 rounded">
+										<div 
+											className={`h-full rounded transition-all duration-300 ${
+												passwordStrength === 'weak' ? 'w-1/3 bg-red-500' :
+												passwordStrength === 'medium' ? 'w-2/3 bg-yellow-500' :
+												'w-full bg-green-500'
+											}`}
+										/>
+									</div>
+									<span className={`text-xs ${
+										passwordStrength === 'weak' ? 'text-red-600' :
+										passwordStrength === 'medium' ? 'text-yellow-600' :
+										'text-green-600'
+									}`}>
+										{passwordStrength === 'weak' ? 'Weak' :
+										 passwordStrength === 'medium' ? 'Medium' : 'Strong'}
+									</span>
+								</div>
+							)}
+							{fieldErrors.password && (
+								<p className="text-[12px] text-red-600">{fieldErrors.password}</p>
+							)}
 						</div>
+
+						{/* Confirm Password Field */}
 						<div className="grid gap-2">
-							<Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
+							<Label htmlFor="confirmPassword">Confirm Password</Label>
 							<Input
 								id="confirmPassword"
 								type="password"
+								placeholder="Re-enter your password"
 								value={confirmPassword}
-								onChange={(e) => setConfirmPassword(e.target.value)}
+								onChange={(e) => {
+									setConfirmPassword(e.target.value);
+									validateField('confirmPassword', e.target.value);
+								}}
 								required
-								minLength={6}
 								disabled={loading}
+								className={fieldErrors.confirmPassword ? 'border-red-500' : ''}
 							/>
+							{fieldErrors.confirmPassword && (
+								<p className="text-[12px] text-red-600">{fieldErrors.confirmPassword}</p>
+							)}
 						</div>
+
 						<Button 
 							type="submit" 
 							className="w-full" 
 							disabled={loading}
 						>
-							{loading ? "Đang đăng ký..." : "Đăng ký"}
+							{loading ? "Creating account..." : "Create Account"}
 						</Button>
 					</div>
 				</form>
@@ -203,13 +342,13 @@ export function SignCard() {
 				</div>
 
 				<p className="text-xs text-center text-muted-foreground">
-					Đã có tài khoản?{" "}
+					Already have an account?{" "}
 					<button
 						type="button"
 						className="text-primary hover:underline"
 						onClick={() => navigate("/login")}
 					>
-						Đăng nhập
+						Sign in
 					</button>
 				</p>
 			</CardFooter>

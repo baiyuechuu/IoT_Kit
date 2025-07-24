@@ -2,13 +2,18 @@ import { FaUikit } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
-import { useLocation, Link } from "react-router-dom";
+import { LogOut, User } from "lucide-react";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ModeToggle } from "./ModeToggle";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
 
 export function Navbar() {
 	const location = useLocation();
+	const navigate = useNavigate();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const { isAuthenticated, user, signOut, loading } = useAuth();
 
 	const navItems = [
 		{ name: "Home", path: "/" },
@@ -29,6 +34,20 @@ export function Navbar() {
 
 	const closeMenu = () => {
 		setIsMenuOpen(false);
+	};
+
+	const handleLogout = async () => {
+		try {
+			closeMenu(); // Close mobile menu if open
+			// Navigate to home page immediately before signOut to prevent ProtectedRoute redirect
+			navigate("/");
+			// Then sign out
+			await signOut();
+		} catch (error) {
+			console.error("Logout failed:", error);
+			// If logout fails, still try to redirect to home
+			navigate("/");  
+		}
 	};
 
 	return (
@@ -80,6 +99,46 @@ export function Navbar() {
 								<span>K</span>
 							</div>
 						</button>
+						
+						{/* User Section - Show login/logout based on auth state */}
+						{isAuthenticated ? (
+							<div className="flex items-center gap-2">
+								{/* User Info */}
+								<div className="flex items-center gap-2 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-700/60 rounded-lg text-gray-600 dark:text-gray-300">
+									<User className="h-4 w-4" />
+									<span className="hidden lg:block">
+										{user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User'}
+									</span>
+								</div>
+								
+								{/* Logout Button */}
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={handleLogout}
+									disabled={loading}
+									className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 border-gray-300 dark:border-gray-700/60"
+									title="Logout"
+								>
+									<LogOut className="h-4 w-4" />
+									<span className="hidden lg:block">Logout</span>
+								</Button>
+							</div>
+						) : (
+							<div className="flex items-center gap-2">
+								<Link to="/login">
+									<Button variant="outline" size="sm" className="text-sm">
+										Sign In
+									</Button>
+								</Link>
+								<Link to="/sign">
+									<Button size="sm" className="text-sm">
+										Sign Up
+									</Button>
+								</Link>
+							</div>
+						)}
+						
 						{/* Mode Toggle */}
 						<ModeToggle />
 					</div>
@@ -126,6 +185,46 @@ export function Navbar() {
 								<IoSearchOutline className="h-4 w-4" />
 								<span>Search</span>
 							</button>
+						</div>
+
+						{/* Mobile User Section */}
+						<div className="pt-4 border-t border-gray-200 dark:border-gray-700/50 mt-4">
+							{isAuthenticated ? (
+								<div className="space-y-2">
+									{/* User Info */}
+									<div className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+										<User className="h-4 w-4" />
+										<span>
+											{user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User'}
+										</span>
+									</div>
+									
+									{/* Logout Button */}
+									<Button
+										variant="outline"
+										size="sm"
+										onClick={handleLogout}
+										disabled={loading}
+										className="w-full flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 border-gray-300 dark:border-gray-700/60"
+									>
+										<LogOut className="h-4 w-4" />
+										<span>Logout</span>
+									</Button>
+								</div>
+							) : (
+								<div className="space-y-2">
+									<Link to="/login" onClick={closeMenu} className="block">
+										<Button variant="outline" size="sm" className="w-full">
+											Sign In
+										</Button>
+									</Link>
+									<Link to="/sign" onClick={closeMenu} className="block">
+										<Button size="sm" className="w-full">
+											Sign Up
+										</Button>
+									</Link>
+								</div>
+							)}
 						</div>
 					</nav>
 				</div>

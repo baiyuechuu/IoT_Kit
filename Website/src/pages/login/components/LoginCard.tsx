@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ShineBorder } from "@/components/magicui/shine-border";
 import { auth } from "@/lib/supabase/utils";
-import { useState } from "react";
+import { validateEmail, validatePassword } from "@/lib/supabase/validation";
+import { useState, useEffect } from "react";
 
 export function LoginCard() {
 	const navigate = useNavigate();
@@ -14,21 +15,88 @@ export function LoginCard() {
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
+	const [successMessage, setSuccessMessage] = useState("");
+	const [fieldErrors, setFieldErrors] = useState<{
+		email?: string;
+		password?: string;
+	}>({});
 
-	// Redirect về trang đã được yêu cầu hoặc dashboard sau khi đăng nhập thành công
+	// Check for success message from signup redirect
+	useEffect(() => {
+		if (location.state?.message) {
+			setSuccessMessage(location.state.message);
+			// Clear the message from location state
+			window.history.replaceState({}, document.title);
+		}
+	}, [location.state]);
+
+	// Redirect to requested page or dashboard after successful login
 	const from = location.state?.from?.pathname || '/dashboard';
+
+	// Real-time field validation
+	const validateField = (fieldName: string, value: string) => {
+		let validation;
+		
+		switch (fieldName) {
+			case 'email':
+				validation = validateEmail(value);
+				break;
+			case 'password':
+				validation = validatePassword(value);
+				break;
+			default:
+				return;
+		}
+
+		setFieldErrors(prev => ({
+			...prev,
+			[fieldName]: validation.isValid ? undefined : validation.error
+		}));
+	};
 
 	const handleEmailLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setLoading(true);
 		setError("");
+		setFieldErrors({});
+
+		// Validate all fields before submission
+		const emailValidation = validateEmail(email);
+		const passwordValidation = validatePassword(password);
+
+		const errors: { email?: string; password?: string } = {};
+		
+		if (!emailValidation.isValid) {
+			errors.email = emailValidation.error;
+		}
+		if (!passwordValidation.isValid) {
+			errors.password = passwordValidation.error;
+		}
+
+		// If there are validation errors, show them and stop submission
+		if (Object.keys(errors).length > 0) {
+			setFieldErrors(errors);
+			setLoading(false);
+			return;
+		}
 
 		const result = await auth.signIn(email, password);
 		
 		if (result.success) {
 			navigate(from, { replace: true });
 		} else {
-			setError(result.error || "Đăng nhập thất bại");
+			// Enhanced error handling for common Supabase auth errors
+			let errorMessage = result.error || "Sign in failed";
+			
+			if (result.error?.includes('Invalid login credentials')) {
+				errorMessage = "Invalid email or password. If you just signed up, please check your email confirmation or disable email confirmation in Supabase dashboard.";
+			} else if (result.error?.includes('Email not confirmed')) {
+				errorMessage = "Please confirm your email before signing in. Check your inbox.";
+			} else if (result.error?.includes('Too many requests')) {
+				errorMessage = "Too many login attempts. Please try again in a few minutes.";
+			}
+			
+			setError(errorMessage);
 		}
 		
 		setLoading(false);
@@ -38,40 +106,69 @@ export function LoginCard() {
 		setLoading(true);
 		setError("");
 
+		// Check if email field has value to prevent cross-provider login
+		if (email.trim()) {
+			// Check if this email was registered with email/password
+			const providerCheck = await auth.checkEmailProvider(email.trim());
+			
+			if (providerCheck.exists && providerCheck.provider === 'email') {
+				setError("This email was registered with a password. Please sign in with email/password or use a different email for Google.");
+				setLoading(false);
+				return;
+			}
+		}
+
 		const result = await auth.signInWithGoogle();
 		
 		if (!result.success) {
-			setError(result.error || "Đăng nhập Google thất bại");
+			setError(result.error || "Google sign in failed");
 			setLoading(false);
 		}
-		// OAuth sẽ redirect tự động, không cần xử lý success case
+		// OAuth will redirect automatically, no need to handle success case
 	};
 
 	const handleGitHubLogin = async () => {
 		setLoading(true);
 		setError("");
 
+		// Check if email field has value to prevent cross-provider login
+		if (email.trim()) {
+			// Check if this email was registered with email/password
+			const providerCheck = await auth.checkEmailProvider(email.trim());
+			
+			if (providerCheck.exists && providerCheck.provider === 'email') {
+				setError("This email was registered with a password. Please sign in with email/password or use a different email for GitHub.");
+				setLoading(false);
+				return;
+			}
+		}
+
 		const result = await auth.signInWithGitHub();
 		
 		if (!result.success) {
-			setError(result.error || "Đăng nhập GitHub thất bại");
+			setError(result.error || "GitHub sign in failed");
 			setLoading(false);
 		}
-		// OAuth sẽ redirect tự động, không cần xử lý success case
+		// OAuth will redirect automatically, no need to handle success case
 	};
 
 	return (
-		<Card className="relative overflow-hidden max-w-[350px] w-full">
+		<Card className="relative overflow-hidden max-w-[400px] w-full">
 			<ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
 			<div className="w-full flex flex-col items-center justify-center gap-2 border-b pb-5">
-				<h2 className="text-2xl font-bold">Đăng nhập</h2>
+				<h2 className="text-2xl font-bold">Sign In</h2>
 				<p className="text-sm text-center text-gray-700 dark:text-gray-400">
-					Nhập thông tin đăng nhập để truy cập tài khoản
+					Enter your credentials to access your account
 				</p>
 			</div>
 			<CardContent>
 				<form onSubmit={handleEmailLogin}>
 					<div className="grid gap-4">
+						{successMessage && (
+							<div className="p-3 text-sm text-green-600 bg-green-50 border border-green-200 rounded-md dark:bg-green-900/20 dark:border-green-900 dark:text-green-400">
+								{successMessage}
+							</div>
+						)}
 						{error && (
 							<div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md dark:bg-red-900/20 dark:border-red-900 dark:text-red-400">
 								{error}
@@ -84,28 +181,43 @@ export function LoginCard() {
 								type="email"
 								placeholder="name@example.com"
 								value={email}
-								onChange={(e) => setEmail(e.target.value)}
+								onChange={(e) => {
+									setEmail(e.target.value);
+									validateField('email', e.target.value);
+								}}
 								required
 								disabled={loading}
+								className={fieldErrors.email ? 'border-red-500' : ''}
 							/>
+							{fieldErrors.email && (
+								<p className="text-[12px] text-red-600">{fieldErrors.email}</p>
+							)}
 						</div>
 						<div className="grid gap-2">
-							<Label htmlFor="password">Mật khẩu</Label>
+							<Label htmlFor="password">Password</Label>
 							<Input 
 								id="password" 
 								type="password" 
+								placeholder="Enter your password"
 								value={password}
-								onChange={(e) => setPassword(e.target.value)}
+								onChange={(e) => {
+									setPassword(e.target.value);
+									validateField('password', e.target.value);
+								}}
 								required 
 								disabled={loading}
+								className={fieldErrors.password ? 'border-red-500' : ''}
 							/>
+							{fieldErrors.password && (
+								<p className="text-[12px] text-red-600">{fieldErrors.password}</p>
+							)}
 						</div>
 						<Button 
 							type="submit" 
 							className="w-full" 
 							disabled={loading}
 						>
-							{loading ? "Đang đăng nhập..." : "Đăng nhập"}
+							{loading ? "Signing in..." : "Sign In"}
 						</Button>
 					</div>
 				</form>
@@ -169,13 +281,13 @@ export function LoginCard() {
 				</div>
 
 				<p className="text-xs text-center text-muted-foreground">
-					Chưa có tài khoản?{" "}
+					Don't have an account?{" "}
 					<button
 						type="button"
 						className="text-primary hover:underline"
 						onClick={() => navigate("/sign")}
 					>
-						Đăng ký
+						Sign up
 					</button>
 				</p>
 			</CardFooter>

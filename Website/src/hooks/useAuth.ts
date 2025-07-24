@@ -40,9 +40,25 @@ export function useAuth() {
     const { data: { subscription } } = auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session?.user?.email);
       
-      // Validate OAuth users when they sign in
+      // Validate OAuth users when they sign in and check for provider conflicts
       if (event === 'SIGNED_IN' && session?.user) {
-        if (session.user.app_metadata?.provider && session.user.app_metadata.provider !== 'email') {
+        const provider = session.user.app_metadata?.provider;
+        
+        if (provider && provider !== 'email') {
+          // Check if this email was already registered with email/password
+          const email = session.user.email;
+          if (email) {
+            // Try to find if user exists with different provider
+            // Note: This is a simplified check. In production, you might want to store provider info in profiles table
+            const userProvider = session.user.app_metadata?.providers || [provider];
+            
+            // If user has both email and oauth providers, it might be a conflict
+            if (userProvider.includes('email') && userProvider.includes(provider) && userProvider.length > 1) {
+              console.warn('Provider conflict detected for user:', email);
+              // You can choose to allow or deny this based on your business logic
+            }
+          }
+          
           const validation = await auth.validateOAuthUser(session.user);
           if (!validation.valid) {
             console.error('OAuth user validation failed:', validation.error);
