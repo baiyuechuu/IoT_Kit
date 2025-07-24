@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,17 +14,29 @@ import { BiCard } from "react-icons/bi";
 import { FiEdit3 } from "react-icons/fi";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { HiSparkles } from "react-icons/hi2";
-
-interface ComponentSection {
-	id: string;
-	title: string;
-	description: string;
-	icon: React.ReactNode;
-	component: React.ReactNode;
-}
+import type { ComponentSection } from "@/types";
 
 export default function UIKit() {
+	const [searchParams] = useSearchParams();
 	const [activeSection, setActiveSection] = useState<string>("buttons");
+
+	// Handle URL section parameter
+	useEffect(() => {
+		const sectionParam = searchParams.get('section');
+		if (sectionParam) {
+			setActiveSection(sectionParam);
+		}
+	}, [searchParams]);
+
+	// Listen for custom section change events from search
+	useEffect(() => {
+		const handleSectionChange = (event: CustomEvent) => {
+			setActiveSection(event.detail);
+		};
+
+		window.addEventListener('uikit-section-change', handleSectionChange as EventListener);
+		return () => window.removeEventListener('uikit-section-change', handleSectionChange as EventListener);
+	}, []);
 
 	const componentSections: ComponentSection[] = [
 		{
