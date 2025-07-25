@@ -1,15 +1,15 @@
 import { lazy } from "react";
 import MainLayout from "@/layouts/MainLayout";
 
-const UIKitPage = lazy(() => import("@/pages/uikit/UIKit"));
+const BlogPage = lazy(() => import("@/pages/blog/Blog"));
 
-export const uikitRoute = {
+export const blogRoute = {
 	path: "/uikit",
 	element: <MainLayout />,
 	children: [
 		{
 			index: true,
-			element: <UIKitPage />,
+			element: <BlogPage />,
 		},
 	],
 };

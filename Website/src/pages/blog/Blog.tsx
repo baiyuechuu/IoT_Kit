@@ -42,7 +42,7 @@ export default function UIKit() {
 	return (
 		<div className="h-screen bg-background flex">
 			{/* Sidebar - Fixed height with independent scroll */}
-			<div className="w-14 lg:w-64 border-r border-border h-screen overflow-y-auto lg:px-3 py-6 flex-shrink-0">
+			<div className="w-14 lg:w-64 border-r border-border h-screen overflow-y-auto py-6 flex-shrink-0">
 				<div className="pt-14">
 					{/* Group sections by category */}
 					{(() => {
@@ -65,16 +65,16 @@ export default function UIKit() {
 							if (!sections || sections.length === 0) return null;
 
 							return (
-								<div key={category} className="mb-6">
-									<h2 className="text-xl font-semibold mb-4 hidden lg:block">
+								<div key={category} className="mb-3">
+									<h2 className="text-xl font-semibold mb-3 hidden lg:block px-3">
 										{categoryTitles[category]}
 									</h2>
-									<div className="space-y-2">
+									<div className="space-y-1">
 										{sections.map((section) => (
 											<button
 												key={section.id}
 												onClick={() => setActiveSection(section.id)}
-												className={`w-fit lg:w-full flex items-center justify-center lg:justify-start lg:text-left px-3 mx-auto py-2 rounded-md transition-colors ${
+												className={`w-fit lg:w-full flex items-center justify-center lg:justify-start lg:text-left px-3 mx-auto py-2 transition-colors ${
 													activeSection === section.id
 														? "bg-primary text-primary-foreground"
 														: "hover:bg-muted"

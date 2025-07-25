@@ -29,7 +29,7 @@ export default function Home() {
 					<p className="py-1">🎉</p>
 				</div>
 				<h1 className="font-bitter font-bold text-5xl mb-5 text-center">
-					UI Kit for IoT & ESP32 Dashboard
+					Blog for IoT & ESP32 Dashboard
 				</h1>
 				<p className="font-geist text-xl text-center max-w-2xl text-gray-600 dark:text-gray-300">
 					Build <span className="text-indigo-400">real-time dashboards</span> to
