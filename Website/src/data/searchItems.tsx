@@ -30,13 +30,13 @@ const searchItems: SearchItem[] = [
 		keywords: ["about", "info", "information", "project", "team"],
 	},
 	{
-		id: "uikit",
-		title: "UI Kit",
-		description: "Collection of UI components and design system",
+		id: "blog",
+		title: "Blog",
+		description: "Documentation and blog posts",
 		type: "page",
-		path: "/uikit",
+		path: "/blog",
 		icon: <FaUikit className="w-6 h-6" />,
-		keywords: ["ui", "components", "design", "system", "kit"],
+		keywords: ["blog", "docs", "documentation", "posts"],
 	},
 	{
 		id: "dashboard",
@@ -72,7 +72,7 @@ const searchItems: SearchItem[] = [
 		title: "Test Documentation Page",
 		description: "A test page demonstrating various markdown elements and formatting options",
 		type: "documentation",
-		path: "/blog?section=test",
+		path: "/blog/test",
 		icon: <FaUikit className="w-6 h-6" />,
 		keywords: ["test", "documentation", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options"],
 	}

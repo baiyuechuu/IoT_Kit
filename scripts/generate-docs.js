@@ -173,54 +173,94 @@ function updateSearchItems(mdxFiles) {
 
   // Parse existing items and filter out documentation items
   const existingContent = searchItemsContent.substring(startMatch, endMatch);
-  const existingItems = existingContent.split('\n\t// Documentation')[0].replace(/,\s*$/, ''); // Keep everything before docs and remove trailing comma
+  
+  // Split content to separate page items from documentation items
+  const parts = existingContent.split('\n\t// Documentation');
+  const pageItems = parts[0].replace(/const searchItems: SearchItem\[\] = \[/, '').trim();
+  
+  // Get existing documentation filenames to avoid duplicates
+  const existingDocItems = parts.length > 1 ? parts[1] : '';
+  const existingDocFilenames = new Set();
+  
+  // Extract existing documentation filenames from the path
+  const docPathRegex = /path: "\/blog\/([^"]+)"/g;
+  let match;
+  while ((match = docPathRegex.exec(existingDocItems)) !== null) {
+    existingDocFilenames.add(match[1]);
+  }
 
-  // Generate new documentation items
-  const docItems = mdxFiles.map(file => `\t// Documentation - ${file.title}
+  // Filter out MDX files that already exist in search items
+  const newMdxFiles = mdxFiles.filter(file => !existingDocFilenames.has(file.filename));
+
+  if (newMdxFiles.length === 0) {
+    console.log('No new MDX files to add to search items');
+    return;
+  }
+
+  // Generate new documentation items with new URL structure
+  const newDocItems = newMdxFiles.map(file => `\t// Documentation - ${file.title}
 \t{
 \t\tid: "${file.filename}-docs",
 \t\ttitle: "${file.title}",
 \t\tdescription: "${file.description}",
 \t\ttype: "documentation",
-\t\tpath: "/blog?section=${file.filename}",
+\t\tpath: "/blog/${file.filename}",
 \t\ticon: <FaUikit className="w-6 h-6" />,
 \t\tkeywords: [${file.keywords.map(k => `"${k}"`).join(', ')}],
 \t}`).join(',\n');
 
   // Combine everything
-  const existingItemsClean = existingItems.replace(/const searchItems: SearchItem\[\] = \[/, '').trim();
-  const needsComma = existingItemsClean && docItems.length > 0;
+  const needsComma = pageItems && (existingDocItems || newDocItems.length > 0);
+  const hasExistingDocs = existingDocItems && existingDocItems.trim().length > 0;
+  const hasNewDocs = newDocItems.length > 0;
   
-  const newContent = `${beforeArray}const searchItems: SearchItem[] = [
-${existingItemsClean}${needsComma ? ',' : ''}
-${docItems.length > 0 ? '\t// Documentation\n' + docItems : ''}
-${afterArray}`;
+  let newContent = `${beforeArray}const searchItems: SearchItem[] = [
+${pageItems}${needsComma ? ',' : ''}`;
+
+  if (hasExistingDocs) {
+    newContent += `\n\t// Documentation\n${existingDocItems.trim()}`;
+  }
+  
+  if (hasNewDocs) {
+    if (hasExistingDocs) {
+      newContent += ',';
+    }
+    newContent += `\n\t// Documentation\n${newDocItems}`;
+  }
+
+  newContent += `\n${afterArray}`;
 
   fs.writeFileSync(SEARCH_ITEMS_FILE, newContent);
+  
+  console.log(`Added ${newMdxFiles.length} new documentation items to search`);
+  newMdxFiles.forEach(file => {
+    console.log(`  - ${file.title} (/blog/${file.filename})`);
+  });
 }
 
 // Main function
 function main() {
-  console.log('Scanning MDX files...');
+  console.log('🔍 Scanning MDX files...');
   const mdxFiles = scanMDXFiles();
-  console.log(`Found ${mdxFiles.length} MDX files`);
+  console.log(`📁 Found ${mdxFiles.length} MDX files`);
 
   if (mdxFiles.length === 0) {
-    console.log('No MDX files found, skipping generation');
+    console.log('❌ No MDX files found, skipping generation');
     return;
   }
 
-  console.log('Generating index.tsx...');
+  console.log('📝 Generating index.tsx...');
   const indexContent = generateIndexContent(mdxFiles);
   fs.writeFileSync(INDEX_FILE, indexContent);
+  console.log('✅ Updated index.tsx with component sections');
 
-  console.log('Updating searchItems.tsx...');
+  console.log('🔍 Updating searchItems.tsx...');
   updateSearchItems(mdxFiles);
 
-  console.log('Documentation generation complete!');
-  console.log('Generated entries for:');
+  console.log('🎉 Documentation generation complete!');
+  console.log('📋 Generated entries for:');
   mdxFiles.forEach(file => {
-    console.log(`  - ${file.title} (${file.filename}.mdx)`);
+    console.log(`  - ${file.title} (${file.filename}.mdx) → /blog/${file.filename}`);
   });
 }
 

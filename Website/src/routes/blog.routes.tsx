@@ -11,5 +11,9 @@ export const blogRoute = {
 			index: true,
 			element: <BlogPage />,
 		},
+		{
+			path: ":section",
+			element: <BlogPage />,
+		},
 	],
 };
