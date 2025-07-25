@@ -1,6 +1,6 @@
 import { lazy } from "react";
 
-const TestDocs = lazy(() => import("../docs/test.mdx"));
+const TestDocs = lazy(() => import("./docs/test.mdx"));
 
 export interface ComponentSection {
 	id: string;
