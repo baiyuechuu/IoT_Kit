@@ -2,7 +2,7 @@ export interface SearchItem {
 	id: string;
 	title: string;
 	description: string;
-	type: "page" | "component";
+	type: "page" | "component" | "documentation";
 	path: string;
 	icon: React.ReactNode;
 	keywords: string[];

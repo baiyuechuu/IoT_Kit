@@ -1,6 +1,7 @@
 import { BiSolidQuoteRight } from "react-icons/bi";
 import CodeBlock from "./codeblock_v3";
 import type { ReactNode, ReactElement, HTMLAttributes } from 'react';
+import { DocumentHeader } from "./document-header";
 
 type CodeProps = {
   children: ReactNode;
@@ -140,4 +141,5 @@ export const mdxComponents = {
 			</pre>
 		);
 	},
+	DocumentHeader,
 };

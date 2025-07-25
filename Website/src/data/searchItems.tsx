@@ -1,15 +1,8 @@
-import { RiRadioButtonLine } from "react-icons/ri";
-import { BiCard } from "react-icons/bi";
-import { FiEdit3 } from "react-icons/fi";
-import { MdKeyboardArrowDown } from "react-icons/md";
-import { HiSparkles } from "react-icons/hi2";
 import {
 	FaHome,
 	FaInfoCircle,
 	FaUikit,
 	FaTachometerAlt,
-	FaEye,
-	FaEnvelope,
 	FaSignInAlt,
 	FaUserPlus,
 } from "react-icons/fa";
@@ -17,7 +10,7 @@ import {
 import type { SearchItem } from "@/types";
 // Define all searchable items
 const searchItems: SearchItem[] = [
-	// Pages
+// Pages
 	{
 		id: "home",
 		title: "Home",
@@ -55,24 +48,6 @@ const searchItems: SearchItem[] = [
 		keywords: ["dashboard", "user", "personal", "profile"],
 	},
 	{
-		id: "showcase",
-		title: "Showcase",
-		description: "Project showcase and portfolio",
-		type: "page",
-		path: "/showcase",
-		icon: <FaEye className="w-6 h-6" />,
-		keywords: ["showcase", "portfolio", "projects", "gallery"],
-	},
-	{
-		id: "contact",
-		title: "Contact",
-		description: "Get in touch with us",
-		type: "page",
-		path: "/contact",
-		icon: <FaEnvelope className="w-6 h-6" />,
-		keywords: ["contact", "reach", "touch", "message", "email"],
-	},
-	{
 		id: "login",
 		title: "Sign In",
 		description: "Login to your account",
@@ -90,71 +65,27 @@ const searchItems: SearchItem[] = [
 		icon: <FaUserPlus className="w-6 h-6" />,
 		keywords: ["signup", "register", "create", "account", "join"],
 	},
-	// UI Kit Components
+	// Documentation
+	// Documentation - MDX and Custom Code Blocks Setup Guide
 	{
-		id: "buttons-component",
-		title: "Buttons",
-		description: "Various button components with different styles and variants",
-		type: "component",
-		path: "/uikit?section=buttons",
-		icon: <RiRadioButtonLine className="w-6 h-6" />,
-		keywords: [
-			"button",
-			"click",
-			"action",
-			"primary",
-			"secondary",
-			"destructive",
-			"outline",
-			"ghost",
-			"rainbow",
-			"shiny",
-		],
+		id: "mdx-setup-docs",
+		title: "MDX and Custom Code Blocks Setup Guide",
+		description: "Comprehensive guide for setting up MDX (Markdown + JSX) with custom code blocks in your React + Vite project",
+		type: "documentation",
+		path: "/uikit?section=mdx-setup",
+		icon: <FaUikit className="w-6 h-6" />,
+		keywords: ["mdx", "custom", "code", "blocks", "setup", "guide", "comprehensive", "setting", "(markdown", "jsx)", "your", "react", "vite", "project", "mdx-setup"],
 	},
+	// Documentation - Test Documentation Page
 	{
-		id: "cards-component",
-		title: "Cards",
-		description: "Card components for displaying content in containers",
-		type: "component",
-		path: "/uikit?section=cards",
-		icon: <BiCard className="w-6 h-6" />,
-		keywords: ["card", "container", "content", "box", "panel"],
-	},
-	{
-		id: "inputs-component",
-		title: "Form Inputs",
-		description: "Input components for forms and user interaction",
-		type: "component",
-		path: "/uikit?section=inputs",
-		icon: <FiEdit3 className="w-6 h-6" />,
-		keywords: ["input", "form", "text", "email", "password", "number", "field"],
-	},
-	{
-		id: "dropdowns-component",
-		title: "Dropdown Menus",
-		description: "Dropdown components for navigation and selection",
-		type: "component",
-		path: "/uikit?section=dropdowns",
-		icon: <MdKeyboardArrowDown className="w-6 h-6" />,
-		keywords: ["dropdown", "menu", "select", "navigation", "options"],
-	},
-	{
-		id: "effects-component",
-		title: "Magic Effects",
-		description: "Special effect components with animations and styling",
-		type: "component",
-		path: "/uikit?section=effects",
-		icon: <HiSparkles className="w-6 h-6" />,
-		keywords: [
-			"effects",
-			"magic",
-			"animation",
-			"shine",
-			"border",
-			"rainbow",
-			"special",
-		],
-	},
+		id: "test-docs",
+		title: "Test Documentation Page",
+		description: "A test page demonstrating various markdown elements and formatting options",
+		type: "documentation",
+		path: "/uikit?section=test",
+		icon: <FaUikit className="w-6 h-6" />,
+		keywords: ["test", "documentation", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options"],
+	}
 ];
 
 export default searchItems;

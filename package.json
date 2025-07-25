@@ -1,0 +1,18 @@
+{
+  "name": "iot-kit-root",
+  "version": "1.0.0",
+  "description": "IoT Kit project root with automation scripts",
+  "private": true,
+  "scripts": {
+    "generate-docs": "node scripts/generate-docs.js",
+    "dev": "cd Website && npm run dev",
+    "build": "cd Website && npm run build",
+    "test-docs": "npm run generate-docs && echo 'Documentation generation completed successfully!'"
+  },
+  "keywords": ["iot", "documentation", "automation"],
+  "author": "IoT Kit Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 

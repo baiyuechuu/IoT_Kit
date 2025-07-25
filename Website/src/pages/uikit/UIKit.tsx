@@ -44,28 +44,54 @@ export default function UIKit() {
 			{/* Sidebar - Fixed height with independent scroll */}
 			<div className="w-14 lg:w-64 border-r border-border h-screen overflow-y-auto lg:px-3 py-6 flex-shrink-0">
 				<div className="pt-14">
-					<h2 className="text-xl font-semibold mb-4 hidden lg:block">
-						Components
-					</h2>
-					<div className="space-y-2">
-						{componentSections.map((section) => (
-							<button
-								key={section.id}
-								onClick={() => setActiveSection(section.id)}
-								className={`w-fit lg:w-full flex items-center justify-center lg:justify-start lg:text-left px-3 mx-auto py-2 rounded-md transition-colors ${
-									activeSection === section.id
-										? "bg-primary text-primary-foreground"
-										: "hover:bg-muted"
-								}`}
-								title={section.title}
-							>
-								<span className="lg:mr-3">
-									<RiCodeSSlashLine className="w-5 h-5" />
-								</span>
-								<span className="hidden lg:inline">{section.title}</span>
-							</button>
-						))}
-					</div>
+					{/* Group sections by category */}
+					{(() => {
+						const groupedSections = componentSections.reduce((acc, section) => {
+							if (!acc[section.category]) {
+								acc[section.category] = [];
+							}
+							acc[section.category].push(section);
+							return acc;
+						}, {} as Record<string, typeof componentSections>);
+
+						const categoryOrder = ["components", "docs"] as const;
+						const categoryTitles = {
+							components: "Components",
+							docs: "Docs"
+						};
+
+						return categoryOrder.map((category) => {
+							const sections = groupedSections[category];
+							if (!sections || sections.length === 0) return null;
+
+							return (
+								<div key={category} className="mb-6">
+									<h2 className="text-xl font-semibold mb-4 hidden lg:block">
+										{categoryTitles[category]}
+									</h2>
+									<div className="space-y-2">
+										{sections.map((section) => (
+											<button
+												key={section.id}
+												onClick={() => setActiveSection(section.id)}
+												className={`w-fit lg:w-full flex items-center justify-center lg:justify-start lg:text-left px-3 mx-auto py-2 rounded-md transition-colors ${
+													activeSection === section.id
+														? "bg-primary text-primary-foreground"
+														: "hover:bg-muted"
+												}`}
+												title={section.title}
+											>
+												<span className="lg:mr-3 lg:hidden">
+													<RiCodeSSlashLine className="w-5 h-5" />
+												</span>
+												<span className="hidden lg:inline">{section.title}</span>
+											</button>
+										))}
+									</div>
+								</div>
+							);
+						});
+					})()}
 				</div>
 			</div>
 
