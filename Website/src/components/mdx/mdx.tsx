@@ -135,7 +135,7 @@ export const mdxComponents = {
 	},
 	pre: ({ children }: PreProps) => {
 		return (
-			<pre className="bg-[#111827]  dark:bg-card px-4 rounded-lg overflow-x-auto shadow-xl">
+			<pre className="bg-[#111827]  dark:bg-[rgb(18,18,18)] backdrop-blur-lg px-4 rounded-lg overflow-x-auto shadow-xl">
 				{children}
 			</pre>
 		);
