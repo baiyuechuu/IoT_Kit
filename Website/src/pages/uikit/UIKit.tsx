@@ -1,6 +1,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "react-router-dom";
 import { componentSections } from "./components";
+import { RiCodeSSlashLine } from "react-icons/ri";
 
 export default function UIKit() {
 	const [searchParams] = useSearchParams();
@@ -41,7 +42,7 @@ export default function UIKit() {
 	return (
 		<div className="h-screen bg-background flex">
 			{/* Sidebar - Fixed height with independent scroll */}
-			<div className="w-16 lg:w-64 border-r border-border h-screen overflow-y-auto px-2 lg:px-4 py-6 flex-shrink-0">
+			<div className="w-14 lg:w-64 border-r border-border h-screen overflow-y-auto lg:px-3 py-6 flex-shrink-0">
 				<div className="pt-14">
 					<h2 className="text-xl font-semibold mb-4 hidden lg:block">
 						Components
@@ -51,14 +52,16 @@ export default function UIKit() {
 							<button
 								key={section.id}
 								onClick={() => setActiveSection(section.id)}
-								className={`w-full flex items-center justify-center lg:justify-start lg:text-left px-2 lg:px-3 py-2 rounded-md transition-colors ${
+								className={`w-fit lg:w-full flex items-center justify-center lg:justify-start lg:text-left px-3 mx-auto py-2 rounded-md transition-colors ${
 									activeSection === section.id
 										? "bg-primary text-primary-foreground"
 										: "hover:bg-muted"
 								}`}
 								title={section.title}
 							>
-								<span className="lg:mr-3">{section.icon}</span>
+								<span className="lg:mr-3">
+									<RiCodeSSlashLine className="w-5 h-5" />
+								</span>
 								<span className="hidden lg:inline">{section.title}</span>
 							</button>
 						))}
