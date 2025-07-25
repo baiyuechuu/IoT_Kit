@@ -64,7 +64,7 @@ const searchItems: SearchItem[] = [
 		path: "/sign",
 		icon: <FaUserPlus className="w-6 h-6" />,
 		keywords: ["signup", "register", "create", "account", "join"],
-	},
+	},,
 	// Documentation
 	// Documentation - Test Documentation Page
 	{
@@ -75,6 +75,16 @@ const searchItems: SearchItem[] = [
 		path: "/blog/test",
 		icon: <FaUikit className="w-6 h-6" />,
 		keywords: ["test", "documentation", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options"],
+	},
+	// Documentation - Test Documentation Page
+	{
+		id: "test_gen-docs",
+		title: "Test Documentation Page",
+		description: "A test page demonstrating various markdown elements and formatting options",
+		type: "documentation",
+		path: "/blog/test_gen",
+		icon: <FaUikit className="w-6 h-6" />,
+		keywords: ["test", "documentation", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options", "test_gen"],
 	}
 ];
 
