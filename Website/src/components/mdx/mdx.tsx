@@ -1,5 +1,5 @@
 import { BiSolidQuoteRight } from "react-icons/bi";
-import CodeBlock from "./codeblock";
+import CodeBlock from "./codeblock_v3";
 import type { ReactNode, ReactElement, HTMLAttributes } from 'react';
 
 type CodeProps = {
@@ -127,19 +127,15 @@ export const mdxComponents = {
 			);
 		}
 
-		// Inline code cũng responsive với theme
 		return (
-			<code className={`px-2 py-1 rounded text-sm font-mono border`} {...props}>
+			<code className={`px-2 pt-1 rounded text-sm font-mono border`} {...props}>
 				{children}
 			</code>
 		);
 	},
 	pre: ({ children }: PreProps) => {
-		if (children?.props?.className?.startsWith("language-")) {
-			return children;
-		}
 		return (
-			<pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto">
+			<pre className="bg-[#111827]  dark:bg-card px-4 rounded-lg overflow-x-auto shadow-xl">
 				{children}
 			</pre>
 		);
