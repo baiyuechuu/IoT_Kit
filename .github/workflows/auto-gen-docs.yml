@@ -32,7 +32,8 @@ jobs:
     - name: Install dependencies
       run: |
         cd Website
-        npm ci
+        npm install -g bun 
+        bun install
     
     - name: Run documentation generation script
       run: |
