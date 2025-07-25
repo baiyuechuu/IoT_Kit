@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { homeRoute } from "./home.routes";
 import { aboutRoute } from "./about.routes";
-// import { contactRoute } from "./contact.routes";
+import { contactRoute } from "./contact.routes";
 import { dashboardRoute } from "./dashboard.routes";
 import { blogRoute } from "./blog.routes";
 import { loginRoute } from "./login.routes";
@@ -12,7 +12,7 @@ import { notFoundRoute } from "./notfound.routes";
 export const routes = [
 	homeRoute,
 	aboutRoute,
-	// contactRoute,
+	contactRoute,
 	dashboardRoute,
 	blogRoute,
 	loginRoute,
