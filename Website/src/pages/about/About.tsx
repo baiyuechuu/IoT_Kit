@@ -57,7 +57,7 @@ export default function About() {
 					<div className="text-center mb-5">
 						<h2 className="text-3xl font-bold mb-4">Meet Our Team</h2>
 						<p className="text-lg text-muted-foreground">
-							The talented individuals behind this project
+							The individuals behind this project
 						</p>
 					</div>
 
@@ -111,7 +111,7 @@ export default function About() {
 									<img
 										src={member.avatar}
 										alt="thong"
-										className="rounded-lg w-40 h-40 shadow-md"
+										className="rounded-[5px] w-40 h-40 shadow-md ring-2 ring-secondary"
 									/>
 									<div className="w-[200px] p-3 flex flex-col items-center justify-center relative">
 										<h2 className="font-bitcnt text-[17px]">{member.name}</h2>

@@ -20,8 +20,8 @@ export function Navbar() {
 		{ name: "About", path: "/about" },
 		{ name: "UI Kit", path: "/uikit" },
 		{ name: "Dashboard", path: "/dashboard" },
-		{ name: "Showcase", path: "/showcase" },
-		{ name: "Contact", path: "/contact" },
+		// { name: "Showcase", path: "/showcase" },
+		// { name: "Contact", path: "/contact" },
 	];
 
 	const isActive = (path: string) => {
@@ -60,7 +60,7 @@ export function Navbar() {
 					</div>
 
 					{/* Desktop Navigation */}
-					<nav className="hidden md:flex items-center gap-8">
+					<nav className="hidden md:flex items-center gap-3">
 						<ul className="flex items-center gap-5">
 							{navItems.map((item) => (
 								<li key={item.name}>
