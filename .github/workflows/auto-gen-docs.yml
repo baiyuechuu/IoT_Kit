@@ -30,7 +30,7 @@ jobs:
           npm install
       - name: Run documentation generation script
         run: |
-          cd Website/scripts
+          cd ../scripts
           npm run generate-docs.js
       - name: Check for changes
         id: verify-changed-files
