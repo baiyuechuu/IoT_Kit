@@ -121,7 +121,7 @@ function scanMDXFiles() {
 // Function to generate index.tsx content
 function generateIndexContent(mdxFiles) {
   const imports = mdxFiles.map(file =>
-    `const ${file.componentName} = lazy(() => import("../docs/${file.filename}.mdx"));`
+    `const ${file.componentName} = lazy(() => import("./docs/${file.filename}.mdx"));`
   ).join('\n');
 
   const sections = mdxFiles.map(file => `\t{
