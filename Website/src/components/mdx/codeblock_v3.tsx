@@ -11,7 +11,6 @@ type CodeBlockProps = {
 const CodeBlock = ({ children, className }: CodeBlockProps) => {
 	const [html, setHtml] = useState<string>("");
 	const [copied, setCopied] = useState(false);
-
 	const language = className?.replace("language-", "") || "text";
 	const code = typeof children === "string" ? children.trim() : "";
 
@@ -40,10 +39,15 @@ const CodeBlock = ({ children, className }: CodeBlockProps) => {
 
 	return html ? (
 		<div className="my-3 relative group">
+			{/* Language Label */}
+			<div className="absolute top-0 left-0 text-xs text-slate-300">
+				{language.toUpperCase()}
+			</div>
+			
 			{/* Copy Button */}
 			<button
 				onClick={copyToClipboard}
-				className="absolute top-0 right-0 z-10 px-2 py-1 text-xs bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white rounded border border-slate-600 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center gap-1"
+				className="absolute top-0 right-0 z-10 px-2 py-1 text-xs bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white rounded-sm border border-slate-600 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center gap-1"
 				title="Copy code"
 			>
 				{copied ? (
@@ -67,10 +71,10 @@ const CodeBlock = ({ children, className }: CodeBlockProps) => {
 					</>
 				)}
 			</button>
-
+			
 			{/* Code Block */}
 			<div
-				className="[&_pre]:!bg-transparent [&_pre]:font-mono [&_pre]:text-sm [&_pre]:relative"
+				className="[&_pre]:!bg-transparent [&_pre]:font-mono [&_pre]:text-sm [&_pre]:relative [&_pre]:pt-6"
 				dangerouslySetInnerHTML={{ __html: html }}
 			/>
 		</div>
