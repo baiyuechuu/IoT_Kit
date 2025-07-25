@@ -21,7 +21,7 @@ export function Navbar() {
 		{ name: "Blog", path: "/uikit" },
 		{ name: "Dashboard", path: "/dashboard" },
 		// { name: "Showcase", path: "/showcase" },
-		// { name: "Contact", path: "/contact" },
+		{ name: "Contact", path: "/contact" },
 	];
 
 	const isActive = (path: string) => {
