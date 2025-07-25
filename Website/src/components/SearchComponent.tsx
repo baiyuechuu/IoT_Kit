@@ -117,15 +117,8 @@ export function SearchComponent({
 	};
 
 	const handleSelect = (item: SearchItem) => {
-		if (item.path.includes("?section=")) {
-			const [path, section] = item.path.split("?section=");
-			navigate(path);
-			setTimeout(() => {
-				window.dispatchEvent(new CustomEvent("uikit-section-change", { detail: section }));
-			}, 100);
-		} else {
-			navigate(item.path);
-		}
+		// Navigate directly to the path - no need for special handling since we're using URL paths now
+		navigate(item.path);
 		handleClose();
 	};
 

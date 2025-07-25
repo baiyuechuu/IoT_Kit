@@ -30,13 +30,13 @@ const searchItems: SearchItem[] = [
 		keywords: ["about", "info", "information", "project", "team"],
 	},
 	{
-		id: "uikit",
-		title: "UI Kit",
-		description: "Collection of UI components and design system",
+		id: "blog",
+		title: "Blog",
+		description: "Documentation and blog posts",
 		type: "page",
-		path: "/uikit",
+		path: "/blog",
 		icon: <FaUikit className="w-6 h-6" />,
-		keywords: ["ui", "components", "design", "system", "kit"],
+		keywords: ["blog", "docs", "documentation", "posts"],
 	},
 	{
 		id: "dashboard",
@@ -66,13 +66,23 @@ const searchItems: SearchItem[] = [
 		keywords: ["signup", "register", "create", "account", "join"],
 	},
 	// Documentation
+	// Documentation - Starting Write Your Content
+	{
+		id: "starting-write-your-content-docs",
+		title: "Starting Write Your Content",
+		description: "A test page  various markdown elements and formatting options",
+		type: "documentation",
+		path: "/blog/starting-write-your-content",
+		icon: <FaUikit className="w-6 h-6" />,
+		keywords: ["starting", "write", "your", "content", "test", "page", "various", "markdown", "elements", "formatting", "options", "starting-write-your-content"],
+	},
 	// Documentation - Test Documentation Page
 	{
-		id: "test-docs",
+		id: "test-documentation-page-docs",
 		title: "Test Documentation Page",
 		description: "A test page demonstrating various markdown elements and formatting options",
 		type: "documentation",
-		path: "/uikit?section=test",
+		path: "/blog/test-documentation-page",
 		icon: <FaUikit className="w-6 h-6" />,
 		keywords: ["test", "documentation", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options"],
 	}

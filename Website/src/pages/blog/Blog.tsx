@@ -1,24 +1,33 @@
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { componentSections } from "../../content";
 import { RiCodeSSlashLine } from "react-icons/ri";
 
 export default function Blog() {
-	const [searchParams] = useSearchParams();
-	const [activeSection, setActiveSection] = useState<string>("mdx-setup");
+	const { section } = useParams();
+	const navigate = useNavigate();
+	const [activeSection, setActiveSection] = useState<string>("test");
 
 	// Handle URL section parameter
 	useEffect(() => {
-		const sectionParam = searchParams.get("section");
-		if (sectionParam) {
-			setActiveSection(sectionParam);
+		if (section) {
+			setActiveSection(section);
+		} else {
+			// Default to first section if no section in URL
+			const firstSection = componentSections[0];
+			if (firstSection && firstSection.id !== activeSection) {
+				setActiveSection(firstSection.id);
+				navigate(`/blog/${firstSection.id}`, { replace: true });
+			}
 		}
-	}, [searchParams]);
+	}, [section, navigate]);
 
 	// Listen for custom section change events from search
 	useEffect(() => {
 		const handleSectionChange = (event: CustomEvent) => {
-			setActiveSection(event.detail);
+			const newSection = event.detail;
+			setActiveSection(newSection);
+			navigate(`/blog/${newSection}`);
 		};
 
 		window.addEventListener(
@@ -30,7 +39,7 @@ export default function Blog() {
 				"uikit-section-change",
 				handleSectionChange as EventListener,
 			);
-	}, []);
+	}, [navigate]);
 
 	// Get the active section data
 	const activeComponentSection = componentSections.find(
@@ -74,9 +83,9 @@ export default function Blog() {
 									</h2>
 									<div className="space-y-1">
 										{sections.map((section) => (
-											<button
+											<Link
 												key={section.id}
-												onClick={() => setActiveSection(section.id)}
+												to={`/blog/${section.id}`}
 												className={`w-fit lg:w-full flex items-center justify-center lg:justify-start lg:text-left px-3 mx-auto py-2 transition-colors ${
 													activeSection === section.id
 														? "bg-primary text-primary-foreground"
@@ -90,7 +99,7 @@ export default function Blog() {
 												<span className="hidden lg:inline">
 													{section.title}
 												</span>
-											</button>
+											</Link>
 										))}
 									</div>
 								</div>

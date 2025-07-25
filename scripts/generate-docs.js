@@ -6,6 +6,16 @@ const DOCS_DIR = path.join(__dirname, '../Website/src/content/docs');
 const INDEX_FILE = path.join(__dirname, '../Website/src/content/index.tsx');
 const SEARCH_ITEMS_FILE = path.join(__dirname, '../Website/src/data/searchItems.tsx');
 
+// Helper function to generate URL-friendly path from title
+function generatePathFromTitle(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+}
+
 // Helper function to parse YAML frontmatter
 function parseFrontmatter(content) {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n/;
@@ -124,13 +134,16 @@ function generateIndexContent(mdxFiles) {
     `const ${file.componentName} = lazy(() => import("./docs/${file.filename}.mdx"));`
   ).join('\n');
 
-  const sections = mdxFiles.map(file => `\t{
-\t\tid: "${file.filename}",
+  const sections = mdxFiles.map(file => {
+    const pathFromTitle = generatePathFromTitle(file.title);
+    return `\t{
+\t\tid: "${pathFromTitle}",
 \t\ttitle: "${file.title}",
 \t\tdescription: "${file.description}",
 \t\tcategory: "${file.category}",
 \t\tdocumentation: ${file.componentName},
-\t}`).join(',\n');
+\t}`;
+  }).join(',\n');
 
   return `import { lazy } from "react";
 
@@ -173,54 +186,195 @@ function updateSearchItems(mdxFiles) {
 
   // Parse existing items and filter out documentation items
   const existingContent = searchItemsContent.substring(startMatch, endMatch);
-  const existingItems = existingContent.split('\n\t// Documentation')[0].replace(/,\s*$/, ''); // Keep everything before docs and remove trailing comma
+  
+  // Split content to separate page items from documentation items
+  const parts = existingContent.split('\n\t// Documentation');
+  const pageItems = parts[0].replace(/const searchItems: SearchItem\[\] = \[/, '').trim();
+  
+  // Get existing documentation items and extract metadata
+  // Join all parts after the first split to handle multiple documentation sections
+  const existingDocItems = parts.length > 1 ? parts.slice(1).join('\n\t// Documentation') : '';
+  
+  const existingDocPaths = new Set();
+  const existingDocTitles = new Set();
+  const existingDocDescriptions = new Set();
+  
+  // Extract existing documentation metadata
+  const docPathRegex = /path: "\/blog\/([^"]+)"/g;
+  const docTitleRegex = /title: "([^"]+)"/g;
+  const docDescRegex = /description: "([^"]+)"/g;
+  
+  let match;
+  while ((match = docPathRegex.exec(existingDocItems)) !== null) {
+    existingDocPaths.add(match[1]);
+  }
+  
+  while ((match = docTitleRegex.exec(existingDocItems)) !== null) {
+    existingDocTitles.add(match[1]);
+  }
+  
+  while ((match = docDescRegex.exec(existingDocItems)) !== null) {
+    existingDocDescriptions.add(match[1]);
+  }
 
-  // Generate new documentation items
-  const docItems = mdxFiles.map(file => `\t// Documentation - ${file.title}
+  // Filter out MDX files that already exist in search items
+  const newMdxFiles = [];
+  const updatedMdxFiles = [];
+  
+  mdxFiles.forEach(file => {
+    // Normalize text for comparison (remove punctuation, extra spaces, etc.)
+    const normalizeText = (text) => text.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim();
+    
+    const normalizedFileTitle = normalizeText(file.title);
+    const normalizedFileDesc = normalizeText(file.description);
+    const pathFromTitle = generatePathFromTitle(file.title);
+    
+    const isDuplicate = existingDocPaths.has(pathFromTitle) || 
+                       Array.from(existingDocTitles).some(title => normalizeText(title) === normalizedFileTitle) ||
+                       Array.from(existingDocDescriptions).some(desc => normalizeText(desc) === normalizedFileDesc);
+    
+    if (isDuplicate) {
+      // Check if this is an update to an existing entry (same path but different content)
+      if (existingDocPaths.has(pathFromTitle)) {
+        console.log(`  🔄 Updating existing entry: ${file.title} (${pathFromTitle})`);
+        updatedMdxFiles.push(file);
+      } else {
+        console.log(`  ⚠️  Skipping duplicate: ${file.title} (${file.filename}.mdx)`);
+        if (Array.from(existingDocTitles).some(title => normalizeText(title) === normalizedFileTitle)) {
+          console.log(`     - Duplicate title: ${file.title}`);
+        }
+        if (Array.from(existingDocDescriptions).some(desc => normalizeText(desc) === normalizedFileDesc)) {
+          console.log(`     - Duplicate description: ${file.description}`);
+        }
+      }
+    } else {
+      newMdxFiles.push(file);
+    }
+  });
+
+  if (newMdxFiles.length === 0 && updatedMdxFiles.length === 0) {
+    console.log('No new or updated MDX files to process');
+    return;
+  }
+
+  // Generate new documentation items with new URL structure
+  const newDocItems = newMdxFiles.map(file => {
+    const pathFromTitle = generatePathFromTitle(file.title);
+    return `\t// Documentation - ${file.title}
 \t{
-\t\tid: "${file.filename}-docs",
+\t\tid: "${pathFromTitle}-docs",
 \t\ttitle: "${file.title}",
 \t\tdescription: "${file.description}",
 \t\ttype: "documentation",
-\t\tpath: "/uikit?section=${file.filename}",
+\t\tpath: "/blog/${pathFromTitle}",
 \t\ticon: <FaUikit className="w-6 h-6" />,
 \t\tkeywords: [${file.keywords.map(k => `"${k}"`).join(', ')}],
-\t}`).join(',\n');
+\t}`;
+  }).join(',\n');
 
-  // Combine everything
-  const existingItemsClean = existingItems.replace(/const searchItems: SearchItem\[\] = \[/, '').trim();
-  const needsComma = existingItemsClean && docItems.length > 0;
+  // Generate updated documentation items
+  const updatedDocItems = updatedMdxFiles.map(file => {
+    const pathFromTitle = generatePathFromTitle(file.title);
+    return `\t// Documentation - ${file.title}
+\t{
+\t\tid: "${pathFromTitle}-docs",
+\t\ttitle: "${file.title}",
+\t\tdescription: "${file.description}",
+\t\ttype: "documentation",
+\t\tpath: "/blog/${pathFromTitle}",
+\t\ticon: <FaUikit className="w-6 h-6" />,
+\t\tkeywords: [${file.keywords.map(k => `"${k}"`).join(', ')}],
+\t}`;
+  }).join(',\n');
+
+  // Clean up page items - remove trailing commas
+  const cleanPageItems = pageItems.replace(/,\s*$/, '');
   
-  const newContent = `${beforeArray}const searchItems: SearchItem[] = [
-${existingItemsClean}${needsComma ? ',' : ''}
-${docItems.length > 0 ? '\t// Documentation\n' + docItems : ''}
-${afterArray}`;
+  // Combine everything with proper comma handling
+  const hasPageItems = cleanPageItems && cleanPageItems.trim().length > 0;
+  const hasExistingDocs = existingDocItems && existingDocItems.trim().length > 0;
+  const hasNewDocs = newDocItems.length > 0;
+  const hasUpdatedDocs = updatedDocItems.length > 0;
+  
+  let newContent = `${beforeArray}const searchItems: SearchItem[] = [
+${hasPageItems ? cleanPageItems : ''}`;
+
+  // Add comma after page items if we have docs
+  if (hasPageItems && (hasExistingDocs || hasNewDocs || hasUpdatedDocs)) {
+    newContent += ',';
+  }
+
+  if (hasExistingDocs) {
+    // Instead of trying to replace individual entries, regenerate the entire documentation section
+    // This ensures we don't have duplicates and everything is up to date
+    const allDocFiles = [...newMdxFiles, ...updatedMdxFiles];
+    const allDocItems = allDocFiles.map(file => {
+      const pathFromTitle = generatePathFromTitle(file.title);
+      return `\t// Documentation - ${file.title}
+\t{
+\t\tid: "${pathFromTitle}-docs",
+\t\ttitle: "${file.title}",
+\t\tdescription: "${file.description}",
+\t\ttype: "documentation",
+\t\tpath: "/blog/${pathFromTitle}",
+\t\ticon: <FaUikit className="w-6 h-6" />,
+\t\tkeywords: [${file.keywords.map(k => `"${k}"`).join(', ')}],
+\t}`;
+    }).join(',\n');
+    
+    newContent += `\n\t// Documentation\n${allDocItems}`;
+  } else if (hasNewDocs) {
+    newContent += `\n\t// Documentation\n${newDocItems}`;
+  }
+
+  newContent += `\n${afterArray}`;
+
+  // Clean up any double commas that might have been created
+  newContent = newContent.replace(/,\s*,/g, ',');
+  newContent = newContent.replace(/,\s*\n\s*]/g, '\n]');
 
   fs.writeFileSync(SEARCH_ITEMS_FILE, newContent);
+  
+  if (newMdxFiles.length > 0) {
+    console.log(`Added ${newMdxFiles.length} new documentation items to search`);
+    newMdxFiles.forEach(file => {
+      const pathFromTitle = generatePathFromTitle(file.title);
+      console.log(`  - ${file.title} (/blog/${pathFromTitle})`);
+    });
+  }
+  
+  if (updatedMdxFiles.length > 0) {
+    console.log(`Updated ${updatedMdxFiles.length} existing documentation items`);
+    updatedMdxFiles.forEach(file => {
+      const pathFromTitle = generatePathFromTitle(file.title);
+      console.log(`  - ${file.title} (/blog/${pathFromTitle})`);
+    });
+  }
 }
 
 // Main function
 function main() {
-  console.log('Scanning MDX files...');
+  console.log('🔍 Scanning MDX files...');
   const mdxFiles = scanMDXFiles();
-  console.log(`Found ${mdxFiles.length} MDX files`);
+  console.log(`📁 Found ${mdxFiles.length} MDX files`);
 
   if (mdxFiles.length === 0) {
-    console.log('No MDX files found, skipping generation');
+    console.log('❌ No MDX files found, skipping generation');
     return;
   }
 
-  console.log('Generating index.tsx...');
+  console.log('📝 Generating index.tsx...');
   const indexContent = generateIndexContent(mdxFiles);
   fs.writeFileSync(INDEX_FILE, indexContent);
+  console.log('✅ Updated index.tsx with component sections');
 
-  console.log('Updating searchItems.tsx...');
+  console.log('🔍 Updating searchItems.tsx...');
   updateSearchItems(mdxFiles);
 
-  console.log('Documentation generation complete!');
-  console.log('Generated entries for:');
+  console.log('🎉 Documentation generation complete!');
+  console.log('📋 Generated entries for:');
   mdxFiles.forEach(file => {
-    console.log(`  - ${file.title} (${file.filename}.mdx)`);
+    console.log(`  - ${file.title} (${file.filename}.mdx) → /blog/${file.filename}`);
   });
 }
 

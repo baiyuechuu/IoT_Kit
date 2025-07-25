@@ -18,10 +18,10 @@ export function Navbar() {
 	const navItems = [
 		{ name: "Home", path: "/" },
 		{ name: "About", path: "/about" },
-		{ name: "Blog", path: "/uikit" },
+		{ name: "Blog", path: "/blog" },
 		{ name: "Dashboard", path: "/dashboard" },
 		// { name: "Showcase", path: "/showcase" },
-		// { name: "Contact", path: "/contact" },
+		{ name: "Contact", path: "/contact" },
 	];
 
 	const isActive = (path: string) => {
