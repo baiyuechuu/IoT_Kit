@@ -1,3 +1,5 @@
+import { BiLinkExternal, BiSolidQuoteRight } from "react-icons/bi";
+
 // MDX components that will be available in all MDX files
 export const mdxComponents = {
 	// Headings
@@ -23,7 +25,7 @@ export const mdxComponents = {
 	// Paragraphs and text
 	p: (props: any) => (
 		<p
-			className="leading-8 text-left text-lg text-muted-foreground"
+			className="leading-8 text-left text-lg text-muted-foreground my-2"
 			{...props}
 		/>
 	),
@@ -46,39 +48,54 @@ export const mdxComponents = {
 	// Links
 	a: (props: any) => (
 		<a
-			className="text-primary hover:text-blue-500 hover:underline font-medium transition-colors"
+			className="text-primary border-b border-indigo-400 hover:border-b-2 font-medium transition-colors duration-300"
 			{...props}
 		/>
 	),
 
 	// Blockquotes
 	blockquote: (props: any) => (
-		<blockquote
-			className="border-l-4 border-primary pl-6 italic mb-6 text-left text-lg bg-muted/20 py-4 rounded-r-lg"
-			{...props}
-		/>
+		<div className="relative overflow-hidden">
+			<blockquote
+				className="border border-border pl-6 italic mb-6 text-left text-lg bg-muted/20 py-4 rounded-lg"
+				{...props}
+			/>
+			<BiSolidQuoteRight
+				className="absolute -top-2 -right-2 text-gray-200 dark:text-gray-700/40 rotate-40"
+				size={60}
+			/>
+		</div>
 	),
 
 	// Tables
 	table: (props: any) => (
-		<div className="overflow-x-auto my-6 rounded-lg">
-			<table className="w-full text-left bg-card" {...props} />
+		<div className="overflow-x-auto my-6 rounded-md border border-border">
+			<table
+				className="w-full text-left bg-card border border-border table-fixed border-collapse rounded-md overflow-hidden"
+				{...props}
+			/>
 		</div>
 	),
+
 	th: (props: any) => (
 		<th
-			className="border-b border-border px-6 py-4 bg-muted/50 font-semibold text-left text-lg"
+			className="border border-border px-6 py-4 bg-muted/50 font-semibold text-left text-lg"
 			{...props}
 		/>
 	),
 	td: (props: any) => (
-		<td className="border-b border-border px-6 py-4 text-left" {...props} />
+		<td className="border border-border px-6 py-4 text-left" {...props} />
+	),
+
+	// Images
+	img: (props: any) => (
+		<img {...props} className="rounded-lg w-full mx-auto drama-shadow" />
 	),
 
 	// Enhanced callout component
 	Callout: ({ type = "info", children, ...props }: any) => (
 		<div
-			className={`py-3 px-5 rounded-xl border-2 text-left shadow-sm my-6 ${
+			className={`py-3 px-5 rounded-md border text-left shadow-sm my-6 relative ${
 				type === "warning"
 					? "bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-800"
 					: type === "error"
@@ -89,6 +106,17 @@ export const mdxComponents = {
 			}`}
 			{...props}
 		>
+			<div
+				className={`h-[80%] w-[4px] absolute left-1.5 top-1/2 -translate-y-1/2 rounded-md ${
+					type === "warning"
+						? "bg-yellow-500 dark:bg-yellow-900/20"
+						: type === "error"
+							? "bg-red-500 dark:bg-red-900/20"
+							: type === "success"
+								? "bg-green-500 dark:bg-green-900/20"
+								: "bg-blue-500 dark:bg-blue-900/20"
+				}`}
+			></div>
 			<div className="text-lg leading-relaxed">{children}</div>
 		</div>
 	),
