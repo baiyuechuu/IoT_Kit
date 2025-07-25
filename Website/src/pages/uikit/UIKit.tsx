@@ -69,7 +69,7 @@ export default function UIKit() {
 			{/* Main Content - Fixed height with independent scroll */}
 			<div className="flex-1 h-screen overflow-y-auto">
 				<div className="px-4 py-6 pt-20 max-w-4xl mx-auto">
-					<div className="wrapper z-10">
+					<div className="wrapper z-10 prose prose-neutral dark:prose-invert">
 						{DocumentationComponent ? (
 							<Suspense 
 								fallback={

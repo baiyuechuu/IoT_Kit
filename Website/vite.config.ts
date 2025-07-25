@@ -5,8 +5,7 @@ import { defineConfig } from "vite";
 import mdx from "@mdx-js/rollup";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypePrism from "rehype-prism-plus";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,11 +16,10 @@ export default defineConfig({
 			remarkPlugins: [remarkGfm],
 			rehypePlugins: [
 				rehypeHighlight,
-				rehypeSlug,
-				[rehypeAutolinkHeadings, { behavior: "wrap" }]
+        rehypePrism,
 			],
 			providerImportSource: "@mdx-js/react",
-		})
+		}),
 	],
 	resolve: {
 		alias: {
