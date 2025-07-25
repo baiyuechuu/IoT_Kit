@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 // Paths
-const DOCS_DIR = path.join(__dirname, '../Website/src/pages/uikit/docs');
-const INDEX_FILE = path.join(__dirname, '../Website/src/pages/uikit/components/index.tsx');
+const DOCS_DIR = path.join(__dirname, '../Website/src/pages/blog/docs');
+const INDEX_FILE = path.join(__dirname, '../Website/src/pages/blog/components/index.tsx');
 const SEARCH_ITEMS_FILE = path.join(__dirname, '../Website/src/data/searchItems.tsx');
 
 // Helper function to parse YAML frontmatter

@@ -66,16 +66,6 @@ const searchItems: SearchItem[] = [
 		keywords: ["signup", "register", "create", "account", "join"],
 	},
 	// Documentation
-	// Documentation - MDX and Custom Code Blocks Setup Guide
-	{
-		id: "mdx-setup-docs",
-		title: "MDX and Custom Code Blocks Setup Guide",
-		description: "Comprehensive guide for setting up MDX (Markdown + JSX) with custom code blocks in your React + Vite project",
-		type: "documentation",
-		path: "/uikit?section=mdx-setup",
-		icon: <FaUikit className="w-6 h-6" />,
-		keywords: ["mdx", "custom", "code", "blocks", "setup", "guide", "comprehensive", "setting", "(markdown", "jsx)", "your", "react", "vite", "project", "mdx-setup"],
-	},
 	// Documentation - Test Documentation Page
 	{
 		id: "test-docs",
