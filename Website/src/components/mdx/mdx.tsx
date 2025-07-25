@@ -63,7 +63,7 @@ export const mdxComponents = {
 	blockquote: (props: any) => (
 		<div className="relative overflow-hidden">
 			<blockquote
-				className="border border-border pl-6 italic mb-6 text-left text-lg bg-muted/20 py-4 rounded-lg"
+				className="border border-border pl-6 italic text-left text-lg bg-muted/20 rounded-lg leading-relaxed whitespace-pre-line"
 				{...props}
 			/>
 			<BiSolidQuoteRight
