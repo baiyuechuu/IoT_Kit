@@ -4,7 +4,7 @@ import { componentSections } from "./components";
 
 export default function UIKit() {
 	const [searchParams] = useSearchParams();
-	const [activeSection, setActiveSection] = useState<string>("example");
+	const [activeSection, setActiveSection] = useState<string>("mdx-setup");
 
 	// Handle URL section parameter
 	useEffect(() => {

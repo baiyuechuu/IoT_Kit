@@ -1,7 +1,8 @@
-import { RiRadioButtonLine, RiFileTextLine } from "react-icons/ri";
+import { RiRadioButtonLine, RiFileTextLine, RiCodeSSlashLine } from "react-icons/ri";
 import { lazy } from "react";
 
 const ExampleDocs = lazy(() => import("../docs/example.mdx"));
+const MDXSetupDocs = lazy(() => import("../docs/mdx-setup.mdx"));
 
 export interface ComponentSection {
     id: string;
@@ -13,6 +14,13 @@ export interface ComponentSection {
 }
 
 export const componentSections: ComponentSection[] = [
+    {
+        id: "mdx-setup",
+        title: "MDX Setup Guide",
+        description: "Complete guide for setting up MDX with custom code blocks and syntax highlighting",
+        icon: <RiCodeSSlashLine className="w-5 h-5" />,
+        documentation: MDXSetupDocs,
+    },
     {
         id: "example",
         title: "Example Article",

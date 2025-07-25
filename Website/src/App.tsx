@@ -3,7 +3,7 @@ import { MDXProvider } from "@mdx-js/react";
 import { RouterProvider } from "react-router-dom";
 import { router } from "@/routes";
 import { Suspense } from "react";
-import { mdxComponents } from "@/components/mdx/MDXComponents";
+import { mdxComponents } from "@/components/mdx/mdx";
 
 function App() {
     return (
