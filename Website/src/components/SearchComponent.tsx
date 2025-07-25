@@ -17,6 +17,9 @@ export function SearchComponent({
 	const searchRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 
+	// Add refs for each result item
+	const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
 	// Filter search results
 	const filteredItems = searchQuery.trim()
 		? searchItems.filter((item) => {
@@ -94,6 +97,13 @@ export function SearchComponent({
 		setSelectedIndex(0);
 	}, [searchQuery]);
 
+	// Scroll selected item into view when selectedIndex changes
+	useEffect(() => {
+		if (isOpen && itemRefs.current[selectedIndex]) {
+			itemRefs.current[selectedIndex]?.scrollIntoView({ block: "nearest" });
+		}
+	}, [selectedIndex, isOpen, filteredItems]);
+
 	const handleOpen = () => {
 		setIsOpen(true);
 		setTimeout(() => inputRef.current?.focus(), 100);
@@ -152,7 +162,7 @@ export function SearchComponent({
 						className="w-full max-w-2xl mx-4 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700/40"
 					>
 						{/* Search Input */}
-						<div className="p-4 border-b border-gray-200 dark:border-gray-700/40">
+						<div className="p-4 border-b border-gray-200 dark:border-gray-700/40 mb-1">
 							<div className="flex items-center gap-3">
 								<IoSearchOutline className="h-5 w-5 text-gray-400" />
 								<input
@@ -172,6 +182,7 @@ export function SearchComponent({
 								<button
 									key={item.id}
 									onClick={() => handleSelect(item)}
+									ref={el => { itemRefs.current[index] = el; }}
 									className={`w-full p-3 rounded-lg text-left transition-colors mb-1 ${
 										index === selectedIndex
 											? "bg-gray-50/30 dark:bg-gray-800/30 border border-gray-300 dark:border-gray-700/60"
@@ -201,7 +212,7 @@ export function SearchComponent({
 						</div>
 
 						{/* Footer */}
-						<div className="p-3 border-t border-gray-200 dark:border-gray-700/40 text-xs text-gray-500 dark:text-gray-400">
+						<div className="p-3 mt-1 border-t border-gray-200 dark:border-gray-700/40 text-xs text-gray-500 dark:text-gray-400">
 							<div className="flex items-center gap-4">
 								<div className="flex items-center gap-1">
 									<kbd className="px-1.5 py-0.5 rounded text-xs">
