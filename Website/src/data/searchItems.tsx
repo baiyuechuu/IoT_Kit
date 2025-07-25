@@ -66,16 +66,6 @@ const searchItems: SearchItem[] = [
 		keywords: ["signup", "register", "create", "account", "join"],
 	},
 	// Documentation
-	// Documentation - Dev Hardware Documentation Page
-	{
-		id: "dev_hw-docs",
-		title: "Dev Hardware Documentation Page",
-		description: "A test page demonstrating various markdown elements and formatting options",
-		type: "documentation",
-		path: "/uikit?section=dev_hw",
-		icon: <FaUikit className="w-6 h-6" />,
-		keywords: ["dev", "hardware", "documentation", "page", "test", "demonstrating", "various", "markdown", "elements", "formatting", "options", "dev_hw"],
-	},
 	// Documentation - Test Documentation Page
 	{
 		id: "test-docs",

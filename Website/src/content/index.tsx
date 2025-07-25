@@ -1,3 +1,7 @@
+import { lazy } from "react";
+
+const TestDocs = lazy(() => import("../docs/test.mdx"));
+
 export interface ComponentSection {
 	id: string;
 	title: string;
@@ -7,4 +11,12 @@ export interface ComponentSection {
 	documentation?: React.ComponentType;
 }
 
-export const componentSections: ComponentSection[] = [];
+export const componentSections: ComponentSection[] = [
+	{
+		id: "test",
+		title: "Test Documentation Page",
+		description: "A test page demonstrating various markdown elements and formatting options",
+		category: "components",
+		documentation: TestDocs,
+	},
+];
