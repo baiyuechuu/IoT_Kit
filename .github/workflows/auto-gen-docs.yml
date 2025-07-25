@@ -22,20 +22,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'bun'
-          cache-dependency-path: Website/bun.lockb
-      - name: Install Bun
-        run: |
-          curl -fsSL https://bun.sh/install | bash
-          echo "$HOME/.bun/bin" >> $GITHUB_PATH
-      - name: Install dependencies with Bun
+          cache: 'npm'
+          cache-dependency-path: Website/package-lock.json
+      - name: Install dependencies
         run: |
           cd Website
-          bun install
+          npm install
       - name: Run documentation generation script
         run: |
           cd Website/scripts
-          bun run generate-docs.js
+          npm run generate-docs.js
       - name: Check for changes
         id: verify-changed-files
         run: |
