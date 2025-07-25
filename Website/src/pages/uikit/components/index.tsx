@@ -24,7 +24,7 @@ export const componentSections: ComponentSection[] = [
 		id: "test",
 		title: "Test Documentation Page",
 		description: "A test page demonstrating various markdown elements and formatting options",
-		category: "docs",
+		category: "components",
 		documentation: TestDocs,
 	},
 ];
