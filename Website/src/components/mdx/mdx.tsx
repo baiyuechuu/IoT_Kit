@@ -1,4 +1,44 @@
-import { BiLinkExternal, BiSolidQuoteRight } from "react-icons/bi";
+import { BiSolidQuoteRight } from "react-icons/bi";
+import {useState, useEffect} from "react";
+
+// components/CodeBlock.jsx
+// import { Highlight, themes } from "prism-react-renderer";
+//
+// const CodeBlock = ({ children, className, ...props }) => {
+// 	const language = className?.replace("language-", "") || "text";
+// 	const code = typeof children === "string" ? children.trim() : "";
+//
+// 	return (
+// 		<div className="my-4">
+// 			{" "}
+// 			{/* Wrapper để tránh nested p tag */}
+// 			<Highlight theme={themes.github} code={code} language={language}>
+// 				{({ className, style, tokens, getLineProps, getTokenProps }) => (
+// 					<pre
+// 						className={`${className} overflow-x-auto p-4 rounded-lg`}
+// 						style={style}
+// 					>
+// 						{tokens.map((line, lineIndex) => {
+// 							// ✅ Tách key ra khỏi spread props
+// 							const { key, ...lineProps } = getLineProps({ line });
+// 							return (
+// 								<div key={lineIndex} {...lineProps}>
+// 									{line.map((token, tokenIndex) => {
+// 										// ✅ Tách key ra khỏi spread props
+// 										const { key, ...tokenProps } = getTokenProps({ token });
+// 										return <span key={tokenIndex} {...tokenProps} />;
+// 									})}
+// 								</div>
+// 							);
+// 						})}
+// 					</pre>
+// 				)}
+// 			</Highlight>
+// 		</div>
+// 	);
+// };
+
+import CodeBlock from "./codeblock";
 
 // MDX components that will be available in all MDX files
 export const mdxComponents = {
@@ -120,4 +160,60 @@ export const mdxComponents = {
 			<div className="text-lg leading-relaxed">{children}</div>
 		</div>
 	),
+
+	code: ({ children, className, ...props }) => {
+		if (className) {
+			// Detect dark mode from document class or context
+			const isDark = document.documentElement.classList.contains("dark");
+			return (
+				<CodeBlock isDark={isDark} className={className}>
+					{children}
+				</CodeBlock>
+			);
+		}
+
+		const [isDark, setIsDark] = useState(
+			window.matchMedia("(prefers-color-scheme: dark)").matches,
+		);
+
+		useEffect(() => {
+			const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+			const handleChange = (e) => {
+				setIsDark(e.matches);
+			};
+
+			mediaQuery.addEventListener("change", handleChange);
+
+			return () => mediaQuery.removeEventListener("change", handleChange);
+		}, []);
+
+		// Inline code cũng responsive với theme
+		return (
+			<code
+				className={`px-2 py-1 rounded text-sm font-mono border
+          ${
+						isDark
+							? "bg-slate-800 text-emerald-400 border-slate-600"
+							: "bg-slate-100 text-emerald-600 border-slate-300"
+					}`}
+				{...props}
+			>
+				{children}
+			</code>
+		);
+	},
+	// ✅ Override pre để tránh double wrapping
+	pre: ({ children }) => {
+		// Nếu children là code element, return trực tiếp children
+		if (children?.props?.className?.startsWith("language-")) {
+			return children;
+		}
+		// Nếu không, render pre bình thường
+		return (
+			<pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto">
+				{children}
+			</pre>
+		);
+	},
 };
