@@ -1,0 +1,1 @@
+export declare function remarkFrontmatterHeader(options?: any): any; 

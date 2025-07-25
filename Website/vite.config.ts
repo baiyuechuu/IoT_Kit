@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 import mdx from "@mdx-js/rollup";
 import remarkGfm from "remark-gfm";
 import remarkFrontmatter from "remark-frontmatter";
-import { remarkFrontmatterHeader } from "./src/lib/remark-frontmatter-header.js";
+import { remarkFrontmatterHeader } from "./src/lib/remark-frontmatter-header";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -15,13 +15,9 @@ export default defineConfig({
 		mdx({
 			remarkPlugins: [
 				remarkGfm,
-				[remarkFrontmatter, ['yaml', 'toml']], // Hide frontmatter from rendering
-				remarkFrontmatterHeader, // Remove duplicate content
+				[remarkFrontmatter, ['yaml', 'toml']],
+				remarkFrontmatterHeader,
 			],
-			// rehypePlugins: [
-			// 	rehypeHighlight,
-			//      rehypePrism,
-			// ],
 			providerImportSource: "@mdx-js/react",
 		}),
 	],
