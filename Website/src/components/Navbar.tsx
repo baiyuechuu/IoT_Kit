@@ -61,7 +61,7 @@ export function Navbar() {
 
 					{/* Desktop Navigation */}
 					<nav className="hidden md:flex items-center gap-3">
-						<ul className="flex items-center gap-5">
+						<ul className="flex items-center gap-2">
 							{navItems.map((item) => (
 								<li key={item.name}>
 									<Link

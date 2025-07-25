@@ -90,7 +90,7 @@ export const mdxComponents = {
 		<td className="border border-border px-6 py-4 text-left" {...props} />
 	),
 	img: (props: any) => (
-		<img {...props} className="rounded-lg w-full mx-auto drama-shadow" />
+		<img {...props} className="rounded-lg w-full mx-auto mb-5 drama-shadow" />
 	),
 	Callout: ({ type = "info", children, ...props }: any) => (
 		<div

@@ -142,11 +142,7 @@ export default function UIKit() {
 										GitHub repository
 									</a>{" "}
 									and info about{" "}
-									<a
-										href="/about"
-										rel="noreferrer"
-										className="text-blue-500"
-									>
+									<a href="/about" rel="noreferrer" className="text-blue-500">
 										My team
 									</a>
 									.
