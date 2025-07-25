@@ -1,7 +1,7 @@
 import { lazy } from "react";
 
+const StartingWriteYourContentDocs = lazy(() => import("./docs/starting-write-your-content.mdx"));
 const TestDocs = lazy(() => import("./docs/test.mdx"));
-const Test_genDocs = lazy(() => import("./docs/test_gen.mdx"));
 
 export interface ComponentSection {
 	id: string;
@@ -14,17 +14,17 @@ export interface ComponentSection {
 
 export const componentSections: ComponentSection[] = [
 	{
-		id: "test",
+		id: "starting-write-your-content",
+		title: "Starting Write Your Content",
+		description: "A test page  various markdown elements and formatting options",
+		category: "components",
+		documentation: StartingWriteYourContentDocs,
+	},
+	{
+		id: "test-documentation-page",
 		title: "Test Documentation Page",
 		description: "A test page demonstrating various markdown elements and formatting options",
 		category: "components",
 		documentation: TestDocs,
-	},
-	{
-		id: "test_gen",
-		title: "Test Documentation Page",
-		description: "A test page demonstrating various markdown elements and formatting options",
-		category: "components",
-		documentation: Test_genDocs,
 	},
 ];

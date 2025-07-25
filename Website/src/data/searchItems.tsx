@@ -64,27 +64,27 @@ const searchItems: SearchItem[] = [
 		path: "/sign",
 		icon: <FaUserPlus className="w-6 h-6" />,
 		keywords: ["signup", "register", "create", "account", "join"],
-	},,
+	},
 	// Documentation
-	// Documentation - Test Documentation Page
+	// Documentation - Starting Write Your Content
 	{
-		id: "test-docs",
-		title: "Test Documentation Page",
-		description: "A test page demonstrating various markdown elements and formatting options",
+		id: "starting-write-your-content-docs",
+		title: "Starting Write Your Content",
+		description: "A test page  various markdown elements and formatting options",
 		type: "documentation",
-		path: "/blog/test",
+		path: "/blog/starting-write-your-content",
 		icon: <FaUikit className="w-6 h-6" />,
-		keywords: ["test", "documentation", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options"],
+		keywords: ["starting", "write", "your", "content", "test", "page", "various", "markdown", "elements", "formatting", "options", "starting-write-your-content"],
 	},
 	// Documentation - Test Documentation Page
 	{
-		id: "test_gen-docs",
+		id: "test-documentation-page-docs",
 		title: "Test Documentation Page",
 		description: "A test page demonstrating various markdown elements and formatting options",
 		type: "documentation",
-		path: "/blog/test_gen",
+		path: "/blog/test-documentation-page",
 		icon: <FaUikit className="w-6 h-6" />,
-		keywords: ["test", "documentation", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options", "test_gen"],
+		keywords: ["test", "documentation", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options"],
 	}
 ];
 
