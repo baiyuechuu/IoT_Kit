@@ -72,7 +72,7 @@ const searchItems: SearchItem[] = [
 		title: "Test Documentation Page",
 		description: "A test page demonstrating various markdown elements and formatting options",
 		type: "documentation",
-		path: "/uikit?section=test",
+		path: "/blog?section=test",
 		icon: <FaUikit className="w-6 h-6" />,
 		keywords: ["test", "documentation", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options"],
 	}

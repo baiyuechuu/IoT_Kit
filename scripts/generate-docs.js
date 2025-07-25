@@ -182,7 +182,7 @@ function updateSearchItems(mdxFiles) {
 \t\ttitle: "${file.title}",
 \t\tdescription: "${file.description}",
 \t\ttype: "documentation",
-\t\tpath: "/uikit?section=${file.filename}",
+\t\tpath: "/blog?section=${file.filename}",
 \t\ticon: <FaUikit className="w-6 h-6" />,
 \t\tkeywords: [${file.keywords.map(k => `"${k}"`).join(', ')}],
 \t}`).join(',\n');
