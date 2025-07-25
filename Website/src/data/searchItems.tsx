@@ -66,6 +66,16 @@ const searchItems: SearchItem[] = [
 		keywords: ["signup", "register", "create", "account", "join"],
 	},
 	// Documentation
+	// Documentation - New Component
+	{
+		id: "new-component-docs",
+		title: "New Component",
+		description: "A page demonstrating various markdown elements and formatting options",
+		type: "documentation",
+		path: "/blog/new-component",
+		icon: <FaUikit className="w-6 h-6" />,
+		keywords: ["new", "component", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options", "test-dev"],
+	},
 	// Documentation - Starting Write Your Content
 	{
 		id: "starting-write-your-content-docs",
