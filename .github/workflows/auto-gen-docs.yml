@@ -2,14 +2,14 @@ name: Auto Generate Documentation
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: main
     paths:
-      - 'Website/src/pages/uikit/docs/**/*.mdx'
+      - 'Website/src/pages/blog/docs/**/*.mdx'
   pull_request:
-    branches: [ main ]
+    branches: main
     paths:
-      - 'Website/src/pages/uikit/docs/**/*.mdx'
-  workflow_dispatch: # Allow manual trigger
+      - 'Website/src/pages/blog/docs/**/*.mdx'
+  workflow_dispatch:
 
 jobs:
   generate-docs:
@@ -42,10 +42,10 @@ jobs:
     - name: Check for changes
       id: verify-changed-files
       run: |
-        if [ -n "$(git status --porcelain)" ]; then
+        if ! git diff --quiet; then
           echo "changed=true" >> $GITHUB_OUTPUT
           echo "Files have been modified:"
-          git status --porcelain
+          git status
         else
           echo "changed=false" >> $GITHUB_OUTPUT
           echo "No files were modified"
@@ -56,7 +56,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add Website/src/pages/uikit/components/index.tsx
+        git add Website/src/pages/blog/components/index.tsx
         git add Website/src/data/searchItems.tsx
         git commit -m "docs: auto-generate documentation entries
         
@@ -81,7 +81,7 @@ jobs:
           This is an automated update to documentation entries based on changes to MDX files.
           
           **Changes:**
-          - Updated `Website/src/pages/uikit/components/index.tsx`
+          - Updated `Website/src/pages/blog/components/index.tsx`
           - Updated `Website/src/data/searchItems.tsx`
           
           **Triggered by:** PR #${{ github.event.number }}
