@@ -58,7 +58,7 @@ jobs:
         git config --local user.name "GitHub Action"
         git add Website/src/pages/uikit/components/index.tsx
         git add Website/src/data/searchItems.tsx
-        git commit -m "🤖 Auto-generate documentation entries
+        git commit -m "docs: auto-generate documentation entries
         
         - Updated component sections in index.tsx
         - Updated search items for new MDX documentation
@@ -72,7 +72,7 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: |
-          🤖 Auto-generate documentation entries
+          docs: auto-generate documentation entries
           
           - Updated component sections in index.tsx
           - Updated search items for new MDX documentation
