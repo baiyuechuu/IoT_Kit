@@ -34,7 +34,7 @@ export default function UIKit() {
 
 	// Get the active section data
 	const activeComponentSection = componentSections.find(
-		(section) => section.id === activeSection
+		(section) => section.id === activeSection,
 	);
 
 	const DocumentationComponent = activeComponentSection?.documentation;
@@ -46,18 +46,21 @@ export default function UIKit() {
 				<div className="pt-14">
 					{/* Group sections by category */}
 					{(() => {
-						const groupedSections = componentSections.reduce((acc, section) => {
-							if (!acc[section.category]) {
-								acc[section.category] = [];
-							}
-							acc[section.category].push(section);
-							return acc;
-						}, {} as Record<string, typeof componentSections>);
+						const groupedSections = componentSections.reduce(
+							(acc, section) => {
+								if (!acc[section.category]) {
+									acc[section.category] = [];
+								}
+								acc[section.category].push(section);
+								return acc;
+							},
+							{} as Record<string, typeof componentSections>,
+						);
 
 						const categoryOrder = ["components", "docs"] as const;
 						const categoryTitles = {
 							components: "Components",
-							docs: "Docs"
+							docs: "Docs",
 						};
 
 						return categoryOrder.map((category) => {
@@ -84,7 +87,9 @@ export default function UIKit() {
 												<span className="lg:mr-3 lg:hidden">
 													<RiCodeSSlashLine className="w-5 h-5" />
 												</span>
-												<span className="hidden lg:inline">{section.title}</span>
+												<span className="hidden lg:inline">
+													{section.title}
+												</span>
 											</button>
 										))}
 									</div>
@@ -100,10 +105,12 @@ export default function UIKit() {
 				<div className="px-4 py-6 pt-20 max-w-4xl mx-auto">
 					<div className="wrapper z-10 prose prose-neutral dark:prose-invert">
 						{DocumentationComponent ? (
-							<Suspense 
+							<Suspense
 								fallback={
 									<div className="flex items-center justify-center p-8">
-										<div className="text-muted-foreground">Loading documentation...</div>
+										<div className="text-muted-foreground">
+											Loading documentation...
+										</div>
 									</div>
 								}
 							>
@@ -112,13 +119,37 @@ export default function UIKit() {
 						) : (
 							<div className="text-center p-8">
 								<h2 className="text-2xl font-semibold mb-4">
-									{activeComponentSection?.title || "Component"}
+									{activeComponentSection?.title ||
+										"Welcome To The My Team Blog!"}
 								</h2>
 								<p className="text-muted-foreground mb-6">
-									{activeComponentSection?.description || "No description available."}
+									{activeComponentSection?.description || (
+										<span>
+											This is a blog about my team and my work. I'm writing
+											about my experiences, challenges, and successes. I hope
+											you enjoy reading it!
+										</span>
+									)}
 								</p>
 								<div className="text-muted-foreground">
-									Documentation coming soon...
+									Details about the blog can be found on the{" "}
+									<a
+										href="https://github.com/baiyuechuu/IoT_Kit"
+										target="_blank"
+										rel="noreferrer"
+										className="text-blue-500"
+									>
+										GitHub repository
+									</a>{" "}
+									and info about{" "}
+									<a
+										href="/about"
+										rel="noreferrer"
+										className="text-blue-500"
+									>
+										My team
+									</a>
+									.
 								</div>
 							</div>
 						)}
