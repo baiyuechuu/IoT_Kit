@@ -1,9 +1,9 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "react-router-dom";
-import { componentSections } from "./components";
+import { componentSections } from "../../content";
 import { RiCodeSSlashLine } from "react-icons/ri";
 
-export default function UIKit() {
+export default function Blog() {
 	const [searchParams] = useSearchParams();
 	const [activeSection, setActiveSection] = useState<string>("mdx-setup");
 
