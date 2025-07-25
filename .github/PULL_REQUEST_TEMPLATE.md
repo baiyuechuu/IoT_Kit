@@ -1,17 +1,17 @@
-## 📝 Description
+## Description
 
 <!-- Brief description of what this PR does -->
 
-## 🎯 Type of Change
+## Type of Change
 
-- [ ] 🆕 New component
-- [ ] 📖 Documentation update
-- [ ] 🐛 Bug fix
-- [ ] ♻️ Refactoring
-- [ ] ⚡ Performance improvement
-- [ ] 🎨 UI/UX improvement
+- [ ] New component
+- [ ] Documentation update
+- [ ] Bug fix
+- [ ] Refactoring
+- [ ] Performance improvement
+- [ ] UI/UX improvement
 
-## 🧪 Testing
+## Testing
 
 - [ ] Component works in development
 - [ ] Documentation renders correctly
@@ -20,26 +20,26 @@
 - [ ] Dark/light mode tested
 - [ ] Cross-browser testing done
 
-## 📷 Screenshots
+## Screenshots
 
 <!-- If applicable, add screenshots of your changes -->
 
-## 📋 Checklist
+## Checklist
 
 - [ ] Code follows project conventions
 - [ ] Documentation is complete and accurate
 - [ ] Component is properly exported
 - [ ] No console errors or warnings
 - [ ] All examples in documentation work
-- [ ] Component supports common variants (size, style, etc.)
+- [ ] Component supports common variants
 - [ ] Proper TypeScript types included
 - [ ] Component uses design system tokens
 
-## 🔗 Related Issues
+## Related Issues
 
 <!-- Link to any related issues -->
 Closes #
 
-## 📝 Additional Notes
+## Additional Notes
 
 <!-- Any additional information reviewers should know --> 
