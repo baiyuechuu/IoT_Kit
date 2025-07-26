@@ -1,9 +1,17 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Mainfest from "./components/Mainfest";
 import Waitlist from "./components/Waitlist";
+import DevPage from "./dev/DevPage";
 
 export default function Dashboard() {
+	const isDevelopment = import.meta.env.DEV;
 
+	// In development mode, show a blank development page
+	if (isDevelopment) {
+		return <DevPage />;
+	}
+
+	// In production mode, show the original dashboard with Waitlist
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
 			<div className="flex flex-col items-center justify-center">
