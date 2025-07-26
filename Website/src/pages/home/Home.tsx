@@ -1,6 +1,7 @@
 import { RainbowButton } from "@/components/magicui/rainbow-button";
 import { Link } from "react-router-dom";
 import TechSection from "./components/TechSection";
+import { AuroraText } from "@/components/magicui/aurora-text";
 
 export default function Home() {
 	return (
@@ -29,7 +30,7 @@ export default function Home() {
 					<p className="py-1">🎉</p>
 				</div>
 				<h1 className="font-bitter font-bold text-5xl mb-5 text-center">
-					Blog for IoT & ESP32 Dashboard
+					Blog for <AuroraText>IoT</AuroraText> & <AuroraText>ESP32</AuroraText> Dashboard
 				</h1>
 				<p className="font-geist text-xl text-center max-w-2xl text-gray-600 dark:text-gray-300">
 					Build <span className="text-indigo-400">real-time dashboards</span> to
