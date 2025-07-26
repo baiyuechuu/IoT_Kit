@@ -3,16 +3,6 @@ import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 export default function About() {
 	const teamMembers = [
 		{
-			name: "Nguyen Dinh Thong",
-			role: "Embedded Systems Engineer",
-			avatar: "/thong.jpeg",
-			github: "https://github.com/ichima28",
-			linkedin: "https://linkedin.com",
-			twitter: "https://twitter.com",
-			color:
-				"bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-700/60",
-		},
-		{
 			name: "Tran Duc Tai",
 			role: "Web Developer",
 			avatar: "/tai.jpg",
@@ -21,6 +11,16 @@ export default function About() {
 			twitter: "https://twitter.com",
 			color:
 				"bg-pink-100 dark:bg-pink-900/30 text-pink-800 dark:text-pink-300 border-pink-300 dark:border-pink-700/60",
+		},
+		{
+			name: "Nguyen Dinh Thong",
+			role: "Embedded Systems Engineer",
+			avatar: "/thong.jpeg",
+			github: "https://github.com/ichima28",
+			linkedin: "https://linkedin.com",
+			twitter: "https://twitter.com",
+			color:
+				"bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-700/60",
 		},
 		{
 			name: "Luu Phuc Khang",

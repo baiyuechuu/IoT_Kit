@@ -21,7 +21,7 @@ export default function Dashboard() {
 				<div className="max-w-6xl flex flex-col justify-center">
 					<Tabs
 						className="space-y-6"
-            defaultValue="waitlist"
+						defaultValue="waitlist"
 					>
 						<TabsList className="mx-auto rounded-full">
 							<TabsTrigger
