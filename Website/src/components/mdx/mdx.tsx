@@ -91,7 +91,7 @@ export const mdxComponents = {
 		/>
 	),
 	blockquote: (props: any) => (
-		<div className="relative overflow-hidden">
+		<div className="relative overflow-hidden my-6">
 			<blockquote
 				className="border border-border pl-6 italic text-left text-lg bg-muted/20 rounded-lg leading-relaxed whitespace-pre-line"
 				{...props}
@@ -167,7 +167,7 @@ export const mdxComponents = {
 	},
 	pre: ({ children }: PreProps) => {
 		return (
-			<pre className="bg-[#111827]  dark:bg-[rgb(18,18,18)] backdrop-blur-lg px-4 rounded-lg overflow-x-auto shadow-xl">
+			<pre className="bg-[#111827]  dark:bg-[rgb(18,18,18)] backdrop-blur-lg px-4 rounded-lg overflow-x-auto shadow-xl my-4">
 				{children}
 			</pre>
 		);

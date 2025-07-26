@@ -77,6 +77,11 @@ jobs:
           else
             git push --force-with-lease origin HEAD:main
           fi
+      - name: Trigger Vercel Deployment
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_${{ secrets.VERCEL_PROJECT_ID }}/$(echo ${{ github.ref }} | sed 's/refs\/heads\///')" \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}"
       - name: Create Pull Request (Fallback)
         if: failure() && steps.verify-changed-files.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v5
