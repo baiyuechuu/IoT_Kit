@@ -74,7 +74,7 @@ const searchItems: SearchItem[] = [
 		type: "documentation",
 		path: "/blog/test-documentation-page",
 		icon: <FaUikit className="w-6 h-6" />,
-		keywords: ["test", "documentation", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options"],
+		keywords: ["test", "documentation", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options", "manual"],
 	}
 ];
 
