@@ -25,4 +25,4 @@ dist-ssr
 *.sln
 *.sw?
 
-src/pages/dashboard/dev/*
+# src/pages/dashboard/dev/*

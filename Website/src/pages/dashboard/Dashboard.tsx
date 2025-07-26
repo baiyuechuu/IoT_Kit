@@ -1,17 +1,14 @@
-import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Mainfest from "./components/Mainfest";
 import Waitlist from "./components/Waitlist";
+// import DevPage from "./dev/DevPage";
 
 export default function Dashboard() {
-	const isDevelopment = import.meta.env.DEV;
-
-	// only work in development
-	if (isDevelopment) {
-		// @ts-ignore - Dynamic import for development only
-		const DevPage = React.lazy(() => import("./dev/DevPage"));
-		return <DevPage />;
-	}
+	// const isDevelopment = import.meta.env.DEV;
+	//
+	// if (isDevelopment) {
+	// 	return <DevPage />;
+	// }
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
@@ -28,7 +25,10 @@ export default function Dashboard() {
 
 				{/* Main Content */}
 				<div className="max-w-6xl flex flex-col justify-center">
-					<Tabs className="space-y-6" defaultValue="waitlist">
+					<Tabs
+						className="space-y-6 flex justify-center items-center"
+						defaultValue="waitlist"
+					>
 						<TabsList className="mx-auto rounded-full">
 							<TabsTrigger
 								value="waitlist"
@@ -46,13 +46,13 @@ export default function Dashboard() {
 
 						<TabsContent
 							value="waitlist"
-							className="space-y-6 w-[400px] h-[500px]"
+							className="space-y-6 w-[350px] md:w-[400px] h-[450px]"
 						>
 							<Waitlist />
 						</TabsContent>
 						<TabsContent
 							value="mainfest"
-							className="space-y-6 w-[400px] h-[500px]"
+							className="space-y-6 w-[350px] md:w-[400px] h-[450px]"
 						>
 							<Mainfest />
 						</TabsContent>

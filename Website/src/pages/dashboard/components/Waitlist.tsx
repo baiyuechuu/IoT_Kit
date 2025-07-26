@@ -24,7 +24,7 @@ export default function Waitlist() {
 		}
 	};
 	return (
-		<Card className="bg-card/50 backdrop-blur-sm border-border/50 w-[350px] h-[400px] flex flex-col items-center justify-center">
+		<Card className="bg-card/50 backdrop-blur-sm border-border/50 w-[350px] md:w-[400px] h-[450px] flex flex-col items-center justify-center">
 			<CardHeader className="text-center w-full">
 				<div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
 					<Bell className="w-8 h-8 text-primary" />

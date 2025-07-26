@@ -3,7 +3,7 @@ import { Zap, Users, BarChart3, Settings } from "lucide-react";
 
 export default function Mainfest() {
 	return (
-		<Card className="bg-card/50 backdrop-blur-sm border-border/50 w-[350px] h-[400px] flex flex-col items-center justify-center">
+		<Card className="bg-card/50 backdrop-blur-sm border-border/50 w-[350px] md:w-[400px] h-[450px] flex flex-col items-center justify-center">
 			{/* Features Preview */}
 			<div className="space-y-4 px-5">
 				<h3 className="text-lg font-semibold">What's Coming</h3>
