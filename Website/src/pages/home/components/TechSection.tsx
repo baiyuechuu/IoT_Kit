@@ -1,10 +1,12 @@
 export default function TechSection() {
 	return (
 		<div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 relative">
-      <div className="absolute w-[120%] h-px -top-3 left-1/2 -translate-x-1/2 border-t border-gray-600"></div>
-      <div className="absolute w-[120%] h-px -bottom-3 left-1/2 -translate-x-1/2 border-t border-gray-600"></div>
-      <div className="absolute h-[250%] w-px -left-3 top-1/2 -translate-y-1/2 border-l border-gray-600 hidden sm:block"></div>
-      <div className="absolute h-[250%] w-px -right-3 top-1/2 -translate-y-1/2 border-l border-gray-600 hidden sm:block"></div>
+			<div className="absolute w-[120%] h-px -top-3 left-1/2 -translate-x-1/2 border-t border-gray-600"></div>
+			<div className="absolute w-[120%] h-px -bottom-3 left-1/2 -translate-x-1/2 border-t border-gray-600"></div>
+			<div className="absolute h-[250%] w-px -left-3 top-1/2 -translate-y-1/2 border-l border-gray-600 hidden sm:block"></div>
+			<div className="absolute h-[250%] w-px -right-3 top-1/2 -translate-y-1/2 border-l border-gray-600 hidden sm:block"></div>
+
+			<div className="absolute w-[120%] h-px top-1/2 left-1/2 -translate-1/2 border-t border-gray-600 min-[485px]:hidden"></div>
 
 			<div>
 				<svg
@@ -76,9 +78,22 @@ export default function TechSection() {
 				</svg>
 			</div>
 
-      <div>
-      <svg className="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="none" d="M0 0h256v256H0z"/><path fill="none" stroke="currentColor" stroke-width="25" stroke-linecap="round" d="M208 128l-80 80M192 40L40 192"/></svg>
-      </div>
+			<div>
+				<svg
+					className="w-10 h-10"
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 256 256"
+				>
+					<path fill="none" d="M0 0h256v256H0z" />
+					<path
+						fill="none"
+						stroke="currentColor"
+						stroke-width="25"
+						stroke-linecap="round"
+						d="M208 128l-80 80M192 40L40 192"
+					/>
+				</svg>
+			</div>
 
 			<div>
 				<svg
@@ -117,9 +132,115 @@ export default function TechSection() {
 				</svg>
 			</div>
 
-      <div>
-      <svg className="w-10 h-10" viewBox="0 0 109 113" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9374L63.7076 110.284Z" fill="url(#supabase__paint0_linear)"/><path d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9374L63.7076 110.284Z" fill="url(#supabase__paint1_linear)" fill-opacity="0.2"/><path d="M45.317 2.07103C48.1765 -1.53037 53.9745 0.442937 54.0434 5.041L54.4849 72.2922H9.83113C1.64038 72.2922 -2.92775 62.8321 2.1655 56.4175L45.317 2.07103Z" fill="#3ECF8E"/><defs><linearGradient id="supabase__paint0_linear" x1="53.9738" y1="54.974" x2="94.1635" y2="71.8295" gradientUnits="userSpaceOnUse"><stop stop-color="#249361"/><stop offset="1" stop-color="#3ECF8E"/></linearGradient><linearGradient id="supabase__paint1_linear" x1="36.1558" y1="30.578" x2="54.4844" y2="65.0806" gradientUnits="userSpaceOnUse"><stop/><stop offset="1" stop-opacity="0"/></linearGradient></defs></svg>
-      </div>
+			<div>
+				<svg
+					className="w-10 h-10"
+					viewBox="0 0 109 113"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9374L63.7076 110.284Z"
+						fill="url(#supabase__paint0_linear)"
+					/>
+					<path
+						d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9374L63.7076 110.284Z"
+						fill="url(#supabase__paint1_linear)"
+						fill-opacity="0.2"
+					/>
+					<path
+						d="M45.317 2.07103C48.1765 -1.53037 53.9745 0.442937 54.0434 5.041L54.4849 72.2922H9.83113C1.64038 72.2922 -2.92775 62.8321 2.1655 56.4175L45.317 2.07103Z"
+						fill="#3ECF8E"
+					/>
+					<defs>
+						<linearGradient
+							id="supabase__paint0_linear"
+							x1="53.9738"
+							y1="54.974"
+							x2="94.1635"
+							y2="71.8295"
+							gradientUnits="userSpaceOnUse"
+						>
+							<stop stop-color="#249361" />
+							<stop offset="1" stop-color="#3ECF8E" />
+						</linearGradient>
+						<linearGradient
+							id="supabase__paint1_linear"
+							x1="36.1558"
+							y1="30.578"
+							x2="54.4844"
+							y2="65.0806"
+							gradientUnits="userSpaceOnUse"
+						>
+							<stop />
+							<stop offset="1" stop-opacity="0" />
+						</linearGradient>
+					</defs>
+				</svg>
+			</div>
+
+			<div>
+				<svg
+					viewBox="0 0 306 345"
+					xmlns="http://www.w3.org/2000/svg"
+					className="w-10 h-10"
+					fill="none"
+				>
+					<g clip-path="url(#c__a)">
+						<path
+							fill="#00599C"
+							d="M302.107 258.262c2.401-4.159 3.893-8.845 3.893-13.053V99.139c0-4.207-1.49-8.892-3.892-13.051L153 172.175l149.107 86.087Z"
+						/>
+						<path
+							fill="#004482"
+							d="m166.25 341.193 126.5-73.034c3.644-2.104 6.956-5.737 9.357-9.897L153 172.175 3.893 258.263c2.4 4.159 5.714 7.793 9.357 9.896l126.5 73.034c7.287 4.208 19.213 4.208 26.5 0Z"
+						/>
+						<path
+							fill="#659AD2"
+							d="M302.108 86.087c-2.402-4.16-5.715-7.793-9.358-9.897L166.25 3.156c-7.287-4.208-19.213-4.208-26.5 0L13.25 76.19C5.962 80.397 0 90.725 0 99.14v146.069c0 4.208 1.491 8.894 3.893 13.053L153 172.175l149.108-86.088Z"
+						/>
+						<path
+							fill="#fff"
+							d="M153 274.175c-56.243 0-102-45.757-102-102s45.757-102 102-102c36.292 0 70.139 19.53 88.331 50.968l-44.143 25.544c-9.105-15.736-26.038-25.512-44.188-25.512-28.122 0-51 22.878-51 51 0 28.121 22.878 51 51 51 18.152 0 35.085-9.776 44.191-25.515l44.143 25.543c-18.192 31.441-52.04 50.972-88.334 50.972Z"
+						/>
+					</g>
+					<defs>
+						<clipPath id="c__a">
+							<path fill="#fff" d="M0 0h306v344.35H0z" />
+						</clipPath>
+					</defs>
+				</svg>
+			</div>
+
+			<div>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					className="w-10 h-10"
+					preserveAspectRatio="xMidYMid"
+					viewBox="0 0 256 288"
+				>
+					<path
+						fill="#649AD2"
+						d="M255.987 84.59c-.002-4.837-1.037-9.112-3.13-12.781-2.054-3.608-5.133-6.632-9.261-9.023-34.08-19.651-68.195-39.242-102.264-58.913-9.185-5.303-18.09-5.11-27.208.27-13.565 8-81.48 46.91-101.719 58.632C4.071 67.6.015 74.984.013 84.58 0 124.101.013 163.62 0 203.141c0 4.73.993 8.923 2.993 12.537 2.056 3.717 5.177 6.824 9.401 9.269 20.24 11.722 88.164 50.63 101.726 58.631 9.121 5.382 18.027 5.575 27.215.27 34.07-19.672 68.186-39.262 102.272-58.913 4.224-2.444 7.345-5.553 9.401-9.267 1.997-3.614 2.992-7.806 2.992-12.539 0 0 0-79.018-.013-118.539"
+					/>
+					<path
+						fill="#004482"
+						d="m128.392 143.476-125.4 72.202c2.057 3.717 5.178 6.824 9.402 9.269 20.24 11.722 88.164 50.63 101.726 58.631 9.121 5.382 18.027 5.575 27.215.27 34.07-19.672 68.186-39.262 102.272-58.913 4.224-2.444 7.345-5.553 9.401-9.267l-124.616-72.192"
+					/>
+					<path
+						fill="#1A4674"
+						d="M91.25 164.863c7.297 12.738 21.014 21.33 36.75 21.33 15.833 0 29.628-8.7 36.888-21.576l-36.496-21.141-37.142 21.387"
+					/>
+					<path
+						fill="#01589C"
+						d="M255.987 84.59c-.002-4.837-1.037-9.112-3.13-12.781l-124.465 71.667 124.616 72.192c1.997-3.614 2.99-7.806 2.992-12.539 0 0 0-79.018-.013-118.539"
+					/>
+					<path
+						fill="#FFF"
+						d="M249.135 148.636h-9.738v9.74h-9.74v-9.74h-9.737V138.9h9.737v-9.738h9.74v9.738h9.738v9.737ZM128 58.847c31.135 0 58.358 16.74 73.17 41.709l.444.759-37.001 21.307c-7.333-12.609-20.978-21.094-36.613-21.094-23.38 0-42.333 18.953-42.333 42.332a42.13 42.13 0 0 0 5.583 21.003c7.297 12.738 21.014 21.33 36.75 21.33 15.659 0 29.325-8.51 36.647-21.153l.241-.423 36.947 21.406c-14.65 25.597-42.228 42.851-73.835 42.851-31.549 0-59.084-17.185-73.754-42.707-7.162-12.459-11.26-26.904-11.26-42.307 0-46.95 38.061-85.013 85.014-85.013Zm75.865 70.314v9.738h9.737v9.737h-9.737v9.74h-9.738v-9.74h-9.738V138.9h9.738v-9.738h9.738Z"
+					/>
+				</svg>
+			</div>
 		</div>
 	);
 }
