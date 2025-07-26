@@ -8,7 +8,7 @@
 		"build": "tsc -b && vite build",
 		"lint": "eslint .",
 		"preview": "vite preview",
-		"generate-docs": "node ../scripts/generate-docs.js"
+		"generate-docs": "node ../Scripts/generate-docs.js"
 	},
 	"dependencies": {
 		"@mdx-js/mdx": "^3.1.0",

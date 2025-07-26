@@ -4,9 +4,9 @@
 	"description": "IoT Kit project root with automation scripts",
 	"private": true,
 	"scripts": {
-		"generate-docs": "node scripts/generate-docs.js",
-		"dev": "cd Website && npm run dev",
-		"build": "cd Website && npm run build",
+		"generate-docs": "node Scripts/generate-docs.js",
+		"dev": "cd Website && bun run dev",
+		"build": "cd Website && bun run build",
 		"test-docs": "npm run generate-docs && echo 'Documentation generation completed successfully!'"
 	},
 	"keywords": [
