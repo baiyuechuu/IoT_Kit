@@ -173,4 +173,10 @@ export const mdxComponents = {
 		);
 	},
 	DocumentHeader,
+	hr: (props: any) => (
+		<hr
+			className="my-8 border-t border-border dark:border-border"
+			{...props}
+		/>
+	),
 };
