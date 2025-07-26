@@ -44,15 +44,13 @@ This is a code block:
 
 This is a link: [Example](https://example.com)
 
-This is a link with title: [Example](https://example.com "Example Title")
-
 This is a table:
 
 | Prop        | Type     | Default   | Description                                   |
 | ----------- | -------- | --------- | --------------------------------------------- |
-| `className` | `string` | `-`       | The class name to be applied to the component |
-| `boxColor`  | `string` | `#5046e6` | Color of the box overlaying the text          |
-| `duration`  | `number` | `0.5`     | Durations (seconds) of the animation          |
+| className | string | -       | The class name to be applied to the component |
+| boxColor  | string | `#5046e6` | Color of the box overlaying the text          |
+| duration  | number | 0.5     | Durations (seconds) of the animation          |
 
 This is a horizontal rule:
 
@@ -79,23 +77,6 @@ This is a callout:
 ## Code Block
 
 ```jsx
-import { useState } from "react";
-
-export default function App() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <div>
-      <h1>You clicked {count} times</h1>
-      <button onClick={() => setCount(count + 1)}>Click me</button>
-    </div>
-  );
-}
-```
-
-## Code Block with Language
-
-```tsx
 import { useState } from "react";
 
 export default function App() {
