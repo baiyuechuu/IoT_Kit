@@ -32,10 +32,20 @@ export default function About() {
 			color:
 				"bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border-purple-300 dark:border-purple-700/60",
 		},
+		{
+			name: "Bui Quang Tan",
+			role: "Embedded Systems Engineer",
+			avatar: "/tan.jpeg",
+			github: "https://github.com/buiTannn",
+			linkedin: "https://www.linkedin.com/in/tan-bui-quang-963682345/",
+			twitter: "https://twitter.com",
+			color:
+				"bg-yellow-100 dark:bg-yellow-900/30 text-green-800 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700/60",
+		},
 	];
 
 	return (
-		<div className="min-h-screen bg-background flex items-center justify-center">
+		<div className="min-h-screen bg-background flex justify-center md:pt-24">
 			{/* Background Effects */}
 			<div
 				className="fixed inset-0 z-0"
@@ -61,7 +71,7 @@ export default function About() {
 						</p>
 					</div>
 
-					<div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-fit">
+					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-8 w-full">
 						{teamMembers.map((member, index) => (
 							<div
 								key={index}
@@ -72,9 +82,7 @@ export default function About() {
 								>
 									{member.role}
 								</div>
-								<div
-									className="flex items-center justify-center p-2 border rounded-lg bg-background relative shadow-md overflow-hidden"
-								>
+								<div className="flex items-center justify-center p-2 border rounded-lg bg-background relative shadow-md overflow-hidden">
 									<div className="flex items-center gap-2 absolute bottom-0 right-0 border-t border-l rounded-tl-lg p-2 bg-background">
 										{member.github && (
 											<a
