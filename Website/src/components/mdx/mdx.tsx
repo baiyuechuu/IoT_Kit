@@ -16,6 +16,36 @@ type PreProps = {
   };
 };
 
+// Enhanced YouTube video embed component supporting both videoId and url
+function extractYouTubeId(url: string): string | null {
+  // Support various YouTube URL formats
+  const regex =
+    /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([\w-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
+
+const YouTube = ({ videoId, url, ...props }: { videoId?: string; url?: string }) => {
+  let id = videoId;
+  if (!id && url) {
+    id = extractYouTubeId(url) || undefined;
+  }
+  if (!id) {
+    return <div className="text-red-500">Invalid YouTube video link</div>;
+  }
+  return (
+    <div className="my-6 w-full aspect-video mx-auto rounded-lg overflow-hidden shadow-lg">
+      <iframe
+        src={`https://www.youtube.com/embed/${id}`}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        className="w-full h-full"
+        {...props}
+      />
+    </div>
+  );
+};
+
 export const mdxComponents = {
 	h1: (props: any) => (
 		<h1
@@ -92,6 +122,7 @@ export const mdxComponents = {
 	img: (props: any) => (
 		<img {...props} className="rounded-lg w-full mx-auto mb-5 drama-shadow" />
 	),
+	YouTube, // Register the YouTube component for MDX
 	Callout: ({ type = "info", children, ...props }: any) => (
 		<div
 			className={`py-3 px-5 rounded-md border text-left shadow-sm my-6 relative ${
