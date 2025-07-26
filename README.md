@@ -1,7 +1,3 @@
-Here is the corrected and improved version of your text:
-
----
-
 # IoT_Kit
 
 A project for an IoT dashboard featuring various UI components such as charts, tables, and more. It also includes multiple hardware use cases that connect to the dashboard.
