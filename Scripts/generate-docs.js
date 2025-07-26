@@ -108,7 +108,7 @@ function scanMDXFiles() {
       const title = frontmatter?.title || extractTitleFromMDX(markdownContent);
       const description = frontmatter?.description || extractDescriptionFromMDX(markdownContent);
       const type = frontmatter?.type || 'docs'; // Default to 'docs'
-      const category = type === 'component' ? 'components' : 'docs';
+      const category = frontmatter?.category || type; // Use type as category if category is not specified
       
       const keywords = generateKeywords(title, description, filename);
 
@@ -153,7 +153,7 @@ export interface ComponentSection {
 \tid: string;
 \ttitle: string;
 \tdescription: string;
-\tcategory: "components" | "docs";
+\tcategory: "components" | "docs" | "guide" | "tutorial" | "reference" | "example";
 \tcomponent?: React.ReactNode;
 \tdocumentation?: React.ComponentType;
 }
@@ -265,7 +265,7 @@ function updateSearchItems(mdxFiles) {
 \t\tid: "${pathFromTitle}-docs",
 \t\ttitle: "${file.title}",
 \t\tdescription: "${file.description}",
-\t\ttype: "documentation",
+\t\ttype: "${file.type}",
 \t\tpath: "/blog/${pathFromTitle}",
 \t\ticon: <FaUikit className="w-6 h-6" />,
 \t\tkeywords: [${file.keywords.map(k => `"${k}"`).join(', ')}],
@@ -280,7 +280,7 @@ function updateSearchItems(mdxFiles) {
 \t\tid: "${pathFromTitle}-docs",
 \t\ttitle: "${file.title}",
 \t\tdescription: "${file.description}",
-\t\ttype: "documentation",
+\t\ttype: "${file.type}",
 \t\tpath: "/blog/${pathFromTitle}",
 \t\ticon: <FaUikit className="w-6 h-6" />,
 \t\tkeywords: [${file.keywords.map(k => `"${k}"`).join(', ')}],
@@ -315,7 +315,7 @@ ${hasPageItems ? cleanPageItems : ''}`;
 \t\tid: "${pathFromTitle}-docs",
 \t\ttitle: "${file.title}",
 \t\tdescription: "${file.description}",
-\t\ttype: "documentation",
+\t\ttype: "${file.type}",
 \t\tpath: "/blog/${pathFromTitle}",
 \t\ticon: <FaUikit className="w-6 h-6" />,
 \t\tkeywords: [${file.keywords.map(k => `"${k}"`).join(', ')}],

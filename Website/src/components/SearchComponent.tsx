@@ -122,10 +122,26 @@ export function SearchComponent({
 		handleClose();
 	};
 
-	const getTypeColor = (type: string) =>
-		type === "page"
-			? "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300"
-			: "bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300";
+	const getTypeColor = (type: string) => {
+		switch (type) {
+			case "page":
+				return "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300";
+			case "component":
+				return "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300";
+			case "docs":
+				return "bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300";
+			case "guide":
+				return "bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300";
+			case "tutorial":
+				return "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300";
+			case "reference":
+				return "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300";
+			case "example":
+				return "bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300";
+			default:
+				return "bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300";
+		}
+	};
 
 	return (
 		<div className={`relative ${className}`}>
@@ -192,7 +208,7 @@ export function SearchComponent({
 												<span
 													className={`px-2 py-0.5 text-xs font-medium rounded-full ${getTypeColor(item.type)}`}
 												>
-													{item.type}
+													{item.type.toUpperCase()}
 												</span>
 											</div>
 											<p className="text-sm text-gray-600 dark:text-gray-400 truncate">

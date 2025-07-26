@@ -71,7 +71,7 @@ const searchItems: SearchItem[] = [
 		id: "render-example-for-markdown-docs",
 		title: "Render Example For Markdown",
 		description: "A page demonstrating various markdown elements and formatting options for rendering",
-		type: "documentation",
+		type: "example",
 		path: "/blog/render-example-for-markdown",
 		icon: <FaUikit className="w-6 h-6" />,
 		keywords: ["render", "example", "markdown", "page", "demonstrating", "various", "elements", "formatting", "options", "rendering"],
