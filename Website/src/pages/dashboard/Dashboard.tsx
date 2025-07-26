@@ -1,3 +1,4 @@
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Mainfest from "./components/Mainfest";
 import Waitlist from "./components/Waitlist";
@@ -5,7 +6,12 @@ import Waitlist from "./components/Waitlist";
 export default function Dashboard() {
 	const isDevelopment = import.meta.env.DEV;
 
-	// In production mode, show the original dashboard with Waitlist
+  // only work in development
+	if (isDevelopment) {
+		const DevPage = React.lazy(() => import("./dev/DevPage"));
+		return <DevPage />;
+	}
+
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
 			<div className="flex flex-col items-center justify-center">
@@ -21,10 +27,7 @@ export default function Dashboard() {
 
 				{/* Main Content */}
 				<div className="max-w-6xl flex flex-col justify-center">
-					<Tabs
-						className="space-y-6"
-						defaultValue="waitlist"
-					>
+					<Tabs className="space-y-6" defaultValue="waitlist">
 						<TabsList className="mx-auto rounded-full">
 							<TabsTrigger
 								value="waitlist"
