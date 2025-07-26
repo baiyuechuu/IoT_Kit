@@ -10,9 +10,9 @@ A project for an IoT dashboard featuring various UI components such as charts, t
 
 - HTML, CSS, JavaScript
 - React (for the dashboard)
-- C++ (for hardware)
+- C/C++ (for hardware)
 - Firebase (as the database)
-- Authentication: supports Google and username/password login
+- Authentication: supports Google and username/password login (Supabase)
 
 ## Hardware
 
