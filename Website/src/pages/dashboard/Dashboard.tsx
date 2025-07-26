@@ -6,8 +6,9 @@ import Waitlist from "./components/Waitlist";
 export default function Dashboard() {
 	const isDevelopment = import.meta.env.DEV;
 
-  // only work in development
+	// only work in development
 	if (isDevelopment) {
+		// @ts-ignore - Dynamic import for development only
 		const DevPage = React.lazy(() => import("./dev/DevPage"));
 		return <DevPage />;
 	}
