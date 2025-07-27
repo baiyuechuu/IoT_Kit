@@ -40,7 +40,7 @@ const CodeBlock = ({ children, className }: CodeBlockProps) => {
 	return html ? (
 		<div className="my-3 relative group">
 			{/* Language Label */}
-			<div className="absolute top-0 left-0 text-xs text-slate-300">
+			<div className="absolute top-0 left-0 text-xs text-slate-300 z-10">
 				{language.toUpperCase()}
 			</div>
 
@@ -74,7 +74,7 @@ const CodeBlock = ({ children, className }: CodeBlockProps) => {
 
 			{/* Code Block */}
 			<div
-				className="[&_pre]:!bg-transparent [&_pre]:font-mono [&_pre]:text-sm [&_pre]:relative [&_pre]:pt-6"
+				className="[&_pre]:!bg-transparent [&_pre]:font-mono [&_pre]:text-sm [&_pre]:relative [&_pre]:pt-6 [&_pre]:overflow-x-auto"
 				dangerouslySetInnerHTML={{ __html: html }}
 			/>
 		</div>

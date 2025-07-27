@@ -46,7 +46,7 @@ git: "https://github.com/username/iot-kit/blob/main/Website/src/pages/uikit/docs
 - The platformio.ini file is where we configure project settings, such as the platform, framework, monitor speed, upload speed, and other build flags or parameters.
 
 Example main.c 
-```C
+```c
 #include "FreeRTOS.h"
 #include "task.h"
 #include <stdio.h>
@@ -94,8 +94,10 @@ To activate a function, select the spcae key when the * sign appears, then confi
 
 ### Option 2 : Adjust via menuconfig file 
 
-Go to the FreeRTOSConfig.h file located at the following path: C:\Users\yourusername\.platformio\packages\framework-espidf\components\freertos\config\include\freertos
-
+Go to the FreeRTOSConfig.h file located at the following path: 
+```plaintext
+C:\Users\yourusername\.platformio\packages\framework-espidf\components\freertos\config\include\freertos
+```
 ![FileConfig](/content/Blog1/FileConfig.png)
 
 ### I hope this will be helpful to you ! 

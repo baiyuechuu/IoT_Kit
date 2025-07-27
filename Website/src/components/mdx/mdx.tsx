@@ -93,7 +93,7 @@ export const mdxComponents = {
 	blockquote: (props: any) => (
 		<div className="relative overflow-hidden my-6">
 			<blockquote
-				className="border border-border pl-6 italic text-left text-lg bg-muted/20 rounded-lg leading-relaxed whitespace-pre-line"
+				className="border border-border pl-6 italic text-left text-lg bg-muted/20 rounded-lg leading-relaxed whitespace-pre-line overflow-x-auto"
 				{...props}
 			/>
 			<BiSolidQuoteRight
@@ -167,7 +167,7 @@ export const mdxComponents = {
 	},
 	pre: ({ children }: PreProps) => {
 		return (
-			<pre className="bg-[#111827]  dark:bg-[rgb(18,18,18)] backdrop-blur-lg px-4 rounded-lg overflow-x-auto shadow-xl my-4">
+			<pre className="bg-[#111827]  dark:bg-[rgb(18,18,18)] backdrop-blur-lg px-4 rounded-lg shadow-xl my-4 py-1">
 				{children}
 			</pre>
 		);
