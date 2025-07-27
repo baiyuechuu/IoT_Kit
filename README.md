@@ -9,10 +9,12 @@ A project for an IoT dashboard featuring various UI components such as charts, t
 - C/C++ (for hardware)
 - Firebase (as the database)
 - Authentication: supports Google and username/password login (Supabase)
+- Server (Golang)
 
 ## Hardware
 
 - ESP32
+- More
 
 ---
 
