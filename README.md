@@ -1,7 +1,3 @@
-Here is the corrected and improved version of your text:
-
----
-
 # IoT_Kit
 
 A project for an IoT dashboard featuring various UI components such as charts, tables, and more. It also includes multiple hardware use cases that connect to the dashboard.
@@ -9,10 +5,10 @@ A project for an IoT dashboard featuring various UI components such as charts, t
 ## Technologies
 
 - HTML, CSS, JavaScript
-- React (for the dashboard)
-- C++ (for hardware)
+- React, shadcn UI (for the dashboard)
+- C/C++ (for hardware)
 - Firebase (as the database)
-- Authentication: supports Google and username/password login
+- Authentication: supports Google and username/password login (Supabase)
 
 ## Hardware
 

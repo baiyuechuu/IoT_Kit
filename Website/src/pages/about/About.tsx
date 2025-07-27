@@ -3,16 +3,6 @@ import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 export default function About() {
 	const teamMembers = [
 		{
-			name: "Nguyen Dinh Thong",
-			role: "Embedded Systems Engineer",
-			avatar: "/thong.jpeg",
-			github: "https://github.com/ichima28",
-			linkedin: "https://linkedin.com",
-			twitter: "https://twitter.com",
-			color:
-				"bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-700/60",
-		},
-		{
 			name: "Tran Duc Tai",
 			role: "Web Developer",
 			avatar: "/tai.jpg",
@@ -21,6 +11,16 @@ export default function About() {
 			twitter: "https://twitter.com",
 			color:
 				"bg-pink-100 dark:bg-pink-900/30 text-pink-800 dark:text-pink-300 border-pink-300 dark:border-pink-700/60",
+		},
+		{
+			name: "Nguyen Dinh Thong",
+			role: "Embedded Systems Engineer",
+			avatar: "/thong.jpeg",
+			github: "https://github.com/ichima28",
+			linkedin: "https://linkedin.com",
+			twitter: "https://twitter.com",
+			color:
+				"bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-700/60",
 		},
 		{
 			name: "Luu Phuc Khang",
@@ -32,10 +32,20 @@ export default function About() {
 			color:
 				"bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border-purple-300 dark:border-purple-700/60",
 		},
+		{
+			name: "Bui Quang Tan",
+			role: "Embedded Systems Engineer",
+			avatar: "/tan.jpeg",
+			github: "https://github.com/buiTannn",
+			linkedin: "https://www.linkedin.com/in/tan-bui-quang-963682345/",
+			twitter: "https://twitter.com",
+			color:
+				"bg-yellow-100 dark:bg-yellow-900/30 text-green-800 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700/60",
+		},
 	];
 
 	return (
-		<div className="min-h-screen bg-background flex items-center justify-center">
+		<div className="min-h-screen bg-background flex justify-center md:pt-24">
 			{/* Background Effects */}
 			<div
 				className="fixed inset-0 z-0"
@@ -61,7 +71,7 @@ export default function About() {
 						</p>
 					</div>
 
-					<div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-fit">
+					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-8 w-full">
 						{teamMembers.map((member, index) => (
 							<div
 								key={index}
@@ -72,9 +82,7 @@ export default function About() {
 								>
 									{member.role}
 								</div>
-								<div
-									className="flex items-center justify-center p-2 border rounded-lg bg-background relative shadow-md overflow-hidden"
-								>
+								<div className="flex items-center justify-center p-2 border rounded-lg bg-background relative shadow-md overflow-hidden">
 									<div className="flex items-center gap-2 absolute bottom-0 right-0 border-t border-l rounded-tl-lg p-2 bg-background">
 										{member.github && (
 											<a

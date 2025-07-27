@@ -66,15 +66,15 @@ const searchItems: SearchItem[] = [
 		keywords: ["signup", "register", "create", "account", "join"],
 	},
 	// Documentation
-	// Documentation - Test Documentation Page
+	// Documentation - Render Example For Markdown
 	{
-		id: "test-documentation-page-docs",
-		title: "Test Documentation Page",
-		description: "A test page demonstrating various markdown elements and formatting options",
-		type: "documentation",
-		path: "/blog/test-documentation-page",
+		id: "render-example-for-markdown-docs",
+		title: "Render Example For Markdown",
+		description: "A page demonstrating various markdown elements and formatting options for rendering",
+		type: "example",
+		path: "/blog/render-example-for-markdown",
 		icon: <FaUikit className="w-6 h-6" />,
-		keywords: ["test", "documentation", "page", "demonstrating", "various", "markdown", "elements", "formatting", "options"],
+		keywords: ["render", "example", "markdown", "page", "demonstrating", "various", "elements", "formatting", "options", "rendering"],
 	}
 ];
 

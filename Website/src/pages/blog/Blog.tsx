@@ -13,12 +13,8 @@ export default function Blog() {
 		if (section) {
 			setActiveSection(section);
 		} else {
-			// Default to first section if no section in URL
-			const firstSection = componentSections[0];
-			if (firstSection && firstSection.id !== activeSection) {
-				setActiveSection(firstSection.id);
-				navigate(`/blog/${firstSection.id}`, { replace: true });
-			}
+			// Don't redirect, just set a default state for the welcome content
+			setActiveSection("");
 		}
 	}, [section, navigate]);
 
@@ -66,10 +62,14 @@ export default function Blog() {
 							{} as Record<string, typeof componentSections>,
 						);
 
-						const categoryOrder = ["components", "docs"] as const;
+						const categoryOrder = ["components", "docs", "guide", "tutorial", "reference", "example"] as const;
 						const categoryTitles = {
 							components: "Components",
 							docs: "Docs",
+							guide: "Guide",
+							tutorial: "Tutorial",
+							reference: "Reference",
+							example: "Example",
 						};
 
 						return categoryOrder.map((category) => {
