@@ -86,7 +86,7 @@ export default function Blog() {
 											<Link
 												key={section.id}
 												to={`/blog/${section.id}`}
-												className={`w-fit lg:w-full flex items-center justify-center lg:justify-start lg:text-left px-3 mx-auto py-2 transition-colors ${
+												className={`w-fit lg:w-full flex items-center justify-center rounded-lg lg:rounded-none lg:justify-start lg:text-left px-3 mx-auto py-2 transition-colors ${
 													activeSection === section.id
 														? "bg-primary text-primary-foreground"
 														: "hover:bg-muted"
@@ -111,7 +111,7 @@ export default function Blog() {
 
 			{/* Main Content - Fixed height with independent scroll */}
 			<div className="flex-1 h-screen overflow-y-auto">
-				<div className="px-4 py-6 pt-20 max-w-4xl mx-auto">
+				<div className="px-2 md:px-3 py-6 pt-20 max-w-4xl mx-auto">
 					<div className="wrapper z-10 prose prose-neutral dark:prose-invert">
 						{DocumentationComponent ? (
 							<Suspense
