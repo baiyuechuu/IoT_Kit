@@ -17,15 +17,15 @@ git: "https://github.com/username/iot-kit/blob/main/Website/src/pages/uikit/docs
 
 ## Step 1 : Download Extention PlatformIO IDE on VsCode
 
-![Extention Setup](/content/blog1/extention.png)
+![Extention Setup](/content/Blog1/extention.png)
 ---
 ## Step 2 : Click on the Platform IO Icon on the VScode taskbar, then select open to open the main interface of Platform IO
 
-![Interface](/content/blog1/interface.png)
+![Interface](/content/Blog1/interface.png)
 ---
 ## Step 3 : Select New project to create a new project
 
-![create projcet](/content/blog1/Newproject.png)
+![create projcet](/content/Blog1/Newproject.png)
 
 ### Project Wizard Interface Overview:
 
@@ -34,12 +34,12 @@ git: "https://github.com/username/iot-kit/blob/main/Website/src/pages/uikit/docs
 - Framework: PlatformIO supports two main frameworks: Arduino and ESP-IDF. (Aselect the ESP-IDF framework.)
 - Location: Choose the location to save your project. (You can either check the box to use the default location — usually inside the Documents folder on Windows — or uncheck it to select a custom location.)
 
-![setting projcet](/content/blog1/setting.png)
+![setting projcet](/content/Blog1/setting.png)
 
-We will wait a few minutes for the IDE to setup the framework environment and generate the necessary files for the project.
+- We will wait a few minutes for the IDE to setup the framework environment and generate the necessary files for the project.
 ---
 ## Step 5 Explore inside the project folder
-![inside Project](/content/blog1/insideProject.png)
+![inside Project](/content/Blog1/insideProject.png)
 
 - The main.c file in the src folder is where the main code of the project will be written.
 - The lib folder is used to store the libraries (usually in .zip or extracted format) required by the project.
@@ -54,7 +54,7 @@ Example main.c
 void ExampleTask(void *pvParameters) {
     while (1) {
         printf("Hello world\n");
-        vTaskDelay(pdMS_TO_TICKS(2000));  // Delay 2000 ms (2 giây)
+        vTaskDelay(pdMS_TO_TICKS(2000)); 
     }
 }
 
@@ -72,7 +72,7 @@ void app_main() {
 
 ---
 ## Step 6 Upload and Monitor
-![upload Project](/content/blog1/upload.png)
+![upload Project](/content/Blog1/upload.png)
 
 - Press Ctrl + P to open the workspace, then type > to access the PlatformIO options.
 - Search for or select the "Upload and Monitor" option.
@@ -84,11 +84,11 @@ void app_main() {
 
 ESP-IDF provides a configuration tool called menuconfig, which allows you to customize many project parameters, such as task priority, stack size, CPU frequency, and more. This is where you can fine-tune system behavior to fit your needs.
 
-![menuconfig ](/content/blog1/menuconfig.png)
+![menuconfig ](/content/Blog1/menuconfig.png)
 
 A menuconfig window appears in the project terminal: select component config → FreeRTOS → Kernel to tweak the FreeRTOS config
 
-![inside menuconfig](/content/blog1/inside_menuconfig.png)
+![inside menuconfig](/content/Blog1/inside_menuconfig.png)
 
 To activate a function, select the spcae key when the * sign appears, then confirm the function activation is successful.
 
@@ -96,6 +96,6 @@ To activate a function, select the spcae key when the * sign appears, then confi
 
 Go to the FreeRTOSConfig.h file located at the following path: C:\Users\yourusername\.platformio\packages\framework-espidf\components\freertos\config\include\freertos
 
-![FileConfig](/content/blog1/FileConfig.png)
+![FileConfig](/content/Blog1/FileConfig.png)
 
 ### I hope this will be helpful to you ! 
