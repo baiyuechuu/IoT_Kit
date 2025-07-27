@@ -66,6 +66,16 @@ const searchItems: SearchItem[] = [
 		keywords: ["signup", "register", "create", "account", "join"],
 	},
 	// Documentation
+	// Documentation - [FreeRTOS] Set Up Environment and Create Project on ESP32
+	{
+		id: "freertos-set-up-environment-and-create-project-on-esp32-docs",
+		title: "[FreeRTOS] Set Up Environment and Create Project on ESP32",
+		description: "Tutorial to setting up the environment and creating a FreeRTOS simulation project using PlatformIO (ESP-IDF Framework)",
+		type: "tutorial",
+		path: "/blog/freertos-set-up-environment-and-create-project-on-esp32",
+		icon: <FaUikit className="w-6 h-6" />,
+		keywords: ["[freertos]", "set", "environment", "create", "project", "esp32", "tutorial", "setting", "creating", "freertos", "simulation", "using", "platformio", "(esp-idf", "framework)", "rtos_blog_1"],
+	},
 	// Documentation - Render Example For Markdown
 	{
 		id: "render-example-for-markdown-docs",
