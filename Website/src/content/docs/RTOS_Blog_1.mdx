@@ -49,11 +49,12 @@ Example main.c
 ```C
 #include "FreeRTOS.h"
 #include "task.h"
+#include <stdio.h>
 
 void ExampleTask(void *pvParameters) {
     while (1) {
         printf("Hello world\n");
-        vTaskDelay(pdMS_TO_TICKS(2000));  // Delay 2000 ms (2 giây)
+        vTaskDelay(pdMS_TO_TICKS(2000)); 
     }
 }
 
