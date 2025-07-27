@@ -1,12 +1,12 @@
 export default function TechSection() {
 	return (
 		<div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 relative">
-			<div className="absolute w-[120%] h-px -top-3 left-1/2 -translate-x-1/2 border-t border-gray-600"></div>
-			<div className="absolute w-[120%] h-px -bottom-3 left-1/2 -translate-x-1/2 border-t border-gray-600"></div>
-			<div className="absolute h-[250%] w-px -left-3 top-1/2 -translate-y-1/2 border-l border-gray-600 hidden sm:block"></div>
-			<div className="absolute h-[250%] w-px -right-3 top-1/2 -translate-y-1/2 border-l border-gray-600 hidden sm:block"></div>
+			<div className="absolute w-[120%] h-px -top-3 left-1/2 -translate-x-1/2 border-t border-gray-600/40"></div>
+			<div className="absolute w-[120%] h-px -bottom-3 left-1/2 -translate-x-1/2 border-t border-gray-600/40"></div>
+			<div className="absolute h-[250%] w-px -left-3 top-1/2 -translate-y-1/2 border-l border-gray-600/40 hidden sm:block"></div>
+			<div className="absolute h-[250%] w-px -right-3 top-1/2 -translate-y-1/2 border-l border-gray-600/40 hidden sm:block"></div>
 
-			<div className="absolute w-[120%] h-px top-1/2 left-1/2 -translate-1/2 border-t border-gray-600 min-[485px]:hidden"></div>
+			<div className="absolute w-[120%] h-px top-1/2 left-1/2 -translate-1/2 border-t border-gray-600/40 min-[485px]:hidden"></div>
 
 			<div>
 				<svg
