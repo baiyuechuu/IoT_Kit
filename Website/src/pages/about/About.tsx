@@ -35,7 +35,7 @@ export default function About() {
 		{
 			name: "Bui Quang Tan",
 			role: "Embedded Systems Engineer",
-			avatar: "/tan.jpeg",
+			avatar: "/tan.jpg",
 			github: "https://github.com/buiTannn",
 			linkedin: "https://www.linkedin.com/in/tan-bui-quang-963682345/",
 			twitter: "https://twitter.com",
