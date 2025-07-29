@@ -2,7 +2,8 @@ import { lazy } from "react";
 import MainLayout from "@/layouts/MainLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
-const DashboardPage = lazy(() => import("@/pages/dashboard/Dashboard"));
+const DashboardListPage = lazy(() => import("@/pages/dashboard/DashboardListPage"));
+const DevPage = lazy(() => import("@/pages/dashboard/dev/DevPage"));
 
 export const dashboardRoute = {
 	path: "/dashboard",
@@ -12,7 +13,15 @@ export const dashboardRoute = {
 			index: true,
 			element: (
 				<ProtectedRoute>
-					<DashboardPage />
+					<DashboardListPage />
+				</ProtectedRoute>
+			),
+		},
+		{
+			path: ":dashboardId",
+			element: (
+				<ProtectedRoute>
+					<DevPage />
 				</ProtectedRoute>
 			),
 		},

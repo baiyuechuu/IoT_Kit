@@ -4,14 +4,17 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "@/routes";
 import { Suspense } from "react";
 import { mdxComponents } from "@/components/mdx/mdx";
+import { ConfirmationProvider } from "@/hooks/useConfirmation";
 
 function App() {
 	return (
 		<MDXProvider components={mdxComponents}>
 			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-				<Suspense fallback={<div className="p-4">Đang tải...</div>}>
-					<RouterProvider router={router} />
-				</Suspense>
+				<ConfirmationProvider>
+					<Suspense fallback={<div className="p-4">Đang tải...</div>}>
+						<RouterProvider router={router} />
+					</Suspense>
+				</ConfirmationProvider>
 			</ThemeProvider>
 		</MDXProvider>
 	);

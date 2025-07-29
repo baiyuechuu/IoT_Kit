@@ -1,14 +1,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Mainfest from "./components/Mainfest";
 import Waitlist from "./components/Waitlist";
-// import DevPage from "./dev/DevPage";
+import DevPage from "./dev/DevPage";
 
 export default function Dashboard() {
-	// const isDevelopment = import.meta.env.DEV;
-	//
-	// if (isDevelopment) {
-	// 	return <DevPage />;
-	// }
+	const isDevelopment = import.meta.env.DEV;
+
+	if (isDevelopment) {
+		return <DevPage />;
+	}
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
