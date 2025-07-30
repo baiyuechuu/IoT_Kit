@@ -50,7 +50,7 @@ bool firebase_get_string(const char* path, char** output);
 
 'Putting' data to FIREBASE:
 
-```ini
+```c
 void firebase_put_data(const char* path, fb_data_type_t type, ...);
 ```
 
