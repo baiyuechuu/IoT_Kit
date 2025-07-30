@@ -1,39 +1,38 @@
 import { useState, useCallback } from "react";
 import GridLayout, { type Layout } from "react-grid-layout";
-import {
-	ButtonWidget,
-	SwitchWidget,
-	DeviceTableWidget,
-	WIDGET_CONSTRAINTS,
-} from "./widgets";
+import { SwitchWidget, WIDGET_CONSTRAINTS } from "./widgets";
 import type { WidgetConfig } from "./widgets";
 import "react-grid-layout/css/styles.css";
+import { Button } from "@/components/ui/button";
+import { Settings, Plus } from "lucide-react";
 
-interface DashboardGridProps {
+interface MainDashboardProps {
 	editMode: boolean;
 	widgets: WidgetConfig[];
 	onLayoutChange: (widgets: WidgetConfig[]) => void;
 	onWidgetSettings?: (widgetId: string) => void;
 	onWidgetDuplicate?: (widget: WidgetConfig) => void;
 	onWidgetDelete?: (widgetId: string) => void;
+	onShowAddDialog?: () => void;
 	width?: number;
 	cols?: number;
 	rowHeight?: number;
 	margin?: [number, number];
 }
 
-export function DashboardGrid({
+export function MainDashboard({
 	editMode,
 	widgets,
 	onLayoutChange,
 	onWidgetSettings,
 	onWidgetDuplicate,
 	onWidgetDelete,
+	onShowAddDialog,
 	width = 1200,
 	cols = 12,
 	rowHeight = 60,
 	margin = [10, 10],
-}: DashboardGridProps) {
+}: MainDashboardProps) {
 	const [switchStates, setSwitchStates] = useState<Record<string, boolean>>({});
 	const [dragPreview, setDragPreview] = useState<{
 		visible: boolean;
@@ -42,6 +41,7 @@ export function DashboardGrid({
 		w: number;
 		h: number;
 	}>({ visible: false, x: 0, y: 0, w: 0, h: 0 });
+	const [isDragging, setIsDragging] = useState(false);
 
 	// Convert widgets to react-grid-layout format
 	const layout: Layout[] = widgets.map((widget) => ({
@@ -58,63 +58,81 @@ export function DashboardGrid({
 		isResizable: editMode,
 	}));
 
-	// Handle drag start - show preview
-	const handleDragStart = useCallback((_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
-		console.log('Drag start:', newItem);
-		setDragPreview({
-			visible: true,
-			x: newItem.x,
-			y: newItem.y,
-			w: newItem.w,
-			h: newItem.h,
-		});
-	}, []);
+	// Handle drag start - only show preview if actually dragging
+	const handleDragStart = useCallback(
+		(_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
+			// Small delay to distinguish between click and drag
+			setTimeout(() => {
+				if (isDragging) {
+					setDragPreview({
+						visible: true,
+						x: newItem.x,
+						y: newItem.y,
+						w: newItem.w,
+						h: newItem.h,
+					});
+				}
+			}, 100);
+			setIsDragging(true);
+		},
+		[isDragging],
+	);
 
 	// Handle drag - update preview position
-	const handleDrag = useCallback((_layout: Layout[], _oldItem: Layout, newItem: Layout, placeholder: Layout) => {
-		console.log('Drag:', placeholder);
-		setDragPreview({
-			visible: true,
-			x: placeholder.x,
-			y: placeholder.y,
-			w: newItem.w,
-			h: newItem.h,
-		});
-	}, []);
+	const handleDrag = useCallback(
+		(
+			_layout: Layout[],
+			_oldItem: Layout,
+			newItem: Layout,
+			placeholder: Layout,
+		) => {
+			setDragPreview({
+				visible: true,
+				x: placeholder.x,
+				y: placeholder.y,
+				w: newItem.w,
+				h: newItem.h,
+			});
+		},
+		[],
+	);
 
 	// Handle drag stop - hide preview
 	const handleDragStop = useCallback(() => {
-		console.log('Drag stop');
 		setDragPreview({ visible: false, x: 0, y: 0, w: 0, h: 0 });
+		setIsDragging(false);
 	}, []);
 
 	// Handle resize start - show preview
-	const handleResizeStart = useCallback((_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
-		console.log('Resize start:', newItem);
-		setDragPreview({
-			visible: true,
-			x: newItem.x,
-			y: newItem.y,
-			w: newItem.w,
-			h: newItem.h,
-		});
-	}, []);
+	const handleResizeStart = useCallback(
+		(_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
+			setDragPreview({
+				visible: true,
+				x: newItem.x,
+				y: newItem.y,
+				w: newItem.w,
+				h: newItem.h,
+			});
+		},
+		[],
+	);
 
 	// Handle resize - update preview size
-	const handleResize = useCallback((_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
-		console.log('Resize:', newItem);
-		setDragPreview({
-			visible: true,
-			x: newItem.x,
-			y: newItem.y,
-			w: newItem.w,
-			h: newItem.h,
-		});
-	}, []);
+	const handleResize = useCallback(
+		(_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
+			setDragPreview({
+				visible: true,
+				x: newItem.x,
+				y: newItem.y,
+				w: newItem.w,
+				h: newItem.h,
+			});
+		},
+		[],
+	);
 
 	// Handle resize stop - hide preview
 	const handleResizeStop = useCallback(() => {
-		console.log('Resize stop');
 		setDragPreview({ visible: false, x: 0, y: 0, w: 0, h: 0 });
 	}, []);
 
@@ -164,27 +182,12 @@ export function DashboardGrid({
 		};
 
 		switch (widget.type) {
-			case "button":
-				return (
-					<ButtonWidget
-						{...commonProps}
-						onClick={() => console.log(`Button ${widget.i} clicked`)}
-					/>
-				);
 			case "switch":
 				return (
 					<SwitchWidget
 						{...commonProps}
 						checked={switchStates[widget.i] || false}
 						onCheckedChange={(checked) => handleSwitchChange(widget.i, checked)}
-					/>
-				);
-			case "device-table":
-				return (
-					<DeviceTableWidget
-						{...commonProps}
-						onRefresh={() => console.log(`Refresh ${widget.i}`)}
-						onAddDevice={() => console.log(`Add device ${widget.i}`)}
 					/>
 				);
 			default:
@@ -195,28 +198,28 @@ export function DashboardGrid({
 	// Calculate preview position and size with red background
 	const getPreviewStyle = () => {
 		if (!dragPreview.visible || !editMode) {
-			return { display: 'none' };
+			return { display: "none" };
 		}
-		
+
 		const cellWidth = (width - margin[0] * (cols - 1)) / cols;
 		const cellHeight = rowHeight;
 		const x = dragPreview.x * (cellWidth + margin[0]);
 		const y = dragPreview.y * (cellHeight + margin[1]);
 		const w = dragPreview.w * cellWidth + (dragPreview.w - 1) * margin[0];
 		const h = dragPreview.h * cellHeight + (dragPreview.h - 1) * margin[1];
-		
+
 		return {
-			position: 'absolute' as const,
+			position: "absolute" as const,
 			left: x,
 			top: y,
 			width: w,
 			height: h,
-			backgroundColor: 'rgba(255, 0, 0, 0.3)',
-			border: '2px solid red',
-			borderRadius: '8px',
-			zIndex: 1000,
-			pointerEvents: 'none' as const,
-			display: 'block',
+			backgroundColor: "rgba(255, 0, 0, 0.3)",
+			border: "2px solid red",
+			borderRadius: "8px",
+			zIndex: 888,
+			pointerEvents: "none" as const,
+			display: "block",
 		};
 	};
 
@@ -225,32 +228,49 @@ export function DashboardGrid({
 			{/* Red Preview for Drag/Resize */}
 			<div style={getPreviewStyle()} />
 
-			<GridLayout
-				className="layout"
-				layout={layout}
-				cols={cols}
-				rowHeight={rowHeight}
-				width={width}
-				margin={margin}
-				isDraggable={editMode}
-				isResizable={editMode}
-				onLayoutChange={handleLayoutChange}
-				onDragStart={handleDragStart}
-				onDrag={handleDrag}
-				onDragStop={handleDragStop}
-				onResizeStart={handleResizeStart}
-				onResize={handleResize}
-				onResizeStop={handleResizeStop}
-				preventCollision={false}
-				verticalCompact={true}
-				resizeHandles={["se", "sw", "ne", "nw"]}
-			>
-				{widgets.map((widget) => (
-					<div key={widget.i} className="widget-container">
-						{renderWidget(widget)}
+			{widgets.length === 0 ? (
+				<div className="text-center py-12">
+					<div className="max-w-md mx-auto">
+						<Settings className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+						<h3 className="text-xl font-semibold mb-2">No Widgets Yet</h3>
+						<p className="text-muted-foreground mb-6">
+							Create your first widget to start monitoring and controlling your
+							IoT devices.
+						</p>
+						<Button onClick={onShowAddDialog} size="lg" className="gap-2">
+							<Plus className="w-4 h-4" />
+							Create Your First Widget
+						</Button>
 					</div>
-				))}
-			</GridLayout>
+				</div>
+			) : (
+				<GridLayout
+					className="layout"
+					layout={layout}
+					cols={cols}
+					rowHeight={rowHeight}
+					width={width}
+					margin={margin}
+					isDraggable={editMode}
+					isResizable={editMode}
+					onLayoutChange={handleLayoutChange}
+					onDragStart={handleDragStart}
+					onDrag={handleDrag}
+					onDragStop={handleDragStop}
+					onResizeStart={handleResizeStart}
+					onResize={handleResize}
+					onResizeStop={handleResizeStop}
+					preventCollision={false}
+					verticalCompact={true}
+					resizeHandles={["se", "sw", "ne", "nw"]}
+				>
+					{widgets.map((widget) => (
+						<div key={widget.i} className="widget-container">
+							{renderWidget(widget)}
+						</div>
+					))}
+				</GridLayout>
+			)}
 
 			<style>{`
 				.react-grid-layout {
@@ -266,7 +286,9 @@ export function DashboardGrid({
 					width: 100%;
 				}
 				
-				${editMode ? `
+				${
+					editMode
+						? `
 					.react-grid-item {
 						border: 2px dashed hsl(var(--border));
 						border-radius: 8px;
@@ -320,12 +342,14 @@ export function DashboardGrid({
 						border-right: 2px solid hsl(var(--muted-foreground));
 						border-bottom: 2px solid hsl(var(--muted-foreground));
 					}
-				` : `
+				`
+						: `
 					.react-grid-item {
 						border: none;
 						background: transparent;
 					}
-				`}
+				`
+				}
 			`}</style>
 		</div>
 	);

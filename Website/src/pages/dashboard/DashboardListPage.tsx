@@ -1,9 +1,23 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { AlertCircle, Calendar, Edit, Loader2, Plus, Settings, Trash2, X } from "lucide-react";
+import {
+	AlertCircle,
+	Calendar,
+	Edit,
+	Loader2,
+	Plus,
+	Settings,
+	Trash2,
+	X,
+} from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,7 +25,7 @@ import { dashboardService } from "@/lib/supabase/dashboard";
 import type { Database } from "@/types/supabase";
 import { useConfirmation } from "@/hooks/useConfirmation";
 
-type Dashboard = Database['public']['Tables']['dashboards']['Row'];
+type Dashboard = Database["public"]["Tables"]["dashboards"]["Row"];
 
 export default function DashboardListPage() {
 	const { isAuthenticated, loading: authLoading } = useAuth();
@@ -27,8 +41,7 @@ export default function DashboardListPage() {
 	// Form state for creating new dashboard
 	const [newDashboard, setNewDashboard] = useState({
 		name: "",
-		description: "",
-		is_public: false
+		is_public: false,
 	});
 
 	// Load dashboards
@@ -46,7 +59,9 @@ export default function DashboardListPage() {
 				setDashboards(data || []);
 			}
 		} catch (err) {
-			setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+			setError(
+				err instanceof Error ? err.message : "An unexpected error occurred",
+			);
 		} finally {
 			setLoading(false);
 		}
@@ -64,35 +79,39 @@ export default function DashboardListPage() {
 		try {
 			const { data, error } = await dashboardService.createDashboard({
 				name: newDashboard.name.trim(),
-				description: newDashboard.description.trim() || undefined,
 				widgets: [],
-				is_public: newDashboard.is_public
+				is_public: newDashboard.is_public,
 			});
 
 			if (error) {
 				setError(error);
 			} else if (data) {
-				setDashboards(prev => [data, ...prev]);
+				setDashboards((prev) => [data, ...prev]);
 				setShowCreateForm(false);
-				setNewDashboard({ name: "", description: "", is_public: false });
+				setNewDashboard({ name: "", is_public: false });
 				// Navigate to the new dashboard
 				navigate(`/dashboard/${data.id}`);
 			}
 		} catch (err) {
-			setError(err instanceof Error ? err.message : 'Failed to create dashboard');
+			setError(
+				err instanceof Error ? err.message : "Failed to create dashboard",
+			);
 		} finally {
 			setCreating(false);
 		}
 	};
 
 	// Delete dashboard
-	const handleDeleteDashboard = async (dashboardId: string, dashboardName: string) => {
+	const handleDeleteDashboard = async (
+		dashboardId: string,
+		dashboardName: string,
+	) => {
 		const confirmed = await confirm({
 			title: "Delete Dashboard",
 			message: `Are you sure you want to delete "${dashboardName}"? This action cannot be undone.`,
 			confirmText: "Delete",
 			cancelText: "Cancel",
-			variant: "destructive"
+			variant: "destructive",
 		});
 
 		if (!confirmed) {
@@ -105,10 +124,12 @@ export default function DashboardListPage() {
 			if (error) {
 				setError(error);
 			} else {
-				setDashboards(prev => prev.filter(d => d.id !== dashboardId));
+				setDashboards((prev) => prev.filter((d) => d.id !== dashboardId));
 			}
 		} catch (err) {
-			setError(err instanceof Error ? err.message : 'Failed to delete dashboard');
+			setError(
+				err instanceof Error ? err.message : "Failed to delete dashboard",
+			);
 		} finally {
 			setDeleting(null);
 		}
@@ -116,12 +137,12 @@ export default function DashboardListPage() {
 
 	// Format date
 	const formatDate = (dateString: string) => {
-		return new Date(dateString).toLocaleDateString('en-US', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric',
-			hour: '2-digit',
-			minute: '2-digit'
+		return new Date(dateString).toLocaleDateString("en-US", {
+			year: "numeric",
+			month: "short",
+			day: "numeric",
+			hour: "2-digit",
+			minute: "2-digit",
 		});
 	};
 
@@ -145,11 +166,13 @@ export default function DashboardListPage() {
 			<div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
 				<div className="max-w-md mx-auto text-center p-6 bg-card rounded-lg border shadow-sm">
 					<AlertCircle className="w-12 h-12 text-orange-500 mx-auto mb-4" />
-					<h2 className="text-xl font-semibold mb-2">Authentication Required</h2>
+					<h2 className="text-xl font-semibold mb-2">
+						Authentication Required
+					</h2>
 					<p className="text-muted-foreground mb-4">
 						You need to be signed in to access your dashboards.
 					</p>
-					<Button onClick={() => window.location.href = '/auth'}>
+					<Button onClick={() => (window.location.href = "/auth")}>
 						Sign In
 					</Button>
 				</div>
@@ -159,7 +182,7 @@ export default function DashboardListPage() {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-			<div className="max-w-7xl mx-auto px-4 py-20">
+			<div className="w-full px-4 md:px-8 py-20">
 				{/* Header */}
 				<div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
 					<div>
@@ -170,8 +193,8 @@ export default function DashboardListPage() {
 							Create and manage your IoT dashboards
 						</p>
 					</div>
-					<Button 
-						size="lg" 
+					<Button
+						size="lg"
 						className="gap-2"
 						onClick={() => setShowCreateForm(true)}
 					>
@@ -191,7 +214,7 @@ export default function DashboardListPage() {
 									size="sm"
 									onClick={() => {
 										setShowCreateForm(false);
-										setNewDashboard({ name: "", description: "", is_public: false });
+										setNewDashboard({ name: "", is_public: false });
 									}}
 								>
 									<X className="w-4 h-4" />
@@ -200,22 +223,19 @@ export default function DashboardListPage() {
 						</CardHeader>
 						<CardContent className="space-y-4">
 							<div>
-								<Label htmlFor="dashboard-name">Dashboard Name</Label>
+								<Label htmlFor="dashboard-name" className="mb-3">
+									Dashboard Name
+								</Label>
 								<Input
 									id="dashboard-name"
 									placeholder="My IoT Dashboard"
 									value={newDashboard.name}
-									onChange={(e) => setNewDashboard(prev => ({ ...prev, name: e.target.value }))}
-								/>
-							</div>
-							<div>
-								<Label htmlFor="dashboard-description">Description (Optional)</Label>
-								<Textarea
-									id="dashboard-description"
-									placeholder="Describe what this dashboard is for..."
-									value={newDashboard.description}
-									onChange={(e) => setNewDashboard(prev => ({ ...prev, description: e.target.value }))}
-									rows={3}
+									onChange={(e) =>
+										setNewDashboard((prev) => ({
+											...prev,
+											name: e.target.value,
+										}))
+									}
 								/>
 							</div>
 						</CardContent>
@@ -224,7 +244,7 @@ export default function DashboardListPage() {
 								variant="outline"
 								onClick={() => {
 									setShowCreateForm(false);
-									setNewDashboard({ name: "", description: "", is_public: false });
+									setNewDashboard({ name: "", is_public: false });
 								}}
 								disabled={creating}
 							>
@@ -266,9 +286,14 @@ export default function DashboardListPage() {
 							<Settings className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
 							<h3 className="text-xl font-semibold mb-2">No Dashboards Yet</h3>
 							<p className="text-muted-foreground mb-6">
-								Create your first dashboard to start monitoring and controlling your IoT devices.
+								Create your first dashboard to start monitoring and controlling
+								your IoT devices.
 							</p>
-							<Button onClick={() => setShowCreateForm(true)} size="lg" className="gap-2">
+							<Button
+								onClick={() => setShowCreateForm(true)}
+								size="lg"
+								className="gap-2"
+							>
 								<Plus className="w-4 h-4" />
 								Create Your First Dashboard
 							</Button>
@@ -277,7 +302,10 @@ export default function DashboardListPage() {
 				) : (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 						{dashboards.map((dashboard) => (
-							<Card key={dashboard.id} className="hover:shadow-lg transition-shadow">
+							<Card
+								key={dashboard.id}
+								className="hover:shadow-lg transition-shadow"
+							>
 								<CardHeader>
 									<CardTitle className="flex items-start justify-between">
 										<span className="line-clamp-1">{dashboard.name}</span>
@@ -287,9 +315,6 @@ export default function DashboardListPage() {
 											</span>
 										)}
 									</CardTitle>
-									<CardDescription className="line-clamp-2">
-										{dashboard.description || "No description provided"}
-									</CardDescription>
 								</CardHeader>
 								<CardContent>
 									<div className="space-y-2 text-sm text-muted-foreground">
@@ -299,7 +324,12 @@ export default function DashboardListPage() {
 										</div>
 										<div className="flex items-center gap-2">
 											<Settings className="w-3 h-3" />
-											<span>{Array.isArray(dashboard.widgets) ? dashboard.widgets.length : 0} widgets</span>
+											<span>
+												{Array.isArray(dashboard.widgets)
+													? dashboard.widgets.length
+													: 0}{" "}
+												widgets
+											</span>
 										</div>
 									</div>
 								</CardContent>
@@ -316,7 +346,9 @@ export default function DashboardListPage() {
 									<Button
 										variant="outline"
 										size="sm"
-										onClick={() => handleDeleteDashboard(dashboard.id, dashboard.name)}
+										onClick={() =>
+											handleDeleteDashboard(dashboard.id, dashboard.name)
+										}
 										disabled={deleting === dashboard.id}
 										className="gap-1"
 									>
@@ -335,4 +367,3 @@ export default function DashboardListPage() {
 		</div>
 	);
 }
-

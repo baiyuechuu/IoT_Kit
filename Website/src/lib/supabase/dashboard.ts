@@ -9,7 +9,6 @@ type DashboardUpdate = Database['public']['Tables']['dashboards']['Update'];
 export interface DashboardData {
   id?: string;
   name: string;
-  description?: string;
   widgets: WidgetConfig[];
   layout_config?: {
     gridWidth?: number;
@@ -154,7 +153,6 @@ class DashboardService {
       const insertData: DashboardInsert = {
         user_id: user.id,
         name: dashboardData.name,
-        description: dashboardData.description || null,
         widgets: dashboardData.widgets,
         layout_config: dashboardData.layout_config || null,
         is_public: dashboardData.is_public || false,
@@ -191,7 +189,6 @@ class DashboardService {
 
       const updateData: DashboardUpdate = {
         ...(dashboardData.name && { name: dashboardData.name }),
-        ...(dashboardData.description !== undefined && { description: dashboardData.description }),
         ...(dashboardData.widgets && { widgets: dashboardData.widgets }),
         ...(dashboardData.layout_config && { layout_config: dashboardData.layout_config }),
         ...(dashboardData.is_public !== undefined && { is_public: dashboardData.is_public }),

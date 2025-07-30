@@ -36,7 +36,6 @@ export interface Database {
 					id: string;
 					user_id: string;
 					name: string;
-					description: string | null;
 					widgets: any; // JSON array of widget configurations
 					layout_config: any | null; // Additional layout settings
 					is_public: boolean;
@@ -47,7 +46,6 @@ export interface Database {
 					id?: string;
 					user_id: string;
 					name: string;
-					description?: string | null;
 					widgets: any;
 					layout_config?: any | null;
 					is_public?: boolean;
@@ -57,7 +55,6 @@ export interface Database {
 				Update: {
 					id?: string;
 					name?: string;
-					description?: string | null;
 					widgets?: any;
 					layout_config?: any | null;
 					is_public?: boolean;
