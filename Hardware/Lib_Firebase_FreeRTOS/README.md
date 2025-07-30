@@ -48,7 +48,7 @@ bool firebase_get_bool(const char* path, bool* output);
 bool firebase_get_string(const char* path, char** output);
 ```
 
-'Posting' data from FIREBASE:
+'Putting' data to FIREBASE:
 
 ```ini
 void firebase_put_data(const char* path, fb_data_type_t type, ...);
