@@ -58,7 +58,6 @@ void wifi_connect() {
     printf("Connected!\n");
 }
 
-//get data from sensor/temperature
 void app_main(void) {
     nvs_flash_init();
     wifi_connect();
