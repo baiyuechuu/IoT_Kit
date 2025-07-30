@@ -9,6 +9,7 @@ import {
 	ArrowLeft,
 	Cloud,
 	CloudOff,
+	DatabaseZap,
 } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -22,6 +23,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { dashboardService } from "@/lib/supabase/dashboard";
 import type { Database } from "@/types/supabase";
 import { useConfirmation } from "@/hooks/useConfirmation";
+import { FirebaseConfigDialog } from "@/components/firebase/FirebaseConfigDialog";
+import { useFirebaseConnection } from "@/hooks/useFirebase";
 
 type Dashboard = Database["public"]["Tables"]["dashboards"]["Row"];
 
@@ -57,6 +60,8 @@ export default function DevPage() {
 	);
 	const [gridWidth, setGridWidth] = useState(1200);
 	const [isDesktop, setIsDesktop] = useState(true);
+	const [showFirebaseDialog, setShowFirebaseDialog] = useState(false);
+	const { connected: firebaseConnected, configured: firebaseConfigured } = useFirebaseConnection();
 
 	useEffect(() => {
 		const loadDashboard = async () => {
@@ -362,6 +367,21 @@ export default function DevPage() {
 							<Button
 								variant="outline"
 								size="sm"
+								onClick={() => setShowFirebaseDialog(true)}
+								className="text-xs sm:text-sm"
+								disabled={!isReady || widgetsLoading}
+							>
+								<DatabaseZap className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 ${
+									firebaseConnected ? 'text-green-500' : 
+									firebaseConfigured ? 'text-orange-500' : 
+									'text-muted-foreground'
+								}`} />
+								<span className="hidden sm:inline">Firebase</span>
+								<span className="sm:hidden">DB</span>
+							</Button>
+							<Button
+								variant="outline"
+								size="sm"
 								className="text-xs sm:text-sm"
 								disabled={!isReady || widgetsLoading}
 							>
@@ -432,6 +452,11 @@ export default function DevPage() {
 				onSave={handleWidgetSave}
 				onDelete={handleWidgetDelete}
 				onDuplicate={handleWidgetDuplicate}
+			/>
+
+			<FirebaseConfigDialog
+				open={showFirebaseDialog}
+				onOpenChange={setShowFirebaseDialog}
 			/>
 		</div>
 	);

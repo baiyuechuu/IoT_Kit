@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X } from "lucide-react";
+import { X, Database } from "lucide-react";
 import type { WidgetConfig } from "./widgets";
 import { useConfirmation } from "@/hooks/useConfirmation";
+import { useFirebaseConnection } from "@/hooks/useFirebase";
 
 interface WidgetSettingsDialogProps {
 	isOpen: boolean;
@@ -26,6 +27,7 @@ export function WidgetSettingsDialog({
 }: WidgetSettingsDialogProps) {
 	const [formData, setFormData] = useState<Record<string, any>>({});
 	const { confirm } = useConfirmation();
+	const { connected: firebaseConnected, configured: firebaseConfigured } = useFirebaseConnection();
 
 	useEffect(() => {
 		if (widget) {
@@ -106,6 +108,77 @@ export function WidgetSettingsDialog({
 								<option value="secondary">Secondary</option>
 								<option value="destructive">Destructive</option>
 							</select>
+						</div>
+						
+						{/* Firebase Configuration Section */}
+						<div className="space-y-3 border-t pt-4">
+							<div className="flex items-center gap-2 mb-2">
+								<Database className={`w-4 h-4 ${
+									firebaseConnected ? 'text-green-500' : 
+									firebaseConfigured ? 'text-orange-500' : 
+									'text-muted-foreground'
+								}`} />
+								<Label className="text-sm font-medium">Firebase Data Source</Label>
+								{!firebaseConfigured && (
+									<span className="text-xs text-muted-foreground">(Configure Firebase first)</span>
+								)}
+							</div>
+							
+							<div className="space-y-2">
+								<Label htmlFor="firebasePath">Variable Path</Label>
+								<Input
+									id="firebasePath"
+									value={formData.firebasePath || ""}
+									onChange={(e) =>
+										setFormData((prev) => ({ ...prev, firebasePath: e.target.value }))
+									}
+									placeholder="e.g., devices/switch1/state"
+									disabled={!firebaseConfigured}
+								/>
+								<p className="text-xs text-muted-foreground">
+									Path to the Firebase variable (e.g., sensors/temperature, devices/light1/status)
+								</p>
+							</div>
+							
+							<div className="space-y-2">
+								<Label htmlFor="dataType">Data Type</Label>
+								<select
+									id="dataType"
+									value={formData.dataType || "boolean"}
+									onChange={(e) =>
+										setFormData((prev) => ({ ...prev, dataType: e.target.value }))
+									}
+									className="w-full p-2 border rounded-md"
+									disabled={!firebaseConfigured}
+								>
+									<option value="boolean">Boolean (true/false)</option>
+									<option value="number">Number</option>
+									<option value="string">String</option>
+									<option value="object">Object</option>
+								</select>
+								<p className="text-xs text-muted-foreground">
+									Expected data type for the Firebase variable
+								</p>
+							</div>
+							
+							<div className="space-y-2">
+								<Label htmlFor="updateInterval">Update Interval (ms)</Label>
+								<Input
+									id="updateInterval"
+									type="number"
+									value={formData.updateInterval || 1000}
+									onChange={(e) =>
+										setFormData((prev) => ({ ...prev, updateInterval: parseInt(e.target.value) || 1000 }))
+									}
+									placeholder="1000"
+									min="100"
+									max="60000"
+									disabled={!firebaseConfigured}
+								/>
+								<p className="text-xs text-muted-foreground">
+									How often to check for updates (100ms - 60s)
+								</p>
+							</div>
 						</div>
 					</>
 				);
