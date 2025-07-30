@@ -94,7 +94,7 @@ void app_main(void) {
         firebase_get_int("sensor/temperature", &receivedata);
         printf("Temperature data received: %d\n", receivedata);
         printf("Sending light status data to Firebase...\n");
-        firebase_put_data("light/light_1", FB_STRING, "Den hu");
+        firebase_put_data("light/light_1", FB_STRING, "On");
         printf("Light status data sent!\n");
     }
 }
