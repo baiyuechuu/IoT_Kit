@@ -1,8 +1,12 @@
 export { SwitchWidget } from "./SwitchWidget";
 
-export type WidgetType = "switch";
+// Re-export standardized types
+export * from './types';
+import type { WidgetType } from './types';
 
-export interface WidgetConfig {
+// Legacy interface for backward compatibility (deprecated)
+/** @deprecated Use the specific widget config types from './types' instead */
+export interface LegacyWidgetConfig {
 	i: string;
 	type: WidgetType;
 	x: number;
@@ -17,10 +21,16 @@ export interface WidgetConfig {
 	props?: Record<string, any>;
 }
 
-// Widget constraints similar to Blynk - minimum sizes ensure content fits properly
-export const WIDGET_CONSTRAINTS: Record<
-	WidgetType,
-	{ minW: number; maxW: number; minH: number; maxH: number }
-> = {
-	switch: { minW: 2, maxW: 3, minH: 2, maxH: 3 }, // 2x2 minimum for title + switch + status
-};
+// Re-export from registry for backward compatibility
+export { 
+	WIDGET_CONSTRAINTS,
+	WIDGET_REGISTRY,
+	getWidgetDefinition,
+	getWidgetComponent,
+	getWidgetConstraints,
+	getWidgetMetadata,
+	getAllWidgetTypes,
+	getWidgetsByCategory,
+	getWidgetsByDifficulty,
+	getWidgetsByTags
+} from './registry';

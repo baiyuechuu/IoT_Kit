@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Card } from "@/components/ui/card";
 import Control from "../controls/Control";
 import { useFirebaseVariable } from "@/hooks/useFirebase";

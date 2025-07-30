@@ -33,7 +33,10 @@ export function MainDashboard({
 	rowHeight = 60,
 	margin = [10, 10],
 }: MainDashboardProps) {
-	const [switchStates, setSwitchStates] = useState<Record<string, boolean>>({});
+	// Widget state management
+	const [widgetStates, setWidgetStates] = useState<Record<string, any>>({});
+	
+	// Drag/resize preview state
 	const [dragPreview, setDragPreview] = useState<{
 		visible: boolean;
 		x: number;
@@ -43,6 +46,7 @@ export function MainDashboard({
 	}>({ visible: false, x: 0, y: 0, w: 0, h: 0 });
 	const [isDragging, setIsDragging] = useState(false);
 
+	// Generate grid layout from widgets
 	const layout: Layout[] = widgets.map((widget) => ({
 		i: widget.i,
 		x: widget.x,
@@ -57,77 +61,7 @@ export function MainDashboard({
 		isResizable: editMode,
 	}));
 
-	const handleDragStart = useCallback(
-		(_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
-			setTimeout(() => {
-				if (isDragging) {
-					setDragPreview({
-						visible: true,
-						x: newItem.x,
-						y: newItem.y,
-						w: newItem.w,
-						h: newItem.h,
-					});
-				}
-			}, 100);
-			setIsDragging(true);
-		},
-		[isDragging],
-	);
-
-	const handleDrag = useCallback(
-		(
-			_layout: Layout[],
-			_oldItem: Layout,
-			newItem: Layout,
-			placeholder: Layout,
-		) => {
-			setDragPreview({
-				visible: true,
-				x: placeholder.x,
-				y: placeholder.y,
-				w: newItem.w,
-				h: newItem.h,
-			});
-		},
-		[],
-	);
-
-	const handleDragStop = useCallback(() => {
-		setDragPreview({ visible: false, x: 0, y: 0, w: 0, h: 0 });
-		setIsDragging(false);
-	}, []);
-
-	const handleResizeStart = useCallback(
-		(_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
-			setDragPreview({
-				visible: true,
-				x: newItem.x,
-				y: newItem.y,
-				w: newItem.w,
-				h: newItem.h,
-			});
-		},
-		[],
-	);
-
-	const handleResize = useCallback(
-		(_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
-			setDragPreview({
-				visible: true,
-				x: newItem.x,
-				y: newItem.y,
-				w: newItem.w,
-				h: newItem.h,
-			});
-		},
-		[],
-	);
-
-	const handleResizeStop = useCallback(() => {
-		setDragPreview({ visible: false, x: 0, y: 0, w: 0, h: 0 });
-	}, []);
-
+	// Layout change handler
 	const handleLayoutChange = useCallback(
 		(newLayout: Layout[]) => {
 			const updatedWidgets = newLayout
@@ -150,16 +84,25 @@ export function MainDashboard({
 		[widgets, onLayoutChange],
 	);
 
-	const handleSwitchChange = useCallback(
-		(widgetId: string, checked: boolean) => {
-			setSwitchStates((prev) => ({
+	// Widget state update handler
+	const handleWidgetStateChange = useCallback(
+		(widgetId: string, newState: any) => {
+			setWidgetStates((prev) => ({
 				...prev,
-				[widgetId]: checked,
+				[widgetId]: newState,
 			}));
 		},
 		[],
 	);
 
+	// Drag preview handlers
+	const dragHandlers = useDragPreview({
+		setDragPreview,
+		setIsDragging,
+		isDragging,
+	});
+
+	// Widget renderer
 	const renderWidget = (widget: WidgetConfig) => {
 		const commonProps = {
 			id: widget.i,
@@ -170,66 +113,42 @@ export function MainDashboard({
 			...widget.props,
 		};
 
+		const widgetState = widgetStates[widget.i];
+
 		switch (widget.type) {
 			case "switch":
 				return (
 					<SwitchWidget
 						{...commonProps}
-						checked={switchStates[widget.i] || false}
-						onCheckedChange={(checked) => handleSwitchChange(widget.i, checked)}
+						checked={widgetState || false}
+						onCheckedChange={(checked) => handleWidgetStateChange(widget.i, checked)}
 					/>
 				);
 			default:
-				return <div>Unknown widget type</div>;
+				return (
+					<div className="flex items-center justify-center h-full text-muted-foreground">
+						<span>Unknown widget type: {widget.type}</span>
+					</div>
+				);
 		}
 	};
 
-	const getPreviewStyle = () => {
-		if (!dragPreview.visible || !editMode) {
-			return { display: "none" };
-		}
-
-		const cellWidth = (width - margin[0] * (cols - 1)) / cols;
-		const cellHeight = rowHeight;
-		const x = dragPreview.x * (cellWidth + margin[0]);
-		const y = dragPreview.y * (cellHeight + margin[1]);
-		const w = dragPreview.w * cellWidth + (dragPreview.w - 1) * margin[0];
-		const h = dragPreview.h * cellHeight + (dragPreview.h - 1) * margin[1];
-
-		return {
-			position: "absolute" as const,
-			left: x,
-			top: y,
-			width: w,
-			height: h,
-			backgroundColor: "rgba(255, 0, 0, 0.2)",
-			border: "2px solid red",
-			borderRadius: "8px",
-			zIndex: 888,
-			pointerEvents: "none" as const,
-			display: "block",
-		};
-	};
+	// Preview style calculation
+	const previewStyle = getPreviewStyle({
+		dragPreview,
+		editMode,
+		width,
+		cols,
+		rowHeight,
+		margin,
+	});
 
 	return (
 		<div className="w-full relative">
-			<div style={getPreviewStyle()} />
+			<div style={previewStyle} />
 
 			{widgets.length === 0 ? (
-				<div className="text-center py-12">
-					<div className="max-w-md mx-auto">
-						<Settings className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-						<h3 className="text-xl font-semibold mb-2">No Widgets Yet</h3>
-						<p className="text-muted-foreground mb-6">
-							Create your first widget to start monitoring and controlling your
-							IoT devices.
-						</p>
-						<Button onClick={onShowAddDialog} size="lg" className="gap-2">
-							<Plus className="w-4 h-4" />
-							Create Your First Widget
-						</Button>
-					</div>
-				</div>
+				<EmptyDashboard onShowAddDialog={onShowAddDialog} />
 			) : (
 				<GridLayout
 					className="layout"
@@ -241,12 +160,7 @@ export function MainDashboard({
 					isDraggable={editMode}
 					isResizable={editMode}
 					onLayoutChange={handleLayoutChange}
-					onDragStart={handleDragStart}
-					onDrag={handleDrag}
-					onDragStop={handleDragStop}
-					onResizeStart={handleResizeStart}
-					onResize={handleResize}
-					onResizeStop={handleResizeStop}
+					{...dragHandlers}
 					preventCollision={false}
 					verticalCompact={true}
 					resizeHandles={["se", "sw", "ne", "nw"]}
@@ -259,85 +173,244 @@ export function MainDashboard({
 				</GridLayout>
 			)}
 
-			<style>{`
-				.react-grid-layout {
-					position: relative;
-				}
-				
-				.react-grid-item {
-					transition: none !important;
-				}
-				
-				.widget-container {
-					height: 100%;
-					width: 100%;
-				}
-				
-				${
-					editMode
-						? `
-					.react-grid-item {
-						border: 2px dashed hsl(var(--border));
-						border-radius: 8px;
-						background: hsl(var(--background) / 0.95);
-					}
-					
-					.react-grid-item:hover {
-						border-color: hsl(var(--primary));
-						box-shadow: 0 4px 12px hsl(var(--primary) / 0.15);
-					}
-					
-					.react-grid-item.react-draggable-dragging {
-						border-color: hsl(var(--primary));
-						box-shadow: 0 8px 24px hsl(var(--primary) / 0.2);
-						transform: scale(1.02);
-						z-index: 100;
-					}
-					
-					.react-grid-item.react-resizable-resizing {
-						border-color: hsl(var(--primary));
-						box-shadow: 0 4px 12px hsl(var(--primary) / 0.15);
-						z-index: 100;
-					}
-					
-					.react-grid-placeholder {
-						background: hsl(var(--muted) / 0.5) !important;
-						border: 2px dashed hsl(var(--muted-foreground)) !important;
-						border-radius: 8px !important;
-						opacity: 0.6 !important;
-					}
-					
-					.react-resizable-handle {
-						position: absolute;
-						width: 16px;
-						height: 16px;
-						bottom: -1px;
-						right: -1px;
-						cursor: se-resize;
-						z-index: 10;
-						overflow: hidden;
-						box-sizing: border-box;
-					}
-					
-					.react-resizable-handle::after {
-						content: "";
-						position: absolute;
-						right: 2px;
-						bottom: 2px;
-						width: 4px;
-						height: 4px;
-						border-right: 2px solid hsl(var(--muted-foreground));
-						border-bottom: 2px solid hsl(var(--muted-foreground));
-					}
-				`
-						: `
-					.react-grid-item {
-						border: none;
-						background: transparent;
-					}
-				`
-				}
-			`}</style>
+			<DashboardStyles editMode={editMode} />
 		</div>
+	);
+}
+
+// Helper hook for drag preview functionality
+function useDragPreview({
+	setDragPreview,
+	setIsDragging,
+	isDragging,
+}: {
+	setDragPreview: (preview: any) => void;
+	setIsDragging: (dragging: boolean) => void;
+	isDragging: boolean;
+}) {
+	const handleDragStart = useCallback(
+		(_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
+			setTimeout(() => {
+				if (isDragging) {
+					setDragPreview({
+						visible: true,
+						x: newItem.x,
+						y: newItem.y,
+						w: newItem.w,
+						h: newItem.h,
+					});
+				}
+			}, 100);
+			setIsDragging(true);
+		},
+		[isDragging, setDragPreview, setIsDragging],
+	);
+
+	const handleDrag = useCallback(
+		(
+			_layout: Layout[],
+			_oldItem: Layout,
+			newItem: Layout,
+			placeholder: Layout,
+		) => {
+			setDragPreview({
+				visible: true,
+				x: placeholder.x,
+				y: placeholder.y,
+				w: newItem.w,
+				h: newItem.h,
+			});
+		},
+		[setDragPreview],
+	);
+
+	const handleDragStop = useCallback(() => {
+		setDragPreview({ visible: false, x: 0, y: 0, w: 0, h: 0 });
+		setIsDragging(false);
+	}, [setDragPreview, setIsDragging]);
+
+	const handleResizeStart = useCallback(
+		(_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
+			setDragPreview({
+				visible: true,
+				x: newItem.x,
+				y: newItem.y,
+				w: newItem.w,
+				h: newItem.h,
+			});
+		},
+		[setDragPreview],
+	);
+
+	const handleResize = useCallback(
+		(_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
+			setDragPreview({
+				visible: true,
+				x: newItem.x,
+				y: newItem.y,
+				w: newItem.w,
+				h: newItem.h,
+			});
+		},
+		[setDragPreview],
+	);
+
+	const handleResizeStop = useCallback(() => {
+		setDragPreview({ visible: false, x: 0, y: 0, w: 0, h: 0 });
+	}, [setDragPreview]);
+
+	return {
+		onDragStart: handleDragStart,
+		onDrag: handleDrag,
+		onDragStop: handleDragStop,
+		onResizeStart: handleResizeStart,
+		onResize: handleResize,
+		onResizeStop: handleResizeStop,
+	};
+}
+
+// Helper function for preview style calculation
+function getPreviewStyle({
+	dragPreview,
+	editMode,
+	width,
+	cols,
+	rowHeight,
+	margin,
+}: {
+	dragPreview: any;
+	editMode: boolean;
+	width: number;
+	cols: number;
+	rowHeight: number;
+	margin: [number, number];
+}) {
+	if (!dragPreview.visible || !editMode) {
+		return { display: "none" };
+	}
+
+	const cellWidth = (width - margin[0] * (cols - 1)) / cols;
+	const cellHeight = rowHeight;
+	const x = dragPreview.x * (cellWidth + margin[0]);
+	const y = dragPreview.y * (cellHeight + margin[1]);
+	const w = dragPreview.w * cellWidth + (dragPreview.w - 1) * margin[0];
+	const h = dragPreview.h * cellHeight + (dragPreview.h - 1) * margin[1];
+
+	return {
+		position: "absolute" as const,
+		left: x,
+		top: y,
+		width: w,
+		height: h,
+		backgroundColor: "rgba(255, 0, 0, 0.2)",
+		border: "2px solid red",
+		borderRadius: "8px",
+		zIndex: 888,
+		pointerEvents: "none" as const,
+		display: "block",
+	};
+}
+
+// Empty dashboard component
+function EmptyDashboard({ onShowAddDialog }: { onShowAddDialog?: () => void }) {
+	return (
+		<div className="text-center py-12">
+			<div className="max-w-md mx-auto">
+				<Settings className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+				<h3 className="text-xl font-semibold mb-2">No Widgets Yet</h3>
+				<p className="text-muted-foreground mb-6">
+					Create your first widget to start monitoring and controlling your IoT devices.
+				</p>
+				<Button onClick={onShowAddDialog} size="lg" className="gap-2">
+					<Plus className="w-4 h-4" />
+					Create Your First Widget
+				</Button>
+			</div>
+		</div>
+	);
+}
+
+// Dashboard styles component
+function DashboardStyles({ editMode }: { editMode: boolean }) {
+	return (
+		<style>{`
+			.react-grid-layout {
+				position: relative;
+			}
+			
+			.react-grid-item {
+				transition: none !important;
+			}
+			
+			.widget-container {
+				height: 100%;
+				width: 100%;
+			}
+			
+			${
+				editMode
+					? `
+				.react-grid-item {
+					border: 2px dashed hsl(var(--border));
+					border-radius: 8px;
+					background: hsl(var(--background) / 0.95);
+				}
+				
+				.react-grid-item:hover {
+					border-color: hsl(var(--primary));
+					box-shadow: 0 4px 12px hsl(var(--primary) / 0.15);
+				}
+				
+				.react-grid-item.react-draggable-dragging {
+					border-color: hsl(var(--primary));
+					box-shadow: 0 8px 24px hsl(var(--primary) / 0.2);
+					transform: scale(1.02);
+					z-index: 100;
+				}
+				
+				.react-grid-item.react-resizable-resizing {
+					border-color: hsl(var(--primary));
+					box-shadow: 0 4px 12px hsl(var(--primary) / 0.15);
+					z-index: 100;
+				}
+				
+				.react-grid-placeholder {
+					background: hsl(var(--muted) / 0.5) !important;
+					border: 2px dashed hsl(var(--muted-foreground)) !important;
+					border-radius: 8px !important;
+					opacity: 0.6 !important;
+				}
+				
+				.react-resizable-handle {
+					position: absolute;
+					width: 16px;
+					height: 16px;
+					bottom: -1px;
+					right: -1px;
+					cursor: se-resize;
+					z-index: 10;
+					overflow: hidden;
+					box-sizing: border-box;
+				}
+				
+				.react-resizable-handle::after {
+					content: "";
+					position: absolute;
+					right: 2px;
+					bottom: 2px;
+					width: 4px;
+					height: 4px;
+					border-right: 2px solid hsl(var(--muted-foreground));
+					border-bottom: 2px solid hsl(var(--muted-foreground));
+				}
+			`
+					: `
+				.react-grid-item {
+					border: none;
+					background: transparent;
+				}
+			`
+			}
+		`}</style>
 	);
 }

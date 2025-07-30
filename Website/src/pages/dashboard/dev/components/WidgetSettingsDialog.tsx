@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { X, Database } from "lucide-react";
+import { X, AlertCircle } from "lucide-react";
 import type { WidgetConfig } from "./widgets";
 import { useConfirmation } from "@/hooks/useConfirmation";
-import { useFirebaseConnection } from "@/hooks/useFirebase";
+import { 
+	WidgetSettingsForm, 
+	getWidgetSettingsSchema, 
+	validateFields, 
+	getDefaultValues 
+} from "./widgets/settings";
 
 interface WidgetSettingsDialogProps {
 	isOpen: boolean;
@@ -26,18 +29,41 @@ export function WidgetSettingsDialog({
 	onDuplicate,
 }: WidgetSettingsDialogProps) {
 	const [formData, setFormData] = useState<Record<string, any>>({});
+	const [validationErrors, setValidationErrors] = useState<string[]>([]);
 	const { confirm } = useConfirmation();
-	const { connected: firebaseConnected, configured: firebaseConfigured } = useFirebaseConnection();
+
+	// Get settings schema for the widget type
+	const settingsSchema = widget ? getWidgetSettingsSchema(widget.type) : null;
 
 	useEffect(() => {
-		if (widget) {
-			setFormData(widget.props || {});
+		if (widget && settingsSchema) {
+			// Merge default values with existing widget props
+			const defaultValues = getDefaultValues(settingsSchema);
+			const currentValues = { ...defaultValues, ...(widget.props || {}) };
+			setFormData(currentValues);
+			setValidationErrors([]);
 		}
-	}, [widget]);
+	}, [widget, settingsSchema]);
 
-	if (!isOpen || !widget) return null;
+	if (!isOpen || !widget || !settingsSchema) return null;
+
+	const handleFieldChange = (key: string, value: any) => {
+		setFormData((prev) => ({ ...prev, [key]: value }));
+		
+		// Clear validation errors when user starts typing
+		if (validationErrors.length > 0) {
+			setValidationErrors([]);
+		}
+	};
 
 	const handleSave = () => {
+		// Validate form data
+		const errors = validateFields(settingsSchema, formData);
+		if (errors.length > 0) {
+			setValidationErrors(errors);
+			return;
+		}
+
 		const updatedWidget = {
 			...widget,
 			props: formData,
@@ -48,6 +74,13 @@ export function WidgetSettingsDialog({
 
 	const handleDuplicate = () => {
 		if (onDuplicate) {
+			// Validate form data before duplicating
+			const errors = validateFields(settingsSchema, formData);
+			if (errors.length > 0) {
+				setValidationErrors(errors);
+				return;
+			}
+
 			const duplicatedWidget = {
 				...widget,
 				i: `${widget.type}-${Date.now()}`,
@@ -77,120 +110,18 @@ export function WidgetSettingsDialog({
 		}
 	};
 
-	const renderFormFields = () => {
-		switch (widget.type) {
-			case "switch":
-				return (
-					<>
-						<div className="space-y-2">
-							<Label htmlFor="title">Switch Title</Label>
-							<Input
-								id="title"
-								value={formData.title || ""}
-								onChange={(e) =>
-									setFormData((prev) => ({ ...prev, title: e.target.value }))
-								}
-								placeholder="Enter switch title"
-							/>
-						</div>
-						<div className="space-y-2">
-							<Label htmlFor="variant">Variant</Label>
-							<select
-								id="variant"
-								value={formData.variant || "default"}
-								onChange={(e) =>
-									setFormData((prev) => ({ ...prev, variant: e.target.value }))
-								}
-								className="w-full p-2 border rounded-md"
-							>
-								<option value="default">Default</option>
-								<option value="outline">Outline</option>
-								<option value="secondary">Secondary</option>
-								<option value="destructive">Destructive</option>
-							</select>
-						</div>
-						
-						{/* Firebase Configuration Section */}
-						<div className="space-y-3 border-t pt-4">
-							<div className="flex items-center gap-2 mb-2">
-								<Database className={`w-4 h-4 ${
-									firebaseConnected ? 'text-green-500' : 
-									firebaseConfigured ? 'text-orange-500' : 
-									'text-muted-foreground'
-								}`} />
-								<Label className="text-sm font-medium">Firebase Data Source</Label>
-								{!firebaseConfigured && (
-									<span className="text-xs text-muted-foreground">(Configure Firebase first)</span>
-								)}
-							</div>
-							
-							<div className="space-y-2">
-								<Label htmlFor="firebasePath">Variable Path</Label>
-								<Input
-									id="firebasePath"
-									value={formData.firebasePath || ""}
-									onChange={(e) =>
-										setFormData((prev) => ({ ...prev, firebasePath: e.target.value }))
-									}
-									placeholder="e.g., devices/switch1/state"
-									disabled={!firebaseConfigured}
-								/>
-								<p className="text-xs text-muted-foreground">
-									Path to the Firebase variable (e.g., sensors/temperature, devices/light1/status)
-								</p>
-							</div>
-							
-							<div className="space-y-2">
-								<Label htmlFor="dataType">Data Type</Label>
-								<select
-									id="dataType"
-									value={formData.dataType || "boolean"}
-									onChange={(e) =>
-										setFormData((prev) => ({ ...prev, dataType: e.target.value }))
-									}
-									className="w-full p-2 border rounded-md"
-									disabled={!firebaseConfigured}
-								>
-									<option value="boolean">Boolean (true/false)</option>
-									<option value="number">Number</option>
-									<option value="string">String</option>
-									<option value="object">Object</option>
-								</select>
-								<p className="text-xs text-muted-foreground">
-									Expected data type for the Firebase variable
-								</p>
-							</div>
-							
-							<div className="space-y-2">
-								<Label htmlFor="updateInterval">Update Interval (ms)</Label>
-								<Input
-									id="updateInterval"
-									type="number"
-									value={formData.updateInterval || 1000}
-									onChange={(e) =>
-										setFormData((prev) => ({ ...prev, updateInterval: parseInt(e.target.value) || 1000 }))
-									}
-									placeholder="1000"
-									min="100"
-									max="60000"
-									disabled={!firebaseConfigured}
-								/>
-								<p className="text-xs text-muted-foreground">
-									How often to check for updates (100ms - 60s)
-								</p>
-							</div>
-						</div>
-					</>
-				);
-			default:
-				return null;
+	const handleReset = () => {
+		if (settingsSchema) {
+			const defaultValues = getDefaultValues(settingsSchema);
+			setFormData({ ...defaultValues, ...(widget.props || {}) });
+			setValidationErrors([]);
 		}
 	};
 
 	return (
 		<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-			<Card className="w-full max-w-md mx-4 bg-background">
-				<CardHeader className="flex flex-row items-center justify-between">
+			<Card className="w-full max-w-md mx-4 bg-background max-h-[90vh] overflow-hidden flex flex-col">
+				<CardHeader className="flex flex-row items-center justify-between flex-shrink-0">
 					<CardTitle>
 						Configure{" "}
 						{widget.type.charAt(0).toUpperCase() +
@@ -200,21 +131,52 @@ export function WidgetSettingsDialog({
 						<X className="w-4 h-4" />
 					</Button>
 				</CardHeader>
-				<CardContent className="space-y-4">
-					{renderFormFields()}
+				
+				<CardContent className="flex-1 overflow-y-auto">
+					<div className="space-y-4">
+						{/* Validation Errors */}
+						{validationErrors.length > 0 && (
+							<div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+								<div className="flex items-center gap-2 mb-2">
+									<AlertCircle className="w-4 h-4 text-destructive" />
+									<span className="text-sm font-medium text-destructive">
+										Please fix the following errors:
+									</span>
+								</div>
+								<ul className="text-sm text-destructive space-y-1">
+									{validationErrors.map((error, index) => (
+										<li key={index} className="ml-4">• {error}</li>
+									))}
+								</ul>
+							</div>
+						)}
 
-					<div className="flex gap-2 pt-4">
+						{/* Settings Form */}
+						<WidgetSettingsForm
+							schema={settingsSchema}
+							values={formData}
+							onChange={handleFieldChange}
+						/>
+					</div>
+				</CardContent>
+
+				{/* Action Buttons */}
+				<div className="flex-shrink-0 p-6 pt-0">
+					<div className="flex gap-2">
 						<Button onClick={handleSave} className="flex-1">
 							Save Changes
 						</Button>
-						<Button variant="outline" onClick={handleDuplicate}>
+						<Button variant="outline" onClick={handleReset} size="sm">
+							Reset
+						</Button>
+						<Button variant="outline" onClick={handleDuplicate} size="sm">
 							Duplicate
 						</Button>
-						<Button variant="destructive" onClick={handleDelete}>
+						<Button variant="destructive" onClick={handleDelete} size="sm">
 							Delete
 						</Button>
 					</div>
-				</CardContent>
+				</div>
 			</Card>
 		</div>
 	);
