@@ -10,11 +10,11 @@
 #include "esp_netif.h"
 #include "nvs_flash.h"
 
-#define WIFI_SSID "Redmi 13"
-#define WIFI_PASS "99999999"
+#define WIFI_SSID "SSID"
+#define WIFI_PASS "PASS"
 
-#define BASE_URL "https://test-8ccfa-default-rtdb.firebaseio.com"
-#define TOKEN    "AdzSbSABNPcZRpR8uOqqsT8TtMPAMX1nwHaoqbNH"
+#define BASE_URL "YOUR_BASE_URL"
+#define TOKEN    "YOUR_TOKEN"
 
 
 static EventGroupHandle_t wifi_event_group;
