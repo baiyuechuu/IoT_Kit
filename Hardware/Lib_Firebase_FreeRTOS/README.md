@@ -41,7 +41,7 @@ idf_component_register(
 ## Library main functions
 'Getting' data from FIREBASE:
 
-```ini
+```c
 bool firebase_get_int(const char* path, int* output);
 bool firebase_get_float(const char* path, float* output);
 bool firebase_get_bool(const char* path, bool* output);
