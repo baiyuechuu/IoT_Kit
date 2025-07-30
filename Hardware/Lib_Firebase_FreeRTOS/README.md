@@ -38,3 +38,19 @@ idf_component_register(
 )
 ```
 
+## Library main functions
+'Getting' data from FIREBASE:
+
+```c
+bool firebase_get_int(const char* path, int* output);
+bool firebase_get_float(const char* path, float* output);
+bool firebase_get_bool(const char* path, bool* output);
+bool firebase_get_string(const char* path, char** output);
+```
+
+'Putting' data to FIREBASE:
+
+```c
+void firebase_put_data(const char* path, fb_data_type_t type, ...);
+```
+
