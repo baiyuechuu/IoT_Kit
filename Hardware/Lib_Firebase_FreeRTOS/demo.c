@@ -13,11 +13,11 @@
 #include "esp_netif.h"
 #include "nvs_flash.h"
 
-#define WIFI_SSID "Redmi 13" 
-#define WIFI_PASS "99999999"
+#define WIFI_SSID "YOUR_NAME_WIFI" // your name wifi
+#define WIFI_PASS "YOUR_PASS_WIFI" // your password wifi
 
-#define BASE_URL "https://test-8ccfa-default-rtdb.firebaseio.com" //your base URL
-#define TOKEN    "AdzSbSABNPcZRpR8uOqqsT8TtMPAMX1nwHaoqbNH" //Your secret Token 
+#define BASE_URL "YOUR_BASE_URL" //your base URL
+#define TOKEN    "YOUR_SECRET_TOKEN" //Your secret Token 
 
 
 static EventGroupHandle_t wifi_event_group;
