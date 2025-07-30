@@ -38,13 +38,11 @@ export default function DashboardListPage() {
 	const [creating, setCreating] = useState(false);
 	const [deleting, setDeleting] = useState<string | null>(null);
 
-	// Form state for creating new dashboard
 	const [newDashboard, setNewDashboard] = useState({
 		name: "",
 		is_public: false,
 	});
 
-	// Load dashboards
 	const loadDashboards = useCallback(async () => {
 		if (!isAuthenticated) return;
 
@@ -71,7 +69,6 @@ export default function DashboardListPage() {
 		loadDashboards();
 	}, [loadDashboards]);
 
-	// Create new dashboard
 	const handleCreateDashboard = async () => {
 		if (!newDashboard.name.trim()) return;
 
@@ -89,7 +86,6 @@ export default function DashboardListPage() {
 				setDashboards((prev) => [data, ...prev]);
 				setShowCreateForm(false);
 				setNewDashboard({ name: "", is_public: false });
-				// Navigate to the new dashboard
 				navigate(`/dashboard/${data.id}`);
 			}
 		} catch (err) {
@@ -101,7 +97,6 @@ export default function DashboardListPage() {
 		}
 	};
 
-	// Delete dashboard
 	const handleDeleteDashboard = async (
 		dashboardId: string,
 		dashboardName: string,
@@ -135,7 +130,6 @@ export default function DashboardListPage() {
 		}
 	};
 
-	// Format date
 	const formatDate = (dateString: string) => {
 		return new Date(dateString).toLocaleDateString("en-US", {
 			year: "numeric",
@@ -146,7 +140,6 @@ export default function DashboardListPage() {
 		});
 	};
 
-	// Loading state
 	if (authLoading || loading) {
 		return (
 			<div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
@@ -160,7 +153,6 @@ export default function DashboardListPage() {
 		);
 	}
 
-	// Authentication required
 	if (!isAuthenticated) {
 		return (
 			<div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
@@ -183,7 +175,6 @@ export default function DashboardListPage() {
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
 			<div className="w-full px-4 md:px-8 py-20">
-				{/* Header */}
 				<div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
 					<div>
 						<h1 className="text-3xl font-bold text-primary mb-2">
@@ -203,7 +194,6 @@ export default function DashboardListPage() {
 					</Button>
 				</div>
 
-				{/* Create form */}
 				{showCreateForm && (
 					<Card className="mb-8">
 						<CardHeader>
@@ -261,7 +251,6 @@ export default function DashboardListPage() {
 					</Card>
 				)}
 
-				{/* Error display */}
 				{error && (
 					<div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg flex items-center justify-between">
 						<div className="flex items-center gap-2">
@@ -279,7 +268,6 @@ export default function DashboardListPage() {
 					</div>
 				)}
 
-				{/* Dashboards grid */}
 				{dashboards.length === 0 ? (
 					<div className="text-center py-12">
 						<div className="max-w-md mx-auto">

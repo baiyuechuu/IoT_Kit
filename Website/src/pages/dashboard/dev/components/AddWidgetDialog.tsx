@@ -15,7 +15,6 @@ const WIDGET_TYPES = [
 		type: "switch" as WidgetType,
 		name: "Switch",
 		description: "Toggle on/off control",
-		color: "bg-purple-500",
 	},
 ];
 

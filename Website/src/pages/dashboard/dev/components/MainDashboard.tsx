@@ -43,7 +43,6 @@ export function MainDashboard({
 	}>({ visible: false, x: 0, y: 0, w: 0, h: 0 });
 	const [isDragging, setIsDragging] = useState(false);
 
-	// Convert widgets to react-grid-layout format
 	const layout: Layout[] = widgets.map((widget) => ({
 		i: widget.i,
 		x: widget.x,
@@ -58,10 +57,8 @@ export function MainDashboard({
 		isResizable: editMode,
 	}));
 
-	// Handle drag start - only show preview if actually dragging
 	const handleDragStart = useCallback(
 		(_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
-			// Small delay to distinguish between click and drag
 			setTimeout(() => {
 				if (isDragging) {
 					setDragPreview({
@@ -78,7 +75,6 @@ export function MainDashboard({
 		[isDragging],
 	);
 
-	// Handle drag - update preview position
 	const handleDrag = useCallback(
 		(
 			_layout: Layout[],
@@ -97,13 +93,11 @@ export function MainDashboard({
 		[],
 	);
 
-	// Handle drag stop - hide preview
 	const handleDragStop = useCallback(() => {
 		setDragPreview({ visible: false, x: 0, y: 0, w: 0, h: 0 });
 		setIsDragging(false);
 	}, []);
 
-	// Handle resize start - show preview
 	const handleResizeStart = useCallback(
 		(_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
 			setDragPreview({
@@ -117,7 +111,6 @@ export function MainDashboard({
 		[],
 	);
 
-	// Handle resize - update preview size
 	const handleResize = useCallback(
 		(_layout: Layout[], _oldItem: Layout, newItem: Layout) => {
 			setDragPreview({
@@ -131,12 +124,10 @@ export function MainDashboard({
 		[],
 	);
 
-	// Handle resize stop - hide preview
 	const handleResizeStop = useCallback(() => {
 		setDragPreview({ visible: false, x: 0, y: 0, w: 0, h: 0 });
 	}, []);
 
-	// Handle layout changes
 	const handleLayoutChange = useCallback(
 		(newLayout: Layout[]) => {
 			const updatedWidgets = newLayout
@@ -159,7 +150,6 @@ export function MainDashboard({
 		[widgets, onLayoutChange],
 	);
 
-	// Handle switch state changes
 	const handleSwitchChange = useCallback(
 		(widgetId: string, checked: boolean) => {
 			setSwitchStates((prev) => ({
@@ -170,7 +160,6 @@ export function MainDashboard({
 		[],
 	);
 
-	// Render widget based on type
 	const renderWidget = (widget: WidgetConfig) => {
 		const commonProps = {
 			id: widget.i,
@@ -195,7 +184,6 @@ export function MainDashboard({
 		}
 	};
 
-	// Calculate preview position and size with red background
 	const getPreviewStyle = () => {
 		if (!dragPreview.visible || !editMode) {
 			return { display: "none" };
@@ -214,7 +202,7 @@ export function MainDashboard({
 			top: y,
 			width: w,
 			height: h,
-			backgroundColor: "rgba(255, 0, 0, 0.3)",
+			backgroundColor: "rgba(255, 0, 0, 0.2)",
 			border: "2px solid red",
 			borderRadius: "8px",
 			zIndex: 888,
@@ -225,7 +213,6 @@ export function MainDashboard({
 
 	return (
 		<div className="w-full relative">
-			{/* Red Preview for Drag/Resize */}
 			<div style={getPreviewStyle()} />
 
 			{widgets.length === 0 ? (

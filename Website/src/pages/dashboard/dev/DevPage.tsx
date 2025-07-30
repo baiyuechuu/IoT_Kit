@@ -58,7 +58,6 @@ export default function DevPage() {
 	const [gridWidth, setGridWidth] = useState(1200);
 	const [isDesktop, setIsDesktop] = useState(true);
 
-	// Load dashboard data
 	useEffect(() => {
 		const loadDashboard = async () => {
 			if (!isAuthenticated || !dashboardId) return;
@@ -89,26 +88,20 @@ export default function DevPage() {
 		loadDashboard();
 	}, [isAuthenticated, dashboardId]);
 
-	// Update grid width and check for desktop
 	useEffect(() => {
 		const updateSizing = () => {
-			// Use window inner width as basis for calculations
 			const windowWidth = window.innerWidth;
-			// Use consistent padding offset for both edit and view modes
-			const paddingOffset = 64; // Consistent padding for both modes
-			// Always use full width minus padding
+			const paddingOffset = 64; 
 			setGridWidth(windowWidth - paddingOffset);
 
-			// Check if we're on desktop (width > 1080px)
 			setIsDesktop(windowWidth > 1080);
 		};
 
 		updateSizing();
 		window.addEventListener("resize", updateSizing);
 		return () => window.removeEventListener("resize", updateSizing);
-	}, [editMode]); // Re-calculate when edit mode changes
+	}, [editMode]); 
 
-	// Handle layout changes
 	const handleLayoutChange = useCallback(
 		(updatedWidgets: WidgetConfig[]) => {
 			updateWidgets(updatedWidgets);
@@ -116,7 +109,6 @@ export default function DevPage() {
 		[updateWidgets],
 	);
 
-	// Add new widget with configuration
 	const handleAddWidget = useCallback(
 		(type: WidgetType, props: Record<string, unknown>) => {
 			const constraints = WIDGET_CONSTRAINTS[type];
@@ -130,7 +122,6 @@ export default function DevPage() {
 				props,
 			};
 
-			// Find empty space for the new widget
 			const existingPositions = widgets.map((w) => ({
 				x: w.x,
 				y: w.y,
@@ -142,7 +133,6 @@ export default function DevPage() {
 			let bestY = 0;
 			let found = false;
 
-			// Try to find an empty spot
 			for (let y = 0; y < 20 && !found; y++) {
 				for (let x = 0; x <= 12 - newWidget.w && !found; x++) {
 					const hasCollision = existingPositions.some((pos) => {
@@ -171,7 +161,6 @@ export default function DevPage() {
 		[widgets, updateWidgets],
 	);
 
-	// Handle widget settings
 	const handleWidgetSettings = useCallback(
 		(widgetId: string) => {
 			const widget = widgets.find((w) => w.i === widgetId);
@@ -183,7 +172,6 @@ export default function DevPage() {
 		[widgets],
 	);
 
-	// Handle widget save
 	const handleWidgetSave = useCallback(
 		(updatedWidget: WidgetConfig) => {
 			const updatedWidgets = widgets.map((w) =>
@@ -194,7 +182,6 @@ export default function DevPage() {
 		[widgets, updateWidgets],
 	);
 
-	// Handle widget duplicate
 	const handleWidgetDuplicate = useCallback(
 		(widget: WidgetConfig) => {
 			const newWidget: WidgetConfig = {
@@ -209,7 +196,6 @@ export default function DevPage() {
 		[widgets, updateWidgets],
 	);
 
-	// Handle widget delete
 	const handleWidgetDelete = useCallback(
 		(widgetId: string) => {
 			const updatedWidgets = widgets.filter((w) => w.i !== widgetId);
@@ -218,7 +204,6 @@ export default function DevPage() {
 		[widgets, updateWidgets],
 	);
 
-	// Clear all widgets
 	const handleClearAll = useCallback(async () => {
 		const confirmed = await confirm({
 			title: "Clear All Widgets",
@@ -234,7 +219,6 @@ export default function DevPage() {
 		}
 	}, [updateWidgets, confirm]);
 
-	// Show loading state while authenticating or loading dashboard
 	if (authLoading || dashboardLoading) {
 		return (
 			<div className="min-h-screen bg-background flex items-center justify-center">
@@ -248,7 +232,6 @@ export default function DevPage() {
 		);
 	}
 
-	// Show authentication required state
 	if (!isAuthenticated) {
 		return (
 			<div className="min-h-screen bg-background flex items-center justify-center">
@@ -268,7 +251,6 @@ export default function DevPage() {
 		);
 	}
 
-	// Show dashboard error state
 	if (dashboardError) {
 		return (
 			<div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
@@ -287,7 +269,6 @@ export default function DevPage() {
 		);
 	}
 
-	// Show dashboard not found state
 	if (!dashboard) {
 		return (
 			<div className="min-h-screen bg-background flex items-center justify-center">
@@ -312,7 +293,6 @@ export default function DevPage() {
 				<div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 mb-6 pt-20">
 					<div className="flex-1">
 						<div className="flex items-center gap-3">
-							{/* Back navigation */}
 							<Button
 								variant="ghost"
 								onClick={() => navigate("/dashboard")}
@@ -321,7 +301,6 @@ export default function DevPage() {
 								<ArrowLeft className="w-9 h-9" />
 							</Button>
 							<h1 className="text-2xl text-primary">{dashboard.name}</h1>
-							{/* Save status indicator */}
 							<div className="flex items-center gap-2 mt-1">
 								{saving ? (
 									<div className="flex items-center gap-1 text-sm text-blue-500">
@@ -401,7 +380,6 @@ export default function DevPage() {
 					</div>
 				</div>
 
-				{/* Error display */}
 				{widgetError && (
 					<div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg flex items-center justify-between">
 						<div className="flex items-center gap-2">

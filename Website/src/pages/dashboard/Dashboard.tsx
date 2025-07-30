@@ -13,7 +13,6 @@ export default function Dashboard() {
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
 			<div className="flex flex-col items-center justify-center">
-				{/* Header */}
 				<div className="text-center mb-8 mt-32">
 					<h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent mb-2">
 						IoT Kit Dashboard
@@ -23,7 +22,6 @@ export default function Dashboard() {
 					</p>
 				</div>
 
-				{/* Main Content */}
 				<div className="max-w-6xl flex flex-col justify-center">
 					<Tabs
 						className="space-y-6 flex justify-center items-center"
