@@ -176,7 +176,7 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
                 ) : (
                   <XCircle className="w-4 h-4 text-orange-600" />
                 )}
-                <span className={connected ? "text-green-700" : "text-orange-700"}>
+                <span className={connected ? "text-green-700 w-fit" : "text-orange-700 w-fit"}>
                   {connected ? "Connected to Firebase" : "Firebase configured but not connected"}
                 </span>
               </div>

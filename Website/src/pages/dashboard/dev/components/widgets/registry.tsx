@@ -6,24 +6,39 @@ import type {
   WidgetMetadata
 } from './types';
 import { createDefaultWidgetConfig } from './types';
-import { SwitchWidget } from './SwitchWidget';
+import { TemperatureWidget } from './TemperatureWidget';
+import { HumidityWidget } from './HumidityWidget';
 import { 
-  ToggleLeft, 
+  Thermometer,
+  Droplets,
+  Activity,
   Gauge, 
   LineChart, 
-  Type, 
-  Square, 
-  Sliders 
+  Type
 } from 'lucide-react';
 
 // Widget constraints registry
 export const WIDGET_CONSTRAINTS_REGISTRY: Record<WidgetType, WidgetConstraints> = {
-  switch: {
+  temperature: {
     minW: 2,
     maxW: 3,
     minH: 2,
     maxH: 3,
     defaultSize: { w: 2, h: 2 }
+  },
+  humidity: {
+    minW: 2,
+    maxW: 3,
+    minH: 2,
+    maxH: 3,
+    defaultSize: { w: 2, h: 2 }
+  },
+  sensor_data: {
+    minW: 2,
+    maxW: 4,
+    minH: 2,
+    maxH: 4,
+    defaultSize: { w: 3, h: 2 }
   },
   gauge: {
     minW: 2,
@@ -46,32 +61,36 @@ export const WIDGET_CONSTRAINTS_REGISTRY: Record<WidgetType, WidgetConstraints> 
     minH: 1,
     maxH: 3,
     defaultSize: { w: 2, h: 1 }
-  },
-  button: {
-    minW: 1,
-    maxW: 4,
-    minH: 1,
-    maxH: 2,
-    defaultSize: { w: 2, h: 1 }
-  },
-  slider: {
-    minW: 2,
-    maxW: 6,
-    minH: 1,
-    maxH: 3,
-    defaultSize: { w: 3, h: 2 }
   }
 };
 
 // Widget metadata registry
 export const WIDGET_METADATA_REGISTRY: Record<WidgetType, WidgetMetadata> = {
-  switch: {
-    name: 'Switch',
-    description: 'Toggle switch for controlling boolean values',
-    icon: ToggleLeft,
-    category: 'control',
-    tags: ['toggle', 'boolean', 'control', 'input'],
+  temperature: {
+    name: 'Temperature',
+    description: 'Display temperature data with unit conversion and color ranges',
+    icon: Thermometer,
+    category: 'display',
+    tags: ['temperature', 'sensor', 'display', 'celsius', 'fahrenheit'],
     difficulty: 'beginner',
+    requiredFeatures: ['firebase']
+  },
+  humidity: {
+    name: 'Humidity',
+    description: 'Display humidity percentage with comfort zone indicators',
+    icon: Droplets,
+    category: 'display',
+    tags: ['humidity', 'sensor', 'display', 'moisture', 'comfort'],
+    difficulty: 'beginner',
+    requiredFeatures: ['firebase']
+  },
+  sensor_data: {
+    name: 'Sensor Data',
+    description: 'Display multiple sensor values in a single widget',
+    icon: Activity,
+    category: 'display',
+    tags: ['sensors', 'multi-data', 'display', 'combined'],
+    difficulty: 'intermediate',
     requiredFeatures: ['firebase']
   },
   gauge: {
@@ -100,24 +119,6 @@ export const WIDGET_METADATA_REGISTRY: Record<WidgetType, WidgetMetadata> = {
     tags: ['text', 'display', 'label', 'value'],
     difficulty: 'beginner',
     requiredFeatures: ['firebase']
-  },
-  button: {
-    name: 'Button',
-    description: 'Interactive button for triggering actions',
-    icon: Square,
-    category: 'input',
-    tags: ['button', 'action', 'trigger', 'control'],
-    difficulty: 'intermediate',
-    requiredFeatures: ['firebase', 'api']
-  },
-  slider: { 
-    name: 'Slider',
-    description: 'Slider input for selecting numeric values in a range',
-    icon: Sliders,
-    category: 'input',
-    tags: ['slider', 'numeric', 'range', 'input'],
-    difficulty: 'intermediate',
-    requiredFeatures: ['firebase']
   }
 };
 
@@ -137,22 +138,36 @@ function PlaceholderWidget({ type }: { type: WidgetType }) {
 
 // Component registry
 const WIDGET_COMPONENT_REGISTRY: Record<WidgetType, React.ComponentType<any>> = {
-  switch: SwitchWidget,
+  temperature: TemperatureWidget,
+  humidity: HumidityWidget,
+  sensor_data: (props) => <PlaceholderWidget type="sensor_data" {...props} />,
   gauge: (props) => <PlaceholderWidget type="gauge" {...props} />,
   chart: (props) => <PlaceholderWidget type="chart" {...props} />,
   text: (props) => <PlaceholderWidget type="text" {...props} />,
-  button: (props) => <PlaceholderWidget type="button" {...props} />,
-  slider: (props) => <PlaceholderWidget type="slider" {...props} />,
 };
 
 // Complete widget definitions
 export const WIDGET_REGISTRY: Record<WidgetType, WidgetDefinition> = {
-  switch: {
-    type: 'switch',
-    metadata: WIDGET_METADATA_REGISTRY.switch,
-    constraints: WIDGET_CONSTRAINTS_REGISTRY.switch,
-    defaultConfig: createDefaultWidgetConfig('switch'),
-    component: WIDGET_COMPONENT_REGISTRY.switch,
+  temperature: {
+    type: 'temperature',
+    metadata: WIDGET_METADATA_REGISTRY.temperature,
+    constraints: WIDGET_CONSTRAINTS_REGISTRY.temperature,
+    defaultConfig: createDefaultWidgetConfig('temperature'),
+    component: WIDGET_COMPONENT_REGISTRY.temperature,
+  },
+  humidity: {
+    type: 'humidity',
+    metadata: WIDGET_METADATA_REGISTRY.humidity,
+    constraints: WIDGET_CONSTRAINTS_REGISTRY.humidity,
+    defaultConfig: createDefaultWidgetConfig('humidity'),
+    component: WIDGET_COMPONENT_REGISTRY.humidity,
+  },
+  sensor_data: {
+    type: 'sensor_data',
+    metadata: WIDGET_METADATA_REGISTRY.sensor_data,
+    constraints: WIDGET_CONSTRAINTS_REGISTRY.sensor_data,
+    defaultConfig: createDefaultWidgetConfig('sensor_data'),
+    component: WIDGET_COMPONENT_REGISTRY.sensor_data,
   },
   gauge: {
     type: 'gauge',
@@ -174,20 +189,6 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetDefinition> = {
     constraints: WIDGET_CONSTRAINTS_REGISTRY.text,
     defaultConfig: createDefaultWidgetConfig('text'),
     component: WIDGET_COMPONENT_REGISTRY.text,
-  },
-  button: {
-    type: 'button',
-    metadata: WIDGET_METADATA_REGISTRY.button,
-    constraints: WIDGET_CONSTRAINTS_REGISTRY.button,
-    defaultConfig: createDefaultWidgetConfig('button'),
-    component: WIDGET_COMPONENT_REGISTRY.button,
-  },
-  slider: {
-    type: 'slider',
-    metadata: WIDGET_METADATA_REGISTRY.slider,
-    constraints: WIDGET_CONSTRAINTS_REGISTRY.slider,
-    defaultConfig: createDefaultWidgetConfig('slider'),
-    component: WIDGET_COMPONENT_REGISTRY.slider,
   },
 };
 

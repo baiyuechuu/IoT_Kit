@@ -11,6 +11,48 @@ import {
 	getDefaultValues 
 } from "./widgets/settings";
 
+// Utility functions for handling nested object paths
+function flattenObject(obj: any, prefix = ''): Record<string, any> {
+	const flattened: Record<string, any> = {};
+	
+	for (const key in obj) {
+		if (obj.hasOwnProperty(key)) {
+			const newKey = prefix ? `${prefix}.${key}` : key;
+			
+			if (obj[key] !== null && typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+				Object.assign(flattened, flattenObject(obj[key], newKey));
+			} else {
+				flattened[newKey] = obj[key];
+			}
+		}
+	}
+	
+	return flattened;
+}
+
+function unflattenObject(obj: Record<string, any>): any {
+	const result: any = {};
+	
+	for (const key in obj) {
+		if (obj.hasOwnProperty(key)) {
+			const keys = key.split('.');
+			let current = result;
+			
+			for (let i = 0; i < keys.length - 1; i++) {
+				const k = keys[i];
+				if (!(k in current)) {
+					current[k] = {};
+				}
+				current = current[k];
+			}
+			
+			current[keys[keys.length - 1]] = obj[key];
+		}
+	}
+	
+	return result;
+}
+
 interface WidgetSettingsDialogProps {
 	isOpen: boolean;
 	widget: WidgetConfig | null;
@@ -39,7 +81,8 @@ export function WidgetSettingsDialog({
 		if (widget && settingsSchema) {
 			// Merge default values with existing widget props
 			const defaultValues = getDefaultValues(settingsSchema);
-			const currentValues = { ...defaultValues, ...(widget.props || {}) };
+			// Flatten nested objects for the form
+			const currentValues = flattenObject({ ...defaultValues, ...widget });
 			setFormData(currentValues);
 			setValidationErrors([]);
 		}
@@ -64,9 +107,11 @@ export function WidgetSettingsDialog({
 			return;
 		}
 
+		// Unflatten the form data back to nested objects
+		const unflattened = unflattenObject(formData);
 		const updatedWidget = {
 			...widget,
-			props: formData,
+			...unflattened,
 		};
 		onSave(updatedWidget);
 		onClose();
@@ -81,12 +126,14 @@ export function WidgetSettingsDialog({
 				return;
 			}
 
+			// Unflatten the form data back to nested objects
+			const unflattened = unflattenObject(formData);
 			const duplicatedWidget = {
 				...widget,
+				...unflattened,
 				i: `${widget.type}-${Date.now()}`,
 				x: widget.x + 1,
 				y: widget.y + 1,
-				props: formData,
 			};
 			onDuplicate(duplicatedWidget);
 			onClose();
@@ -113,7 +160,8 @@ export function WidgetSettingsDialog({
 	const handleReset = () => {
 		if (settingsSchema) {
 			const defaultValues = getDefaultValues(settingsSchema);
-			setFormData({ ...defaultValues, ...(widget.props || {}) });
+			const currentValues = flattenObject({ ...defaultValues, ...widget });
+			setFormData(currentValues);
 			setValidationErrors([]);
 		}
 	};

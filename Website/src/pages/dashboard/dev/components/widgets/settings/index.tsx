@@ -1,15 +1,16 @@
 import type { WidgetType } from '../index';
 import type { WidgetSettingsSchema } from './WidgetSettingsFramework';
-import { getSwitchWidgetSettingsSchema } from './SwitchWidgetSettings';
+import { temperatureWidgetSettingsSchema } from './TemperatureWidgetSettings';
+import { humidityWidgetSettingsSchema } from './HumidityWidgetSettings';
 
 // Widget settings registry
 export const WIDGET_SETTINGS_REGISTRY: Record<WidgetType, () => WidgetSettingsSchema> = {
-  switch: getSwitchWidgetSettingsSchema,
+  temperature: () => temperatureWidgetSettingsSchema,
+  humidity: () => humidityWidgetSettingsSchema,
+  sensor_data: () => ({ sections: [] }),
   gauge: () => ({ sections: [] }),
   chart: () => ({ sections: [] }),
   text: () => ({ sections: [] }),
-  button: () => ({ sections: [] }),
-  slider: () => ({ sections: [] }),
 };
 
 // Get settings schema for a widget type
@@ -23,4 +24,5 @@ export function getWidgetSettingsSchema(widgetType: WidgetType): WidgetSettingsS
 
 // Export framework components
 export * from './WidgetSettingsFramework';
-export * from './SwitchWidgetSettings';
+export * from './TemperatureWidgetSettings';
+export * from './HumidityWidgetSettings';

@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Widget type definitions
-export type WidgetType = "switch" | "gauge" | "chart" | "text" | "button" | "slider";
+export type WidgetType = "temperature" | "humidity" | "sensor_data" | "gauge" | "chart" | "text";
 
 // Base widget configuration interface
 export interface BaseWidgetConfig {
@@ -48,16 +48,39 @@ export interface BaseWidgetConfig {
 }
 
 // Specific widget configuration interfaces
-export interface SwitchWidgetConfig extends BaseWidgetConfig {
-  type: 'switch';
+export interface TemperatureWidgetConfig extends BaseWidgetConfig {
+  type: 'temperature';
   props?: {
-    variant?: 'default' | 'outline' | 'secondary' | 'destructive';
-    defaultState?: boolean;
-    confirmOnChange?: boolean;
-    labels?: {
-      on?: string;
-      off?: string;
-    };
+    unit?: 'celsius' | 'fahrenheit';
+    showTrend?: boolean;
+    colorRanges?: Array<{
+      min: number;
+      max: number;
+      color: string;
+      label: string;
+    }>;
+    precision?: number;
+  };
+}
+
+export interface HumidityWidgetConfig extends BaseWidgetConfig {
+  type: 'humidity';
+  props?: {
+    showComfortZone?: boolean;
+    comfortRange?: { min: number; max: number };
+    showTrend?: boolean;
+    precision?: number;
+  };
+}
+
+export interface SensorDataWidgetConfig extends BaseWidgetConfig {
+  type: 'sensor_data';
+  props?: {
+    sensors?: string[];
+    layout?: 'vertical' | 'horizontal' | 'grid';
+    showLabels?: boolean;
+    showUnits?: boolean;
+    precision?: number;
   };
 }
 
@@ -108,45 +131,15 @@ export interface TextWidgetConfig extends BaseWidgetConfig {
   };
 }
 
-export interface ButtonWidgetConfig extends BaseWidgetConfig {
-  type: 'button';
-  props?: {
-    variant?: 'default' | 'outline' | 'secondary' | 'destructive';
-    size?: 'sm' | 'md' | 'lg';
-    action?: {
-      type: 'firebase' | 'api' | 'navigation';
-      target?: string;
-      payload?: any;
-    };
-    confirmAction?: boolean;
-    disabled?: boolean;
-  };
-}
-
-export interface SliderWidgetConfig extends BaseWidgetConfig {
-  type: 'slider';
-  props?: {
-    min?: number;
-    max?: number;
-    step?: number;
-    unit?: string;
-    showValue?: boolean;
-    orientation?: 'horizontal' | 'vertical';
-    marks?: Array<{
-      value: number;
-      label?: string;
-    }>;
-  };
-}
 
 // Union type for all widget configurations
 export type WidgetConfig = 
-  | SwitchWidgetConfig
+  | TemperatureWidgetConfig
+  | HumidityWidgetConfig
+  | SensorDataWidgetConfig
   | GaugeWidgetConfig
   | ChartWidgetConfig
-  | TextWidgetConfig
-  | ButtonWidgetConfig
-  | SliderWidgetConfig;
+  | TextWidgetConfig;
 
 // Widget constraints configuration
 export interface WidgetConstraints {
@@ -166,7 +159,7 @@ export interface WidgetMetadata {
   name: string;
   description: string;
   icon?: React.ComponentType<any>;
-  category?: 'input' | 'display' | 'control' | 'visualization';
+  category?: 'display' | 'visualization';
   tags?: string[];
   previewImage?: string;
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
@@ -230,8 +223,16 @@ export interface CommonWidgetProps {
 }
 
 // Type guards for widget configurations
-export function isSwitchWidget(config: WidgetConfig): config is SwitchWidgetConfig {
-  return config.type === 'switch';
+export function isTemperatureWidget(config: WidgetConfig): config is TemperatureWidgetConfig {
+  return config.type === 'temperature';
+}
+
+export function isHumidityWidget(config: WidgetConfig): config is HumidityWidgetConfig {
+  return config.type === 'humidity';
+}
+
+export function isSensorDataWidget(config: WidgetConfig): config is SensorDataWidgetConfig {
+  return config.type === 'sensor_data';
 }
 
 export function isGaugeWidget(config: WidgetConfig): config is GaugeWidgetConfig {
@@ -246,35 +247,27 @@ export function isTextWidget(config: WidgetConfig): config is TextWidgetConfig {
   return config.type === 'text';
 }
 
-export function isButtonWidget(config: WidgetConfig): config is ButtonWidgetConfig {
-  return config.type === 'button';
-}
-
-export function isSliderWidget(config: WidgetConfig): config is SliderWidgetConfig {
-  return config.type === 'slider';
-}
-
 // Utility functions for widget configuration
 export function getWidgetDisplayName(type: WidgetType): string {
   const names: Record<WidgetType, string> = {
-    switch: 'Switch',
+    temperature: 'Temperature',
+    humidity: 'Humidity',
+    sensor_data: 'Sensor Data',
     gauge: 'Gauge',
     chart: 'Chart',
     text: 'Text Display',
-    button: 'Button',
-    slider: 'Slider',
   };
   return names[type];
 }
 
 export function getWidgetIcon(type: WidgetType): string {
   const icons: Record<WidgetType, string> = {
-    switch: '🔘',
+    temperature: '🌡️',
+    humidity: '💧',
+    sensor_data: '📊',
     gauge: '📊',
     chart: '📈',
     text: '📝',
-    button: '🔲',
-    slider: '🎛️',
   };
   return icons[type];
 }
@@ -299,17 +292,74 @@ export function createDefaultWidgetConfig(type: WidgetType, overrides?: Partial<
 
   // Type-specific defaults
   switch (type) {
-    case 'switch':
+    case 'temperature':
       return {
         ...baseConfig,
-        type: 'switch',
+        type: 'temperature',
+        w: 2,
+        h: 2,
+        firebaseConfig: {
+          path: '/sensors/temperature',
+          dataType: 'number',
+          updateInterval: 1000,
+          enabled: true,
+        },
         props: {
-          variant: 'default',
-          defaultState: false,
-          labels: { on: 'ON', off: 'OFF' },
+          unit: 'celsius',
+          showTrend: true,
+          precision: 1,
+          colorRanges: [
+            { min: -10, max: 0, color: '#3b82f6', label: 'Cold' },
+            { min: 0, max: 20, color: '#10b981', label: 'Cool' },
+            { min: 20, max: 30, color: '#f59e0b', label: 'Warm' },
+            { min: 30, max: 50, color: '#ef4444', label: 'Hot' }
+          ],
           ...baseConfig.props,
         },
-      } as SwitchWidgetConfig;
+      } as TemperatureWidgetConfig;
+    
+    case 'humidity':
+      return {
+        ...baseConfig,
+        type: 'humidity',
+        w: 2,
+        h: 2,
+        firebaseConfig: {
+          path: '/sensors/humidity',
+          dataType: 'number',
+          updateInterval: 1000,
+          enabled: true,
+        },
+        props: {
+          showComfortZone: true,
+          comfortRange: { min: 30, max: 60 },
+          showTrend: true,
+          precision: 1,
+          ...baseConfig.props,
+        },
+      } as HumidityWidgetConfig;
+    
+    case 'sensor_data':
+      return {
+        ...baseConfig,
+        type: 'sensor_data',
+        w: 3,
+        h: 2,
+        firebaseConfig: {
+          path: '/sensors',
+          dataType: 'object',
+          updateInterval: 1000,
+          enabled: true,
+        },
+        props: {
+          sensors: ['temperature', 'humidity'],
+          layout: 'vertical',
+          showLabels: true,
+          showUnits: true,
+          precision: 1,
+          ...baseConfig.props,
+        },
+      } as SensorDataWidgetConfig;
     
     case 'gauge':
       return {
@@ -355,35 +405,6 @@ export function createDefaultWidgetConfig(type: WidgetType, overrides?: Partial<
           ...baseConfig.props,
         },
       } as TextWidgetConfig;
-    
-    case 'button':
-      return {
-        ...baseConfig,
-        type: 'button',
-        props: {
-          variant: 'default',
-          size: 'md',
-          confirmAction: false,
-          disabled: false,
-          ...baseConfig.props,
-        },
-      } as ButtonWidgetConfig;
-    
-    case 'slider':
-      return {
-        ...baseConfig,
-        type: 'slider',
-        w: 3,
-        h: 2,
-        props: {
-          min: 0,
-          max: 100,
-          step: 1,
-          showValue: true,
-          orientation: 'horizontal',
-          ...baseConfig.props,
-        },
-      } as SliderWidgetConfig;
     
     default:
       return baseConfig as WidgetConfig;

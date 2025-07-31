@@ -1,4 +1,5 @@
-export { SwitchWidget } from "./SwitchWidget";
+export { TemperatureWidget } from "./TemperatureWidget";
+export { HumidityWidget } from "./HumidityWidget";
 
 // Re-export standardized types
 export * from './types';
@@ -25,6 +26,7 @@ export interface LegacyWidgetConfig {
 export { 
 	WIDGET_CONSTRAINTS,
 	WIDGET_REGISTRY,
+	WIDGET_METADATA_REGISTRY,
 	getWidgetDefinition,
 	getWidgetComponent,
 	getWidgetConstraints,

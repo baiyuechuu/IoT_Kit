@@ -1,4 +1,6 @@
 // Firebase exports
+console.log('📦 Firebase: Loading Firebase modules...');
+
 export { firebaseClient, type FirebaseConfig } from './client';
 export { realtimeService, type RealtimeSubscription, type VariableConfig } from './realtime';
 
@@ -9,3 +11,5 @@ export {
   off,
   type DataSnapshot
 } from 'firebase/database';
+
+console.log('✅ Firebase: All modules loaded successfully');

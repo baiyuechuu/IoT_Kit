@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import GridLayout, { type Layout } from "react-grid-layout";
-import { SwitchWidget, WIDGET_CONSTRAINTS } from "./widgets";
+import { WIDGET_CONSTRAINTS, TemperatureWidget, HumidityWidget } from "./widgets";
 import type { WidgetConfig } from "./widgets";
 import "react-grid-layout/css/styles.css";
 import { Button } from "@/components/ui/button";
@@ -47,19 +47,40 @@ export function MainDashboard({
 	const [isDragging, setIsDragging] = useState(false);
 
 	// Generate grid layout from widgets
-	const layout: Layout[] = widgets.map((widget) => ({
-		i: widget.i,
-		x: widget.x,
-		y: widget.y,
-		w: widget.w,
-		h: widget.h,
-		minW: WIDGET_CONSTRAINTS[widget.type].minW,
-		maxW: WIDGET_CONSTRAINTS[widget.type].maxW,
-		minH: WIDGET_CONSTRAINTS[widget.type].minH,
-		maxH: WIDGET_CONSTRAINTS[widget.type].maxH,
-		isDraggable: editMode,
-		isResizable: editMode,
-	}));
+	const layout: Layout[] = widgets.map((widget) => {
+		const constraints = WIDGET_CONSTRAINTS[widget.type];
+		if (!constraints) {
+			console.warn(`Widget type "${widget.type}" not found in constraints registry`);
+			// Use default constraints for unknown widget types
+			return {
+				i: widget.i,
+				x: widget.x,
+				y: widget.y,
+				w: widget.w,
+				h: widget.h,
+				minW: 1,
+				maxW: 6,
+				minH: 1,
+				maxH: 4,
+				isDraggable: editMode,
+				isResizable: editMode,
+			};
+		}
+		
+		return {
+			i: widget.i,
+			x: widget.x,
+			y: widget.y,
+			w: widget.w,
+			h: widget.h,
+			minW: constraints.minW,
+			maxW: constraints.maxW,
+			minH: constraints.minH,
+			maxH: constraints.maxH,
+			isDraggable: editMode,
+			isResizable: editMode,
+		};
+	});
 
 	// Layout change handler
 	const handleLayoutChange = useCallback(
@@ -105,25 +126,21 @@ export function MainDashboard({
 	// Widget renderer
 	const renderWidget = (widget: WidgetConfig) => {
 		const commonProps = {
-			id: widget.i,
+			config: widget,
 			editMode,
 			onSettings: () => onWidgetSettings?.(widget.i),
 			onDuplicate: () => onWidgetDuplicate?.(widget),
 			onDelete: () => onWidgetDelete?.(widget.i),
-			...widget.props,
+			onError: (error: string) => console.error(`Widget ${widget.i} error:`, error),
 		};
 
 		const widgetState = widgetStates[widget.i];
 
 		switch (widget.type) {
-			case "switch":
-				return (
-					<SwitchWidget
-						{...commonProps}
-						checked={widgetState || false}
-						onCheckedChange={(checked) => handleWidgetStateChange(widget.i, checked)}
-					/>
-				);
+			case "temperature":
+				return <TemperatureWidget {...commonProps} config={widget as any} />;
+			case "humidity":
+				return <HumidityWidget {...commonProps} config={widget as any} />;
 			default:
 				return (
 					<div className="flex items-center justify-center h-full text-muted-foreground">
