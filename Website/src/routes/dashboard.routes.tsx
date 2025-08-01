@@ -5,7 +5,10 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 const DashboardListPage = lazy(() => import("@/pages/dashboard/DashboardListPage"));
 const DevPage = lazy(() => import("@/pages/dashboard/dev/DevPage"));
 
-export const dashboardRoute = {
+// Only show dashboard routes in development environment
+const isDevelopment = import.meta.env.DEV;
+
+export const dashboardRoute = isDevelopment ? {
 	path: "/dashboard",
 	element: <MainLayout />,
 	children: [
@@ -26,4 +29,4 @@ export const dashboardRoute = {
 			),
 		},
 	],
-};
+} : null;

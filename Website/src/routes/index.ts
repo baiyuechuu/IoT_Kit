@@ -13,7 +13,7 @@ export const routes = [
 	homeRoute,
 	aboutRoute,
 	contactRoute,
-	dashboardRoute,
+	...(dashboardRoute ? [dashboardRoute] : []),
 	blogRoute,
 	loginRoute,
 	signupRoute,
