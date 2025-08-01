@@ -1,20 +1,20 @@
-# Widget Development Guide
+# Hướng Dẫn Phát Triển Widget
 
-This guide explains how to manually develop widgets for the IoT Kit dashboard system, using the Temperature Widget as an example.
+Hướng dẫn này giải thích cách phát triển thủ công các widget cho hệ thống dashboard IoT Kit, sử dụng Temperature Widget làm ví dụ.
 
-## Overview
+## Tổng Quan
 
-Widgets are modular components that display IoT data in the dashboard. Each widget consists of:
-- **Component**: React component that renders the widget
-- **Configuration**: TypeScript interfaces defining widget properties
-- **Settings**: Form schema for widget configuration
-- **Registry**: Registration in the widget system
+Widgets là các thành phần mô-đun hiển thị dữ liệu IoT trong dashboard. Mỗi widget bao gồm:
+- **Component**: React component để render widget
+- **Configuration**: TypeScript interfaces định nghĩa thuộc tính widget
+- **Settings**: Schema form cho cấu hình widget
+- **Registry**: Đăng ký trong hệ thống widget
 
-## File Structure
+## Cấu Trúc Tệp
 
 ```
 components/widgets/
-├── BaseWidget.tsx           # Base widget wrapper and utilities
+├── BaseWidget.tsx           # Base widget wrapper và utilities
 ├── TemperatureWidget.tsx    # Temperature widget component
 ├── types.tsx               # TypeScript interfaces
 ├── registry.tsx            # Widget registration
@@ -25,33 +25,33 @@ components/widgets/
 └── index.tsx               # Main exports
 ```
 
-## Step 1: Define Widget Types
+## Bước 1: Định Nghĩa Widget Types
 
-First, add your widget type to the `WidgetType` union in `types.tsx`:
+Đầu tiên, thêm widget type của bạn vào union `WidgetType` trong `types.tsx`:
 
 ```typescript
 export type WidgetType = "temperature" | "your_widget" | ...;
 ```
 
-## Step 2: Create Widget Configuration Interface
+## Bước 2: Tạo Widget Configuration Interface
 
-In `types.tsx`, define your widget's configuration interface:
+Trong `types.tsx`, định nghĩa interface cấu hình widget của bạn:
 
 ```typescript
 export interface YourWidgetConfig extends BaseWidgetConfig {
   type: 'your_widget';
   props?: {
-    // Your widget-specific properties
+    // Thuộc tính riêng của widget
     unit?: 'celsius' | 'fahrenheit';
     showTrend?: boolean;
-    // ... other properties
+    // ... các thuộc tính khác
   };
 }
 ```
 
-## Step 3: Create Widget Component
+## Bước 3: Tạo Widget Component
 
-Create your widget component in `YourWidget.tsx`:
+Tạo widget component trong `YourWidget.tsx`:
 
 ```typescript
 import React from 'react';
@@ -135,7 +135,7 @@ export function YourWidget({
         {/* Status indicators */}
         {!isFirebaseConfigured && (
           <div className="text-xs text-gray-500">
-            No Firebase path configured
+            Chưa cấu hình đường dẫn Firebase
           </div>
         )}
       </div>
@@ -144,9 +144,9 @@ export function YourWidget({
 }
 ```
 
-## Step 4: Register Widget in Registry
+## Bước 4: Đăng Ký Widget Trong Registry
 
-Add your widget to `registry.tsx`:
+Thêm widget của bạn vào `registry.tsx`:
 
 ```typescript
 // Add to WIDGET_CONSTRAINTS_REGISTRY
@@ -166,7 +166,7 @@ export const WIDGET_METADATA_REGISTRY: Record<WidgetType, WidgetMetadata> = {
   // ... existing widgets
   your_widget: {
     name: 'Your Widget',
-    description: 'Description of your widget',
+    description: 'Mô tả widget của bạn',
     icon: YourIcon,
     category: 'display',
     tags: ['your', 'widget', 'tags'],
@@ -194,9 +194,9 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetDefinition> = {
 };
 ```
 
-## Step 5: Create Settings Schema
+## Bước 5: Tạo Settings Schema
 
-Create `YourWidgetSettings.tsx` in the `settings/` folder:
+Tạo `YourWidgetSettings.tsx` trong thư mục `settings/`:
 
 ```typescript
 import { YourIcon, Database } from 'lucide-react';
@@ -208,8 +208,8 @@ export const yourWidgetSettingsSchema: WidgetSettingsSchema = {
     {
       key: 'title',
       type: 'text',
-      label: 'Widget Title',
-      description: 'Display name for your widget',
+      label: 'Tiêu Đề Widget',
+      description: 'Tên hiển thị cho widget của bạn',
       defaultValue: 'Your Widget',
       maxLength: 50,
     },
@@ -217,15 +217,15 @@ export const yourWidgetSettingsSchema: WidgetSettingsSchema = {
     // Firebase Configuration
     {
       type: 'section',
-      title: 'Firebase Configuration',
-      description: 'Configure data source connection',
+      title: 'Cấu Hình Firebase',
+      description: 'Cấu hình kết nối nguồn dữ liệu',
       icon: <Database className="w-4 h-4" />,
       fields: [
         {
           key: 'firebaseConfig.path',
           type: 'text',
-          label: 'Firebase Path',
-          description: 'Path to your data in Firebase',
+          label: 'Đường Dẫn Firebase',
+          description: 'Đường dẫn đến dữ liệu trong Firebase',
           defaultValue: '/your/data/path',
           required: true,
           placeholder: '/your/data/path',
@@ -233,8 +233,8 @@ export const yourWidgetSettingsSchema: WidgetSettingsSchema = {
         {
           key: 'firebaseConfig.updateInterval',
           type: 'number',
-          label: 'Update Interval (ms)',
-          description: 'How often to fetch new data',
+          label: 'Khoảng Thời Gian Cập Nhật (ms)',
+          description: 'Tần suất lấy dữ liệu mới',
           defaultValue: 1000,
           min: 100,
           max: 60000,
@@ -246,26 +246,26 @@ export const yourWidgetSettingsSchema: WidgetSettingsSchema = {
     // Your Widget Properties
     {
       type: 'section',
-      title: 'Widget Properties',
-      description: 'Configure widget display options',
+      title: 'Thuộc Tính Widget',
+      description: 'Cấu hình tùy chọn hiển thị widget',
       icon: <YourIcon className="w-4 h-4" />,
       fields: [
         {
           key: 'props.unit',
           type: 'select',
-          label: 'Display Unit',
-          description: 'Unit to display',
+          label: 'Đơn Vị Hiển Thị',
+          description: 'Đơn vị để hiển thị',
           defaultValue: 'default',
           options: [
-            { value: 'default', label: 'Default' },
-            { value: 'custom', label: 'Custom' },
+            { value: 'default', label: 'Mặc Định' },
+            { value: 'custom', label: 'Tùy Chỉnh' },
           ],
         },
         {
           key: 'props.showTrend',
           type: 'boolean',
-          label: 'Show Trend',
-          description: 'Display trend indicator',
+          label: 'Hiển Thị Xu Hướng',
+          description: 'Hiển thị chỉ báo xu hướng',
           defaultValue: true,
         },
       ],
@@ -274,9 +274,9 @@ export const yourWidgetSettingsSchema: WidgetSettingsSchema = {
 };
 ```
 
-## Step 6: Register Settings
+## Bước 6: Đăng Ký Settings
 
-Add your settings to `settings/index.tsx`:
+Thêm settings của bạn vào `settings/index.tsx`:
 
 ```typescript
 import { yourWidgetSettingsSchema } from './YourWidgetSettings';
@@ -287,9 +287,9 @@ export const WIDGET_SETTINGS_REGISTRY: Record<WidgetType, () => WidgetSettingsSc
 };
 ```
 
-## Step 7: Update Default Configuration
+## Bước 7: Cập Nhật Cấu Hình Mặc Định
 
-Add your widget's default configuration to `types.tsx` in the `createDefaultWidgetConfig` function:
+Thêm cấu hình mặc định của widget vào `types.tsx` trong hàm `createDefaultWidgetConfig`:
 
 ```typescript
 case 'your_widget':
@@ -313,61 +313,61 @@ case 'your_widget':
   } as YourWidgetConfig;
 ```
 
-## Step 8: Export Widget
+## Bước 8: Export Widget
 
-Add your widget to `index.tsx`:
+Thêm widget của bạn vào `index.tsx`:
 
 ```typescript
 export { YourWidget } from "./YourWidget";
 ```
 
-## Key Concepts
+## Khái Niệm Chính
 
 ### BaseWidget
-The `BaseWidget` component provides:
-- Common layout and styling
-- Firebase connection indicators
-- Edit mode controls (settings, duplicate, delete)
-- Error handling
+Component `BaseWidget` cung cấp:
+- Layout và styling chung
+- Chỉ báo kết nối Firebase
+- Điều khiển chế độ chỉnh sửa (settings, duplicate, delete)
+- Xử lý lỗi
 
 ### Firebase Integration
-Use the `useWidgetFirebase` hook for:
-- Automatic connection management
-- Data type conversion
-- Error handling
-- Connection status indicators
+Sử dụng hook `useWidgetFirebase` cho:
+- Quản lý kết nối tự động
+- Chuyển đổi kiểu dữ liệu
+- Xử lý lỗi
+- Chỉ báo trạng thái kết nối
 
 ### Settings Framework
-The settings framework provides:
-- Form generation from schema
+Framework settings cung cấp:
+- Tạo form từ schema
 - Validation
-- Default values
-- Nested object support
+- Giá trị mặc định
+- Hỗ trợ object lồng nhau
 
 ### Widget Lifecycle
-1. **Creation**: Widget is added to dashboard
-2. **Configuration**: User sets up Firebase path and properties
-3. **Connection**: Widget connects to Firebase when not in edit mode
-4. **Data Display**: Widget renders data with error handling
-5. **Updates**: Widget receives real-time updates from Firebase
+1. **Creation**: Widget được thêm vào dashboard
+2. **Configuration**: Người dùng thiết lập đường dẫn Firebase và thuộc tính
+3. **Connection**: Widget kết nối Firebase khi không ở chế độ chỉnh sửa
+4. **Data Display**: Widget render dữ liệu với xử lý lỗi
+5. **Updates**: Widget nhận cập nhật thời gian thực từ Firebase
 
 ## Best Practices
 
-1. **Error Handling**: Always handle Firebase connection errors
-2. **Loading States**: Show appropriate loading indicators
-3. **Default Values**: Provide sensible defaults for all properties
-4. **Validation**: Validate user inputs in settings
-5. **Responsive Design**: Ensure widgets work at different sizes
-6. **Accessibility**: Use proper ARIA labels and keyboard navigation
+1. **Error Handling**: Luôn xử lý lỗi kết nối Firebase
+2. **Loading States**: Hiển thị chỉ báo loading phù hợp
+3. **Default Values**: Cung cấp giá trị mặc định hợp lý cho tất cả thuộc tính
+4. **Validation**: Validate input người dùng trong settings
+5. **Responsive Design**: Đảm bảo widget hoạt động ở các kích thước khác nhau
+6. **Accessibility**: Sử dụng ARIA labels và keyboard navigation phù hợp
 
-## Example: Temperature Widget
+## Ví Dụ: Temperature Widget
 
-The Temperature Widget demonstrates all these concepts:
+Temperature Widget minh họa tất cả các khái niệm này:
 
-- **Firebase Integration**: Connects to temperature sensor data
-- **Data Processing**: Converts values and applies unit conversion
-- **Visual Feedback**: Color-coded temperature ranges
-- **Settings**: Configurable units, precision, and color ranges
-- **Error Handling**: Shows connection status and errors
+- **Firebase Integration**: Kết nối dữ liệu cảm biến nhiệt độ
+- **Data Processing**: Chuyển đổi giá trị và áp dụng chuyển đổi đơn vị
+- **Visual Feedback**: Phạm vi nhiệt độ được mã màu
+- **Settings**: Đơn vị, độ chính xác và phạm vi màu có thể cấu hình
+- **Error Handling**: Hiển thị trạng thái kết nối và lỗi
 
-This provides a complete template for developing new widgets in the IoT Kit dashboard system.
+Điều này cung cấp template hoàn chỉnh để phát triển widget mới trong hệ thống dashboard IoT Kit.
