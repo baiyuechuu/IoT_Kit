@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -12,9 +11,8 @@ import {
   DialogTitle,
   DialogClose,
 } from '@/components/ui/dialog';
-import { Alert } from '@/components/ui/alert';
-import { Loader2, Database, CheckCircle, XCircle, Eye, EyeOff } from 'lucide-react';
-import { useFirebaseConnection } from '@/hooks/useFirebase';
+import { Loader2, Database, Eye, EyeOff } from 'lucide-react';
+import { useFirebaseConnection } from '@/contexts/FirebaseContext';
 import type { FirebaseConfig } from '@/lib/firebase';
 
 interface FirebaseConfigDialogProps {
@@ -23,56 +21,54 @@ interface FirebaseConfigDialogProps {
 }
 
 const SAMPLE_CONFIG = `{
-  "apiKey": "AIzaSyC-example-api-key-here",
-  "authDomain": "your-project-id.firebaseapp.com",
-  "databaseURL": "https://your-project-id-default-rtdb.firebaseio.com",
-  "projectId": "your-project-id",
-  "storageBucket": "your-project-id.appspot.com",
-  "messagingSenderId": "123456789012",
-  "appId": "1:123456789012:web:abcdef1234567890"
+  apiKey: "AIzaSyAja2offUYcZ8Atf-KqG6hVopb9t8PWsG0",
+  authDomain: "test-dashboard-web.firebaseapp.com",
+  databaseURL: "https://test-dashboard-web-default-rtdb.firebaseio.com",
+  projectId: "test-dashboard-web",
+  storageBucket: "test-dashboard-web.firebasestorage.app",
+  messagingSenderId: "648959894707",
+  appId: "1:648959894707:web:63947255f9a07c248dfcc6",
+  measurementId: "G-TC8HQYN00Y"
 }`;
 
 export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialogProps) {
-  const { initialize, testConnection, reset, connected, configured, loading, error, clearError } = useFirebaseConnection();
-  
+  const { initialize, checkRealConnection, reset, connected, configured, loading, error, clearError, setError } = useFirebaseConnection();
+
   const [configInput, setConfigInput] = useState('');
   const [showConfig, setShowConfig] = useState(false);
-  const [formData, setFormData] = useState<FirebaseConfig>({
-    apiKey: '',
-    authDomain: '',
-    databaseURL: '',
-    projectId: '',
-    storageBucket: '',
-    messagingSenderId: '',
-    appId: '',
-  });
-  const [useJsonInput, setUseJsonInput] = useState(true);
   const [testing, setTesting] = useState(false);
-
-  const handleFormChange = useCallback((field: keyof FirebaseConfig, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value,
-    }));
-  }, []);
 
   const handleJsonChange = useCallback((value: string) => {
     setConfigInput(value);
+  }, []);
+
+  // Function to convert JavaScript object format to valid JSON
+  const convertJsObjectToJson = useCallback((input: string): string => {
     try {
-      const parsed = JSON.parse(value);
-      if (parsed && typeof parsed === 'object') {
-        setFormData({
-          apiKey: parsed.apiKey || '',
-          authDomain: parsed.authDomain || '',
-          databaseURL: parsed.databaseURL || '',
-          projectId: parsed.projectId || '',
-          storageBucket: parsed.storageBucket || '',
-          messagingSenderId: parsed.messagingSenderId || '',
-          appId: parsed.appId || '',
-        });
-      }
+      // First try to parse as-is (in case it's already valid JSON)
+      JSON.parse(input);
+      return input;
     } catch {
-      // Invalid JSON, ignore
+      // If it fails, try to convert JavaScript object to JSON
+      try {
+        // Remove any leading/trailing whitespace and ensure it starts/ends with braces
+        let cleaned = input.trim();
+
+        // Add braces if missing
+        if (!cleaned.startsWith('{')) cleaned = '{' + cleaned;
+        if (!cleaned.endsWith('}')) cleaned = cleaned + '}';
+
+        // Replace unquoted keys with quoted keys
+        // This regex matches property names that aren't already quoted
+        const withQuotedKeys = cleaned.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":');
+
+        // Test if the conversion worked
+        JSON.parse(withQuotedKeys);
+        return withQuotedKeys;
+      } catch {
+        // If conversion fails, return original input
+        return input;
+      }
     }
   }, []);
 
@@ -97,16 +93,17 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
 
   const handleConnect = useCallback(async () => {
     clearError();
-    
-    const config = useJsonInput ? (
-      (() => {
-        try {
-          return JSON.parse(configInput);
-        } catch {
-          return null;
-        }
-      })()
-    ) : formData;
+
+    // Convert JavaScript object format to JSON if needed
+    const jsonString = convertJsObjectToJson(configInput);
+
+    let config;
+    try {
+      config = JSON.parse(jsonString);
+    } catch {
+      setError('Invalid configuration format. Please check your input and try again.');
+      return;
+    }
 
     if (!config) {
       setError('Invalid configuration. Please check your input.');
@@ -120,38 +117,29 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
     }
 
     await initialize(config);
-  }, [useJsonInput, configInput, formData, initialize, validateConfig, clearError]);
+
+    // Use the more reliable connection check after initialization
+    await checkRealConnection();
+  }, [configInput, initialize, validateConfig, clearError, checkRealConnection, convertJsObjectToJson, setError]);
 
   const handleTest = useCallback(async () => {
     if (!configured) {
       setError('Firebase not configured. Please configure Firebase first.');
       return;
     }
-    
+
     setTesting(true);
     clearError();
-    const success = await testConnection();
-    if (success) {
-      // Clear any previous errors on successful test
-      clearError();
-    } else {
-      setError('Connection test failed. Please check your Firebase configuration and network connection.');
-    }
+
+    // Use the more reliable connection check
+    await checkRealConnection();
+
     setTesting(false);
-  }, [configured, testConnection, clearError]);
+  }, [configured, checkRealConnection, clearError, setError]);
 
   const handleReset = useCallback(() => {
     reset();
     setConfigInput('');
-    setFormData({
-      apiKey: '',
-      authDomain: '',
-      databaseURL: '',
-      projectId: '',
-      storageBucket: '',
-      messagingSenderId: '',
-      appId: '',
-    });
     clearError();
   }, [reset, clearError]);
 
@@ -159,16 +147,15 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
     onOpenChange(false);
   }, [onOpenChange]);
 
-  const isValid = useJsonInput ? 
-    (() => {
-      try {
-        const parsed = JSON.parse(configInput);
-        return validateConfig(parsed) === null;
-      } catch {
-        return false;
-      }
-    })() : 
-    validateConfig(formData) === null;
+  const isValid = (() => {
+    try {
+      const jsonString = convertJsObjectToJson(configInput);
+      const parsed = JSON.parse(jsonString);
+      return validateConfig(parsed) === null;
+    } catch {
+      return false;
+    }
+  })();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -181,183 +168,72 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
           </DialogTitle>
           <DialogDescription>
             Configure your Firebase Realtime Database connection to enable real-time data for widgets.
-            <br />
-            <span className="text-sm text-muted-foreground">
-              Get your Firebase config from your Firebase Console → Project Settings → General → Your Apps → Web App
-            </span>
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           {/* Connection Status */}
           {configured && (
-            <Alert className={connected ? "border-green-200 bg-green-50" : "border-orange-200 bg-orange-50"}>
-              <div className="flex items-center gap-2">
-                {connected ? (
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                ) : (
-                  <XCircle className="w-4 h-4 text-orange-600" />
-                )}
-                <span className={connected ? "text-green-700 w-fit" : "text-orange-700 w-fit"}>
-                  {connected ? "Connected to Firebase" : "Firebase configured but not connected"}
-                </span>
-              </div>
-            </Alert>
+            <div className={connected ? "border-green-200 bg-green-50 rounded-md p-2" : "border-orange-200 bg-orange-50 rounded-md p-2"}>
+              <span className={`${connected ? "text-green-700" : "text-orange-700"} flex-1 min-w-0 break-keep`}>
+                {connected ? "Connected to Firebase" : "Firebase configured but not connected"}
+              </span>
+            </div>
           )}
 
           {/* Success message when connection is established */}
           {connected && configured && !error && (
-            <Alert className="border-green-200 bg-green-50">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-600" />
-                <span className="text-green-700">
-                  Firebase connection successful! You can now use real-time widgets.
-                </span>
-              </div>
-            </Alert>
+            <div className="border-green-200 bg-green-50 rounded-md p-2">
+              <span className="text-green-700 flex-1 min-w-0 break-keep">
+                Firebase connection successful! You can now use real-time widgets.
+              </span>
+            </div>
           )}
 
           {/* Help message for first-time users */}
           {!configured && (
-            <Alert className="border-blue-200 bg-blue-50">
-              <div className="flex items-center gap-2">
-                <Database className="w-4 h-4 text-blue-600" />
-                <span className="text-blue-700">
-                  To use real-time widgets, you need to configure your Firebase Realtime Database connection.
-                </span>
-              </div>
-            </Alert>
+            <div className="border-blue-200 bg-blue-50 rounded-md p-2">
+              <span className="text-blue-700 flex-1 min-w-0 break-keep">
+                To use real-time widgets, you need to configure your Firebase Realtime Database connection. You can paste the config directly from Firebase Console.
+              </span>
+            </div>
           )}
 
           {/* Error Display */}
           {error && (
-            <Alert className="border-red-200 bg-red-50">
-              <XCircle className="w-4 h-4 text-red-600" />
+            <div className="border-red-200 bg-red-50 rounded-md p-2">
               <div className="text-red-700">{error}</div>
-            </Alert>
+            </div>
           )}
 
-          {/* Input Method Toggle */}
-          <div className="flex gap-2">
-            <Button
-              variant={useJsonInput ? "default" : "outline"}
-              size="sm"
-              onClick={() => setUseJsonInput(true)}
-            >
-              JSON Config
-            </Button>
-            <Button
-              variant={!useJsonInput ? "default" : "outline"}
-              size="sm"
-              onClick={() => setUseJsonInput(false)}
-            >
-              Form Fields
-            </Button>
+          {/* JSON Configuration Input */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="config-json">Firebase Configuration</Label>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowConfig(!showConfig)}
+              >
+                {showConfig ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showConfig ? "Hide" : "Show"} Sample
+              </Button>
+            </div>
+            <Textarea
+              id="config-json"
+              placeholder="Paste your Firebase config here (supports both JavaScript object and JSON formats)..."
+              value={configInput}
+              onChange={(e) => handleJsonChange(e.target.value)}
+              rows={8}
+              className="font-mono text-sm"
+            />
+            {showConfig && (
+              <div className="p-3 bg-muted rounded border">
+                <Label className="text-xs text-muted-foreground">Sample Configuration (paste as-is from Firebase Console):</Label>
+                <pre className="text-xs mt-1 whitespace-pre-wrap">{SAMPLE_CONFIG}</pre>
+              </div>
+            )}
           </div>
-
-          {useJsonInput ? (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="config-json">Firebase Configuration (JSON)</Label>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowConfig(!showConfig)}
-                >
-                  {showConfig ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  {showConfig ? "Hide" : "Show"} Sample
-                </Button>
-              </div>
-              <Textarea
-                id="config-json"
-                placeholder="Paste your Firebase config JSON here..."
-                value={configInput}
-                onChange={(e) => handleJsonChange(e.target.value)}
-                rows={8}
-                className="font-mono text-sm"
-              />
-              {showConfig && (
-                <div className="p-3 bg-muted rounded border">
-                  <Label className="text-xs text-muted-foreground">Sample Configuration:</Label>
-                  <pre className="text-xs mt-1 whitespace-pre-wrap">{SAMPLE_CONFIG}</pre>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="apiKey">API Key *</Label>
-                  <Input
-                    id="apiKey"
-                    value={formData.apiKey}
-                    onChange={(e) => handleFormChange('apiKey', e.target.value)}
-                    placeholder="your-api-key"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="projectId">Project ID *</Label>
-                  <Input
-                    id="projectId"
-                    value={formData.projectId}
-                    onChange={(e) => handleFormChange('projectId', e.target.value)}
-                    placeholder="your-project-id"
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="databaseURL">Database URL *</Label>
-                <Input
-                  id="databaseURL"
-                  value={formData.databaseURL}
-                  onChange={(e) => handleFormChange('databaseURL', e.target.value)}
-                  placeholder="https://your-project-default-rtdb.firebaseio.com/"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="authDomain">Auth Domain</Label>
-                <Input
-                  id="authDomain"
-                  value={formData.authDomain}
-                  onChange={(e) => handleFormChange('authDomain', e.target.value)}
-                  placeholder="your-project.firebaseapp.com"
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="storageBucket">Storage Bucket</Label>
-                  <Input
-                    id="storageBucket"
-                    value={formData.storageBucket}
-                    onChange={(e) => handleFormChange('storageBucket', e.target.value)}
-                    placeholder="your-project.appspot.com"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="messagingSenderId">Messaging Sender ID</Label>
-                  <Input
-                    id="messagingSenderId"
-                    value={formData.messagingSenderId}
-                    onChange={(e) => handleFormChange('messagingSenderId', e.target.value)}
-                    placeholder="123456789"
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="appId">App ID</Label>
-                <Input
-                  id="appId"
-                  value={formData.appId}
-                  onChange={(e) => handleFormChange('appId', e.target.value)}
-                  placeholder="1:123456789:web:abcdef123456"
-                />
-              </div>
-            </div>
-          )}
         </div>
 
         <DialogFooter className="flex gap-2">
@@ -384,7 +260,7 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
           <Button variant="outline" onClick={handleClose}>
             Cancel
           </Button>
-          <Button 
+          <Button
             onClick={handleConnect}
             disabled={!isValid || loading}
           >

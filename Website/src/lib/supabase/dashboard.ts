@@ -43,7 +43,7 @@ class DashboardService {
       }
 
       // Check if profile exists
-      const { data: existingProfile, error: profileError } = await supabase
+      const { error: profileError } = await supabase
         .from('profiles')
         .select('id')
         .eq('id', user.id)

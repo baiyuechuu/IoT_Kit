@@ -12,7 +12,7 @@ import {
 	AlertCircle,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useFirebaseConnection } from "@/hooks/useFirebase";
+import { useFirebaseConnection } from "@/contexts/FirebaseContext";
 import {
 	Tooltip,
 	TooltipContent,
@@ -140,7 +140,7 @@ export function DashboardHeader({
 								</TooltipContent>
 							</Tooltip>
 						</TooltipProvider>
-						<Button
+						{/* <Button
 							variant="outline"
 							size="sm"
 							className="text-xs sm:text-sm"
@@ -148,7 +148,7 @@ export function DashboardHeader({
 							<Settings className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
 							<span className="hidden sm:inline">Settings</span>
 							<span className="sm:hidden">Settings</span>
-						</Button>
+						</Button> */}
 					</div>
 				</div>
 			</div>

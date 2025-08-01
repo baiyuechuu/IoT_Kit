@@ -21,7 +21,7 @@ interface DashboardState {
 export function useDashboard(options: UseDashboardOptions = {}) {
   const { dashboardId, autoSave = true, autoSaveDelay = 2000 } = options;
   const { isAuthenticated } = useAuth();
-  const autoSaveTimeoutRef = useRef<NodeJS.Timeout>();
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   
   const [state, setState] = useState<DashboardState>({
     dashboard: null,
@@ -89,7 +89,6 @@ export function useDashboard(options: UseDashboardOptions = {}) {
       const dashboardData: DashboardData = {
         id: data?.id,
         name: data?.name || 'Untitled Dashboard',
-        description: data?.description || undefined,
         widgets: (data?.widgets as WidgetConfig[]) || [],
         layout_config: data?.layout_config || undefined,
         is_public: data?.is_public || false,
@@ -135,7 +134,6 @@ export function useDashboard(options: UseDashboardOptions = {}) {
       const newDashboard: DashboardData = {
         id: data?.id,
         name: data?.name || 'Untitled Dashboard',
-        description: data?.description || undefined,
         widgets: (data?.widgets as WidgetConfig[]) || [],
         layout_config: data?.layout_config || undefined,
         is_public: data?.is_public || false,
@@ -182,7 +180,6 @@ export function useDashboard(options: UseDashboardOptions = {}) {
       const updatedDashboard: DashboardData = {
         id: data?.id,
         name: data?.name || 'Untitled Dashboard',
-        description: data?.description || undefined,
         widgets: (data?.widgets as WidgetConfig[]) || [],
         layout_config: data?.layout_config || undefined,
         is_public: data?.is_public || false,
