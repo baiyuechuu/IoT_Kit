@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { BaseWidget, useWidgetFirebase, DataTypeConverters } from './BaseWidget';
-import type { TemperatureWidgetConfig, CommonWidgetProps } from './types';
+import { BaseWidget, useWidgetFirebase, DataTypeConverters } from './core/BaseWidget';
+import type { TemperatureWidgetConfig, CommonWidgetProps } from './core/types';
 import { TrendingUp, TrendingDown, Minus, Thermometer } from 'lucide-react';
 
 interface TemperatureWidgetProps extends CommonWidgetProps {

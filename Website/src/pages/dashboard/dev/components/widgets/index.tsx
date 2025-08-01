@@ -1,8 +1,8 @@
 export { TemperatureWidget } from "./TemperatureWidget";
 
 // Re-export standardized types
-export * from './types';
-import type { WidgetType } from './types';
+export * from './core/types';
+import type { WidgetType } from './core/types';
 
 // Legacy interface for backward compatibility (deprecated)
 /** @deprecated Use the specific widget config types from './types' instead */
@@ -34,4 +34,4 @@ export {
 	getWidgetsByCategory,
 	getWidgetsByDifficulty,
 	getWidgetsByTags
-} from './registry';
+} from './core/registry';

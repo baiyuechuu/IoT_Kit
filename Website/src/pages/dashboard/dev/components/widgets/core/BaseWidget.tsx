@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Card } from "@/components/ui/card";
-import Control from "../controls/Control";
+import Control from "../control/Control";
 import { useFirebaseVariable } from "@/hooks/useFirebase";
 
 export interface BaseWidgetProps {

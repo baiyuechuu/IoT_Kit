@@ -6,7 +6,7 @@ import type {
   WidgetMetadata
 } from './types';
 import { createDefaultWidgetConfig } from './types';
-import { TemperatureWidget } from './TemperatureWidget';
+import { TemperatureWidget } from '../TemperatureWidget';
 import { 
   Thermometer,
   Activity,

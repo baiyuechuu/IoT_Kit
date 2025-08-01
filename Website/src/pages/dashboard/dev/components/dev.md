@@ -14,28 +14,41 @@ Widgets là các thành phần mô-đun hiển thị dữ liệu IoT trong dashb
 
 ```
 components/widgets/
-├── BaseWidget.tsx           # Base widget wrapper và utilities
-├── TemperatureWidget.tsx    # Temperature widget component
-├── types.tsx               # TypeScript interfaces
-├── registry.tsx            # Widget registration
+├── core/
+│   ├── BaseWidget.tsx           # Base widget wrapper và utilities
+│   ├── types.tsx               # TypeScript interfaces
+│   └── registry.tsx            # Widget registration system
 ├── settings/
-│   ├── index.tsx           # Settings registry
+│   ├── index.tsx               # Settings registry
 │   ├── WidgetSettingsFramework.tsx  # Settings form framework
 │   └── TemperatureWidgetSettings.tsx # Temperature widget settings
-└── index.tsx               # Main exports
+├── control/
+│   └── Control.tsx             # Common control components
+├── TemperatureWidget.tsx        # Temperature widget component
+└── index.tsx                   # Main exports
 ```
+
+## Widget Types Hiện Có
+
+Hệ thống hiện hỗ trợ các loại widget sau:
+
+- **temperature**: Hiển thị dữ liệu nhiệt độ với chuyển đổi đơn vị
+- **sensor_data**: Hiển thị nhiều giá trị cảm biến trong một widget
+- **gauge**: Đồng hồ đo tròn cho giá trị số với phạm vi
+- **chart**: Biểu đồ đường/cột cho dữ liệu thời gian
+- **text**: Hiển thị văn bản hoặc giá trị số được định dạng
 
 ## Bước 1: Định Nghĩa Widget Types
 
-Đầu tiên, thêm widget type của bạn vào union `WidgetType` trong `types.tsx`:
+Đầu tiên, thêm widget type của bạn vào union `WidgetType` trong `core/types.tsx`:
 
 ```typescript
-export type WidgetType = "temperature" | "your_widget" | ...;
+export type WidgetType = "temperature" | "sensor_data" | "gauge" | "chart" | "text" | "your_widget" | ...;
 ```
 
 ## Bước 2: Tạo Widget Configuration Interface
 
-Trong `types.tsx`, định nghĩa interface cấu hình widget của bạn:
+Trong `core/types.tsx`, định nghĩa interface cấu hình widget của bạn:
 
 ```typescript
 export interface YourWidgetConfig extends BaseWidgetConfig {
@@ -47,6 +60,15 @@ export interface YourWidgetConfig extends BaseWidgetConfig {
     // ... các thuộc tính khác
   };
 }
+
+// Thêm vào union type WidgetConfig
+export type WidgetConfig = 
+  | TemperatureWidgetConfig
+  | SensorDataWidgetConfig
+  | GaugeWidgetConfig
+  | ChartWidgetConfig
+  | TextWidgetConfig
+  | YourWidgetConfig;
 ```
 
 ## Bước 3: Tạo Widget Component
@@ -54,9 +76,9 @@ export interface YourWidgetConfig extends BaseWidgetConfig {
 Tạo widget component trong `YourWidget.tsx`:
 
 ```typescript
-import React from 'react';
-import { BaseWidget, useWidgetFirebase } from './BaseWidget';
-import type { YourWidgetConfig, CommonWidgetProps } from './types';
+import React, { useEffect } from 'react';
+import { BaseWidget, useWidgetFirebase } from './core/BaseWidget';
+import type { YourWidgetConfig, CommonWidgetProps } from './core/types';
 
 interface YourWidgetProps extends CommonWidgetProps {
   config: YourWidgetConfig;
@@ -146,9 +168,12 @@ export function YourWidget({
 
 ## Bước 4: Đăng Ký Widget Trong Registry
 
-Thêm widget của bạn vào `registry.tsx`:
+Thêm widget của bạn vào `core/registry.tsx`:
 
 ```typescript
+import { YourWidget } from '../YourWidget';
+import { YourIcon } from 'lucide-react';
+
 // Add to WIDGET_CONSTRAINTS_REGISTRY
 export const WIDGET_CONSTRAINTS_REGISTRY: Record<WidgetType, WidgetConstraints> = {
   // ... existing widgets
@@ -289,7 +314,7 @@ export const WIDGET_SETTINGS_REGISTRY: Record<WidgetType, () => WidgetSettingsSc
 
 ## Bước 7: Cập Nhật Cấu Hình Mặc Định
 
-Thêm cấu hình mặc định của widget vào `types.tsx` trong hàm `createDefaultWidgetConfig`:
+Thêm cấu hình mặc định của widget vào `core/types.tsx` trong hàm `createDefaultWidgetConfig`:
 
 ```typescript
 case 'your_widget':
@@ -343,6 +368,8 @@ Framework settings cung cấp:
 - Validation
 - Giá trị mặc định
 - Hỗ trợ object lồng nhau
+- Sections có thể thu gọn
+- Icons và descriptions
 
 ### Widget Lifecycle
 1. **Creation**: Widget được thêm vào dashboard
@@ -350,6 +377,33 @@ Framework settings cung cấp:
 3. **Connection**: Widget kết nối Firebase khi không ở chế độ chỉnh sửa
 4. **Data Display**: Widget render dữ liệu với xử lý lỗi
 5. **Updates**: Widget nhận cập nhật thời gian thực từ Firebase
+
+## Các Widget Types Chi Tiết
+
+### Temperature Widget
+- **Mục đích**: Hiển thị dữ liệu nhiệt độ
+- **Tính năng**: Chuyển đổi đơn vị, phạm vi màu, xu hướng
+- **Cấu hình**: Đơn vị, độ chính xác, phạm vi màu
+
+### Sensor Data Widget
+- **Mục đích**: Hiển thị nhiều giá trị cảm biến
+- **Tính năng**: Layout linh hoạt, nhãn tùy chỉnh
+- **Cấu hình**: Danh sách cảm biến, layout, hiển thị đơn vị
+
+### Gauge Widget
+- **Mục đích**: Đồng hồ đo tròn cho giá trị số
+- **Tính năng**: Phạm vi màu, hiển thị min/max
+- **Cấu hình**: Phạm vi, đơn vị, segments
+
+### Chart Widget
+- **Mục đích**: Biểu đồ cho dữ liệu thời gian
+- **Tính năng**: Nhiều loại biểu đồ, legend, trục tùy chỉnh
+- **Cấu hình**: Loại biểu đồ, phạm thời gian, màu sắc
+
+### Text Widget
+- **Mục đích**: Hiển thị văn bản hoặc giá trị định dạng
+- **Tính năng**: Font size, alignment, prefix/suffix
+- **Cấu hình**: Font, alignment, format string
 
 ## Best Practices
 
@@ -359,6 +413,8 @@ Framework settings cung cấp:
 4. **Validation**: Validate input người dùng trong settings
 5. **Responsive Design**: Đảm bảo widget hoạt động ở các kích thước khác nhau
 6. **Accessibility**: Sử dụng ARIA labels và keyboard navigation phù hợp
+7. **Performance**: Tối ưu hóa re-renders và Firebase connections
+8. **Type Safety**: Sử dụng TypeScript interfaces cho tất cả configurations
 
 ## Ví Dụ: Temperature Widget
 

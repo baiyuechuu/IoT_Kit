@@ -123,11 +123,7 @@ export function MainDashboard({
 			case "temperature":
 				return <TemperatureWidget {...commonProps} config={widget as any} />;
 			default:
-				return (
-					<div className="flex items-center justify-center h-full text-muted-foreground">
-						<span>Unknown widget type: {widget.type}</span>
-					</div>
-				);
+				return null;
 		}
 	};
 
