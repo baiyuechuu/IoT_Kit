@@ -9,7 +9,6 @@ import { createDefaultWidgetConfig } from './types';
 import { TemperatureWidget } from './TemperatureWidget';
 import { 
   Thermometer,
-  Droplets,
   Activity,
   Gauge, 
   LineChart, 
