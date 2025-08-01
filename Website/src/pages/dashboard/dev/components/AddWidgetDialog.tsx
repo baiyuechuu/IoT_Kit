@@ -16,11 +16,6 @@ const WIDGET_TYPES = [
 		name: "Temperature",
 		description: "Display temperature data with unit conversion and color ranges",
 	},
-	{
-		type: "humidity" as WidgetType,
-		name: "Humidity", 
-		description: "Display humidity percentage with comfort zone indicators",
-	},
 ];
 
 export function AddWidgetDialog({
@@ -66,7 +61,7 @@ export function AddWidgetDialog({
 					</p>
 				</div>
 
-				{(selectedType === "temperature" || selectedType === "humidity") && (
+				{(selectedType === "temperature") && (
 					<div className="space-y-2">
 						<label className="text-sm font-medium">Widget Title *</label>
 						<input

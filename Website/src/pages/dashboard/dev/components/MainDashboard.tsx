@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import GridLayout, { type Layout } from "react-grid-layout";
-import { WIDGET_CONSTRAINTS, TemperatureWidget, HumidityWidget } from "./widgets";
+import { WIDGET_CONSTRAINTS, TemperatureWidget } from "./widgets";
 import type { WidgetConfig } from "./widgets";
 import "react-grid-layout/css/styles.css";
 import { Button } from "@/components/ui/button";
@@ -122,8 +122,6 @@ export function MainDashboard({
 		switch (widget.type) {
 			case "temperature":
 				return <TemperatureWidget {...commonProps} config={widget as any} />;
-			case "humidity":
-				return <HumidityWidget {...commonProps} config={widget as any} />;
 			default:
 				return (
 					<div className="flex items-center justify-center h-full text-muted-foreground">

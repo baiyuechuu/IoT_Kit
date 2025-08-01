@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Widget type definitions
-export type WidgetType = "temperature" | "humidity" | "sensor_data" | "gauge" | "chart" | "text";
+export type WidgetType = "temperature" | "sensor_data" | "gauge" | "chart" | "text";
 
 // Base widget configuration interface
 export interface BaseWidgetConfig {
@@ -59,16 +59,6 @@ export interface TemperatureWidgetConfig extends BaseWidgetConfig {
       color: string;
       label: string;
     }>;
-    precision?: number;
-  };
-}
-
-export interface HumidityWidgetConfig extends BaseWidgetConfig {
-  type: 'humidity';
-  props?: {
-    showComfortZone?: boolean;
-    comfortRange?: { min: number; max: number };
-    showTrend?: boolean;
     precision?: number;
   };
 }
@@ -135,7 +125,6 @@ export interface TextWidgetConfig extends BaseWidgetConfig {
 // Union type for all widget configurations
 export type WidgetConfig = 
   | TemperatureWidgetConfig
-  | HumidityWidgetConfig
   | SensorDataWidgetConfig
   | GaugeWidgetConfig
   | ChartWidgetConfig
@@ -227,10 +216,6 @@ export function isTemperatureWidget(config: WidgetConfig): config is Temperature
   return config.type === 'temperature';
 }
 
-export function isHumidityWidget(config: WidgetConfig): config is HumidityWidgetConfig {
-  return config.type === 'humidity';
-}
-
 export function isSensorDataWidget(config: WidgetConfig): config is SensorDataWidgetConfig {
   return config.type === 'sensor_data';
 }
@@ -251,7 +236,6 @@ export function isTextWidget(config: WidgetConfig): config is TextWidgetConfig {
 export function getWidgetDisplayName(type: WidgetType): string {
   const names: Record<WidgetType, string> = {
     temperature: 'Temperature',
-    humidity: 'Humidity',
     sensor_data: 'Sensor Data',
     gauge: 'Gauge',
     chart: 'Chart',
@@ -263,7 +247,6 @@ export function getWidgetDisplayName(type: WidgetType): string {
 export function getWidgetIcon(type: WidgetType): string {
   const icons: Record<WidgetType, string> = {
     temperature: '🌡️',
-    humidity: '💧',
     sensor_data: '📊',
     gauge: '📊',
     chart: '📈',
@@ -318,27 +301,6 @@ export function createDefaultWidgetConfig(type: WidgetType, overrides?: Partial<
         },
       } as TemperatureWidgetConfig;
     
-    case 'humidity':
-      return {
-        ...baseConfig,
-        type: 'humidity',
-        w: 2,
-        h: 2,
-        firebaseConfig: {
-          path: '/sensors/humidity',
-          dataType: 'number',
-          updateInterval: 1000,
-          enabled: true,
-        },
-        props: {
-          showComfortZone: true,
-          comfortRange: { min: 30, max: 60 },
-          showTrend: true,
-          precision: 1,
-          ...baseConfig.props,
-        },
-      } as HumidityWidgetConfig;
-    
     case 'sensor_data':
       return {
         ...baseConfig,
@@ -352,7 +314,7 @@ export function createDefaultWidgetConfig(type: WidgetType, overrides?: Partial<
           enabled: true,
         },
         props: {
-          sensors: ['temperature', 'humidity'],
+          sensors: ['temperature'],
           layout: 'vertical',
           showLabels: true,
           showUnits: true,

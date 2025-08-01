@@ -7,7 +7,6 @@ import type {
 } from './types';
 import { createDefaultWidgetConfig } from './types';
 import { TemperatureWidget } from './TemperatureWidget';
-import { HumidityWidget } from './HumidityWidget';
 import { 
   Thermometer,
   Droplets,
@@ -20,13 +19,6 @@ import {
 // Widget constraints registry
 export const WIDGET_CONSTRAINTS_REGISTRY: Record<WidgetType, WidgetConstraints> = {
   temperature: {
-    minW: 2,
-    maxW: 3,
-    minH: 2,
-    maxH: 3,
-    defaultSize: { w: 2, h: 2 }
-  },
-  humidity: {
     minW: 2,
     maxW: 3,
     minH: 2,
@@ -72,15 +64,6 @@ export const WIDGET_METADATA_REGISTRY: Record<WidgetType, WidgetMetadata> = {
     icon: Thermometer,
     category: 'display',
     tags: ['temperature', 'sensor', 'display', 'celsius', 'fahrenheit'],
-    difficulty: 'beginner',
-    requiredFeatures: ['firebase']
-  },
-  humidity: {
-    name: 'Humidity',
-    description: 'Display humidity percentage with comfort zone indicators',
-    icon: Droplets,
-    category: 'display',
-    tags: ['humidity', 'sensor', 'display', 'moisture', 'comfort'],
     difficulty: 'beginner',
     requiredFeatures: ['firebase']
   },
@@ -139,7 +122,6 @@ function PlaceholderWidget({ type }: { type: WidgetType }) {
 // Component registry
 const WIDGET_COMPONENT_REGISTRY: Record<WidgetType, React.ComponentType<any>> = {
   temperature: TemperatureWidget,
-  humidity: HumidityWidget,
   sensor_data: (props) => <PlaceholderWidget type="sensor_data" {...props} />,
   gauge: (props) => <PlaceholderWidget type="gauge" {...props} />,
   chart: (props) => <PlaceholderWidget type="chart" {...props} />,
@@ -154,13 +136,6 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetDefinition> = {
     constraints: WIDGET_CONSTRAINTS_REGISTRY.temperature,
     defaultConfig: createDefaultWidgetConfig('temperature'),
     component: WIDGET_COMPONENT_REGISTRY.temperature,
-  },
-  humidity: {
-    type: 'humidity',
-    metadata: WIDGET_METADATA_REGISTRY.humidity,
-    constraints: WIDGET_CONSTRAINTS_REGISTRY.humidity,
-    defaultConfig: createDefaultWidgetConfig('humidity'),
-    component: WIDGET_COMPONENT_REGISTRY.humidity,
   },
   sensor_data: {
     type: 'sensor_data',
