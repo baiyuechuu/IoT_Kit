@@ -2,6 +2,7 @@ import { lazy } from "react";
 import MainLayout from "@/layouts/MainLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
+const Dashboard = lazy(() => import("@/pages/dashboard/Dashboard"));
 const DashboardListPage = lazy(() => import("@/pages/dashboard/DashboardListPage"));
 const DevPage = lazy(() => import("@/pages/dashboard/dev/DevPage"));
 
@@ -29,4 +30,13 @@ export const dashboardRoute = isDevelopment ? {
 			),
 		},
 	],
-} : null;
+} : {
+	path: "/dashboard",
+	element: <MainLayout />,
+	children: [
+		{
+			index: true,
+			element: <Dashboard />,
+		},
+	],
+};
