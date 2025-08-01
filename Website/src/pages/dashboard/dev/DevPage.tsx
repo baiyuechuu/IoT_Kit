@@ -1,15 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import {
-	Plus,
-	Settings,
-	Trash2,
 	AlertCircle,
 	Loader2,
-	ArrowLeft,
-	Cloud,
-	CloudOff,
-	DatabaseZap,
 } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -17,15 +9,12 @@ import { MainDashboard } from "./components/MainDashboard";
 import { AddWidgetDialog } from "./components/AddWidgetDialog";
 import { WidgetSettingsDialog } from "./components/WidgetSettingsDialog";
 import { DashboardHeader } from "./components/DashboardHeader";
-import { WIDGET_CONSTRAINTS } from "./components/widgets";
 import type { WidgetConfig, WidgetType } from "./components/widgets";
-import { useDashboard } from "@/hooks/useDashboard";
 import { useAuth } from "@/hooks/useAuth";
 import { dashboardService } from "@/lib/supabase/dashboard";
 import type { Database } from "@/types/supabase";
 import { useConfirmation } from "@/hooks/useConfirmation";
 import { FirebaseConfigDialog } from "@/components/firebase/FirebaseConfigDialog";
-import { useFirebaseConnection } from "@/hooks/useFirebase";
 import { DashboardProvider, useDashboardContext } from "@/contexts/DashboardContext";
 
 type Dashboard = Database["public"]["Tables"]["dashboards"]["Row"];
@@ -34,7 +23,6 @@ export default function DevPage() {
 	const { dashboardId } = useParams<{ dashboardId: string }>();
 	const navigate = useNavigate();
 	const { isAuthenticated, loading: authLoading } = useAuth();
-	const { confirm } = useConfirmation();
 	const [dashboard, setDashboard] = useState<Dashboard | null>(null);
 	const [dashboardLoading, setDashboardLoading] = useState(true);
 	const [dashboardError, setDashboardError] = useState<string | null>(null);
@@ -152,6 +140,9 @@ function DashboardContent({ dashboard }: { dashboard: Dashboard | null }) {
 		selectedWidget,
 		error: widgetError,
 	} = state;
+
+	// Don't automatically show Firebase dialog on startup
+	// Only show it when user explicitly clicks the Firebase button
 
 	const handleLayoutChange = useCallback(
 		(updatedWidgets: WidgetConfig[]) => {

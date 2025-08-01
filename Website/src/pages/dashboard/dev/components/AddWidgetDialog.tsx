@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { X } from "lucide-react";
 import type { WidgetType } from "./widgets";
-import { WIDGET_METADATA_REGISTRY } from "./widgets";
 
 interface AddWidgetDialogProps {
 	isOpen: boolean;

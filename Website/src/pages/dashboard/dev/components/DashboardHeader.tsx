@@ -13,6 +13,12 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useFirebaseConnection } from "@/hooks/useFirebase";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface DashboardHeaderProps {
 	title: string;
@@ -104,20 +110,36 @@ export function DashboardHeader({
 							<span className="hidden sm:inline">Clear All</span>
 							<span className="sm:hidden">Clear</span>
 						</Button>
-						<Button
-							variant="outline"
-							size="sm"
-							onClick={onShowFirebaseDialog}
-							className="text-xs sm:text-sm"
-						>
-							<DatabaseZap className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 ${
-								firebaseConnected ? 'text-green-500' : 
-								firebaseConfigured ? 'text-orange-500' : 
-								'text-muted-foreground'
-							}`} />
-							<span className="hidden sm:inline">Firebase</span>
-							<span className="sm:hidden">DB</span>
-						</Button>
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<Button
+										variant="outline"
+										size="sm"
+										onClick={onShowFirebaseDialog}
+										className="text-xs sm:text-sm"
+									>
+										<DatabaseZap className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 ${
+											firebaseConnected ? 'text-green-500' : 
+											firebaseConfigured ? 'text-orange-500' : 
+											'text-muted-foreground'
+										}`} />
+										<span className="hidden sm:inline">Firebase</span>
+										<span className="sm:hidden">DB</span>
+									</Button>
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>
+										{firebaseConnected 
+											? 'Firebase: Connected and ready for real-time data'
+											: firebaseConfigured 
+												? 'Firebase: Configured but not connected'
+												: 'Firebase: Not configured - click to set up'
+										}
+									</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
 						<Button
 							variant="outline"
 							size="sm"

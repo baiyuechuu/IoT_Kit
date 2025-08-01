@@ -331,27 +331,29 @@ export function useFirebaseConnection() {
     setError(null);
   }, []);
 
-  // Check initial state and auto-initialize
+  // Check initial state - only auto-initialize if there's a saved config, don't show dialog automatically
   useEffect(() => {
     const initializeFromStorage = async () => {
       const wasInitialized = firebaseClient.isInitialized();
       
       if (!wasInitialized) {
-        // Try to auto-initialize from saved config
+        // Try to auto-initialize from saved config silently
         const autoInitSuccess = firebaseClient.autoInitialize();
         if (autoInitSuccess) {
           setConfigured(true);
-          const isConnected = await testConnection();
+          const isConnected = await realtimeService.testConnection();
           setConnected(isConnected);
+          // Don't set error if auto-initialization fails - let user configure manually
         }
       } else {
         setConfigured(true);
-        testConnection();
+        const isConnected = await realtimeService.testConnection();
+        setConnected(isConnected);
       }
     };
 
     initializeFromStorage();
-  }, [testConnection]);
+  }, []);
 
   return {
     // State

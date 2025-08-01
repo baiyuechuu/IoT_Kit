@@ -16,9 +16,7 @@ interface MainDashboardProps {
 	onShowAddDialog?: () => void;
 	width?: number;
 	cols?: number;
-	rowHeight?: number;
-	margin?: [number, number];
-}
+	rowHeight?: number; margin?: [number, number]; }
 
 export function MainDashboard({
 	editMode,
@@ -33,8 +31,6 @@ export function MainDashboard({
 	rowHeight = 60,
 	margin = [10, 10],
 }: MainDashboardProps) {
-	// Widget state management
-	const [widgetStates, setWidgetStates] = useState<Record<string, any>>({});
 	
 	// Drag/resize preview state
 	const [dragPreview, setDragPreview] = useState<{
@@ -105,17 +101,6 @@ export function MainDashboard({
 		[widgets, onLayoutChange],
 	);
 
-	// Widget state update handler
-	const handleWidgetStateChange = useCallback(
-		(widgetId: string, newState: any) => {
-			setWidgetStates((prev) => ({
-				...prev,
-				[widgetId]: newState,
-			}));
-		},
-		[],
-	);
-
 	// Drag preview handlers
 	const dragHandlers = useDragPreview({
 		setDragPreview,
@@ -133,8 +118,6 @@ export function MainDashboard({
 			onDelete: () => onWidgetDelete?.(widget.i),
 			onError: (error: string) => console.error(`Widget ${widget.i} error:`, error),
 		};
-
-		const widgetState = widgetStates[widget.i];
 
 		switch (widget.type) {
 			case "temperature":

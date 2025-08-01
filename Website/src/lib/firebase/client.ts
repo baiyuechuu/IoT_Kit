@@ -33,6 +33,12 @@ class FirebaseClient {
         throw new Error('Database URL and Project ID are required');
       }
 
+      // Validate database URL format
+      if (!config.databaseURL.startsWith('https://') && !config.databaseURL.startsWith('http://')) {
+        console.error('❌ Firebase: Invalid database URL format');
+        throw new Error('Database URL must start with https:// or http://');
+      }
+
       console.log('✅ Firebase: Config validation passed');
       
       this.config = config;

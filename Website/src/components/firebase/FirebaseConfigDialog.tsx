@@ -23,13 +23,13 @@ interface FirebaseConfigDialogProps {
 }
 
 const SAMPLE_CONFIG = `{
-  "apiKey": "your-api-key",
-  "authDomain": "your-project.firebaseapp.com",
-  "databaseURL": "https://your-project-default-rtdb.firebaseio.com/",
+  "apiKey": "AIzaSyC-example-api-key-here",
+  "authDomain": "your-project-id.firebaseapp.com",
+  "databaseURL": "https://your-project-id-default-rtdb.firebaseio.com",
   "projectId": "your-project-id",
-  "storageBucket": "your-project.appspot.com",
-  "messagingSenderId": "123456789",
-  "appId": "1:123456789:web:abcdef123456"
+  "storageBucket": "your-project-id.appspot.com",
+  "messagingSenderId": "123456789012",
+  "appId": "1:123456789012:web:abcdef1234567890"
 }`;
 
 export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialogProps) {
@@ -80,11 +80,17 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
     if (!config.databaseURL) {
       return 'Database URL is required';
     }
+    if (!config.databaseURL.startsWith('https://') && !config.databaseURL.startsWith('http://')) {
+      return 'Database URL must start with https:// or http://';
+    }
     if (!config.projectId) {
       return 'Project ID is required';
     }
     if (!config.apiKey) {
       return 'API Key is required';
+    }
+    if (config.apiKey.length < 10) {
+      return 'API Key appears to be invalid (too short)';
     }
     return null;
   }, []);
@@ -103,11 +109,13 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
     ) : formData;
 
     if (!config) {
+      setError('Invalid configuration. Please check your input.');
       return;
     }
 
     const validationError = validateConfig(config);
     if (validationError) {
+      setError(validationError);
       return;
     }
 
@@ -115,12 +123,22 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
   }, [useJsonInput, configInput, formData, initialize, validateConfig, clearError]);
 
   const handleTest = useCallback(async () => {
-    if (!configured) return;
+    if (!configured) {
+      setError('Firebase not configured. Please configure Firebase first.');
+      return;
+    }
     
     setTesting(true);
-    await testConnection();
+    clearError();
+    const success = await testConnection();
+    if (success) {
+      // Clear any previous errors on successful test
+      clearError();
+    } else {
+      setError('Connection test failed. Please check your Firebase configuration and network connection.');
+    }
     setTesting(false);
-  }, [configured, testConnection]);
+  }, [configured, testConnection, clearError]);
 
   const handleReset = useCallback(() => {
     reset();
@@ -163,6 +181,10 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
           </DialogTitle>
           <DialogDescription>
             Configure your Firebase Realtime Database connection to enable real-time data for widgets.
+            <br />
+            <span className="text-sm text-muted-foreground">
+              Get your Firebase config from your Firebase Console → Project Settings → General → Your Apps → Web App
+            </span>
           </DialogDescription>
         </DialogHeader>
 
@@ -178,6 +200,30 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
                 )}
                 <span className={connected ? "text-green-700 w-fit" : "text-orange-700 w-fit"}>
                   {connected ? "Connected to Firebase" : "Firebase configured but not connected"}
+                </span>
+              </div>
+            </Alert>
+          )}
+
+          {/* Success message when connection is established */}
+          {connected && configured && !error && (
+            <Alert className="border-green-200 bg-green-50">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                <span className="text-green-700">
+                  Firebase connection successful! You can now use real-time widgets.
+                </span>
+              </div>
+            </Alert>
+          )}
+
+          {/* Help message for first-time users */}
+          {!configured && (
+            <Alert className="border-blue-200 bg-blue-50">
+              <div className="flex items-center gap-2">
+                <Database className="w-4 h-4 text-blue-600" />
+                <span className="text-blue-700">
+                  To use real-time widgets, you need to configure your Firebase Realtime Database connection.
                 </span>
               </div>
             </Alert>
@@ -330,7 +376,7 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
                   variant="outline"
                   onClick={handleReset}
                 >
-                  Reset
+                  Reset Configuration
                 </Button>
               </>
             )}
@@ -343,7 +389,7 @@ export function FirebaseConfigDialog({ open, onOpenChange }: FirebaseConfigDialo
             disabled={!isValid || loading}
           >
             {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            {configured ? "Update" : "Connect"}
+            {configured ? "Update Configuration" : "Connect to Firebase"}
           </Button>
         </DialogFooter>
       </DialogContent>

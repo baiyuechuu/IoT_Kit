@@ -182,8 +182,8 @@ class RealtimeService {
       const snapshot = await new Promise<DataSnapshot>((resolve, reject) => {
         const timeout = setTimeout(() => {
           console.error('⏰ Firebase Realtime: Connection test timeout');
-          reject(new Error('Connection timeout'));
-        }, 5000);
+          reject(new Error('Connection timeout - please check your network and Firebase configuration'));
+        }, 10000); // Increased timeout to 10 seconds
         
         onValue(testRef, (snap) => {
           clearTimeout(timeout);
@@ -192,7 +192,7 @@ class RealtimeService {
         }, (error) => {
           clearTimeout(timeout);
           console.error('❌ Firebase Realtime: Connection test error:', error);
-          reject(error);
+          reject(new Error(`Connection test failed: ${error.message}`));
         }, { onlyOnce: true });
       });
       

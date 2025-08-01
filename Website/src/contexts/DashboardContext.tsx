@@ -189,7 +189,6 @@ export function DashboardProvider({ children, dashboardId }: DashboardProviderPr
     saving,
     error,
     lastSaved,
-    clearError,
     isReady,
   } = useDashboard({
     dashboardId,
