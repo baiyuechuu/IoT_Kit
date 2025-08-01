@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
 	Plus,
-	Settings,
 	Trash2,
 	ArrowLeft,
 	Cloud,
