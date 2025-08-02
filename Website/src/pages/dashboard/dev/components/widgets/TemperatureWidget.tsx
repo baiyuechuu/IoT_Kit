@@ -1,62 +1,44 @@
 import React, { useEffect } from 'react';
-import { BaseWidget, useWidgetFirebase, DataTypeConverters } from './core/BaseWidget';
-import type { TemperatureWidgetConfig, CommonWidgetProps } from './core/types';
+import { Card } from '@/components/ui/card';
+import Control from './control/Control';
+import { useFirebaseVariable } from '@/hooks/useFirebase';
+import type { WidgetProps } from './core/types';
 import { TrendingUp, TrendingDown, Minus, Thermometer } from 'lucide-react';
-
-interface TemperatureWidgetProps extends CommonWidgetProps {
-  config: TemperatureWidgetConfig;
-}
 
 export function TemperatureWidget({ 
   config, 
   editMode, 
-  onConfigChange,
-  onError,
-  ...props 
-}: TemperatureWidgetProps) {
+  onSettings,
+  onDelete,
+  className = ""
+}: WidgetProps) {
 
-  const { firebaseConfig, props: widgetProps } = config;
+  const { title, firebasePath, props: widgetProps } = config;
   
   // Firebase integration
   const {
-    firebaseValue,
-    connectionStatus,
-    firebaseError,
-    connectFirebase,
-    disconnectFirebase,
-    shouldConnect,
-    isFirebaseConfigured,
-  } = useWidgetFirebase({
-    firebasePath: firebaseConfig?.path,
-    dataType: firebaseConfig?.dataType || 'number',
-    editMode,
+    value: firebaseValue,
+    connected: firebaseConnected,
+    loading: firebaseLoading,
+    error: firebaseError,
+  } = useFirebaseVariable({
+    variablePath: firebasePath,
+    variableType: 'number',
+    autoConnect: !editMode && !!firebasePath,
   });
 
   // Auto-connect when configured and not in edit mode
   useEffect(() => {
-
-
-    if (shouldConnect && isFirebaseConfigured) {
-      connectFirebase();
-    } else if (editMode) {
-      disconnectFirebase();
-    }
-  }, [shouldConnect, isFirebaseConfigured, editMode, connectFirebase, disconnectFirebase]);
-
-  // Handle Firebase errors
-  useEffect(() => {
-    if (firebaseError && onError) {
-      onError(firebaseError);
-    }
-  }, [firebaseError, onError]);
+    // Firebase connection is handled automatically by useFirebaseVariable
+  }, [editMode, firebasePath]);
 
   // Convert Firebase value to temperature
   const temperature = React.useMemo(() => {
     if (firebaseValue === null || firebaseValue === undefined) {
       return null;
     }
-    const converted = DataTypeConverters.toNumber(firebaseValue);
-    return converted;
+    const converted = Number(firebaseValue);
+    return isNaN(converted) ? null : converted;
   }, [firebaseValue]);
 
   // Temperature conversion
@@ -152,16 +134,27 @@ export function TemperatureWidget({
   const trendIcon = getTrendIcon(trend);
 
   return (
-    <BaseWidget
-      editMode={editMode}
-      onSettings={props.onSettings}
-      onDuplicate={props.onDuplicate}
-      onDelete={props.onDelete}
-      firebasePath={firebaseConfig?.path}
-      connectionStatus={connectionStatus}
-      firebaseError={firebaseError}
-      className="bg-gradient-to-br from-blue-50 to-blue-100"
-    >
+    <Card className={`p-3 h-full flex flex-col relative group bg-gradient-to-br from-blue-50 to-blue-100 ${className}`}>
+      {editMode && (
+        <Control
+          onSettings={onSettings}
+          onDelete={onDelete}
+        />
+      )}
+      
+      {/* Firebase connection indicator */}
+      {firebasePath && (
+        <div className="absolute top-2 right-2 z-10">
+          <div 
+            className={`w-2 h-2 rounded-full ${
+              firebaseConnected ? 'bg-green-500' : 
+              firebaseLoading ? 'bg-yellow-500 animate-pulse' : 
+              firebaseError ? 'bg-red-500' : 'bg-gray-400'
+            }`}
+            title={`Firebase: ${firebaseConnected ? 'connected' : firebaseLoading ? 'connecting' : firebaseError ? 'error' : 'disconnected'}`}
+          />
+        </div>
+      )}
       <div className="flex flex-col items-center justify-center h-full space-y-2">
         {/* Title */}
         {config.title && (
@@ -191,25 +184,25 @@ export function TemperatureWidget({
         </div>
 
         {/* Status Indicator */}
-        {!isFirebaseConfigured && (
+        {!firebasePath && (
           <div className="text-xs text-gray-500 text-center">
             No Firebase path configured
           </div>
         )}
 
-        {connectionStatus === 'error' && (
+        {firebaseError && (
           <div className="text-xs text-red-500 text-center">
-            Connection error
+            Connection error: {firebaseError}
           </div>
         )}
 
-        {connectionStatus === 'connecting' && (
+        {firebaseLoading && (
           <div className="text-xs text-yellow-600 text-center">
             Connecting...
           </div>
         )}
       </div>
-    </BaseWidget>
+    </Card>
   );
 }
 

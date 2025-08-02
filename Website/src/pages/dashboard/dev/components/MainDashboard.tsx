@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import GridLayout, { type Layout } from "react-grid-layout";
-import { WIDGET_CONSTRAINTS, TemperatureWidget } from "./widgets";
+import { TemperatureWidget } from "./widgets";
 import type { WidgetConfig } from "./widgets";
 import "react-grid-layout/css/styles.css";
 import { Button } from "@/components/ui/button";
@@ -44,35 +44,17 @@ export function MainDashboard({
 
 	// Generate grid layout from widgets
 	const layout: Layout[] = widgets.map((widget) => {
-		const constraints = WIDGET_CONSTRAINTS[widget.type];
-		if (!constraints) {
-			console.warn(`Widget type "${widget.type}" not found in constraints registry`);
-			// Use default constraints for unknown widget types
-			return {
-				i: widget.i,
-				x: widget.x,
-				y: widget.y,
-				w: widget.w,
-				h: widget.h,
-				minW: 1,
-				maxW: 6,
-				minH: 1,
-				maxH: 4,
-				isDraggable: editMode,
-				isResizable: editMode,
-			};
-		}
-		
+		// Use default constraints for all widgets
 		return {
 			i: widget.i,
 			x: widget.x,
 			y: widget.y,
 			w: widget.w,
 			h: widget.h,
-			minW: constraints.minW,
-			maxW: constraints.maxW,
-			minH: constraints.minH,
-			maxH: constraints.maxH,
+			minW: 1,
+			maxW: 6,
+			minH: 1,
+			maxH: 4,
 			isDraggable: editMode,
 			isResizable: editMode,
 		};

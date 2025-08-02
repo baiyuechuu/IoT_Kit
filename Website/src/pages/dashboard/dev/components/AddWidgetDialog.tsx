@@ -35,7 +35,14 @@ export function AddWidgetDialog({
 	};
 
 	const handleSaveWidget = (widgetConfig: WidgetConfig) => {
-		onAddWidget(widgetConfig.type, widgetConfig);
+		// Extract all the configuration data as props
+		const widgetProps = {
+			...widgetConfig.props,
+			title: widgetConfig.title,
+			firebasePath: widgetConfig.firebasePath,
+		};
+		
+		onAddWidget(widgetConfig.type, widgetProps);
 		setSelectedType(null);
 		setShowSettings(false);
 		onClose();

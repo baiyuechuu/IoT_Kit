@@ -21,17 +21,11 @@ export interface LegacyWidgetConfig {
 	props?: Record<string, any>;
 }
 
-// Re-export from registry for backward compatibility
+// Re-export from registry
 export { 
-	WIDGET_CONSTRAINTS,
-	WIDGET_REGISTRY,
-	WIDGET_METADATA_REGISTRY,
 	getWidgetDefinition,
 	getWidgetComponent,
-	getWidgetConstraints,
-	getWidgetMetadata,
 	getAllWidgetTypes,
-	getWidgetsByCategory,
-	getWidgetsByDifficulty,
-	getWidgetsByTags
+	getAllWidgetDefinitions,
+	registerWidget
 } from './core/registry';

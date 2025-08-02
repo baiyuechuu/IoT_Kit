@@ -1,7 +1,6 @@
 import { createContext, useContext, useReducer, useCallback, useEffect, type ReactNode } from 'react';
 import type { WidgetConfig, WidgetType } from '@/pages/dashboard/dev/components/widgets';
 import { useDashboard } from '@/hooks/useDashboard';
-import { WIDGET_CONSTRAINTS } from '@/pages/dashboard/dev/components/widgets';
 
 // Dashboard state types
 interface DashboardContextState {
@@ -222,15 +221,19 @@ export function DashboardProvider({ children, dashboardId }: DashboardProviderPr
 
   // Widget management actions
   const addWidget = useCallback((type: WidgetType, props: Record<string, unknown>) => {
-    const constraints = WIDGET_CONSTRAINTS[type];
+    // Extract title and firebasePath from props if they exist
+    const { title, firebasePath, ...widgetProps } = props;
+    
     const newWidget: WidgetConfig = {
       i: `${type}-${Date.now()}`,
       type,
       x: 0,
       y: 0,
-      w: constraints.minW,
-      h: constraints.minH,
-      props,
+      w: 2, // Default width
+      h: 2, // Default height
+      title: title as string || type.charAt(0).toUpperCase() + type.slice(1),
+      firebasePath: firebasePath as string,
+      props: widgetProps,
     };
 
     // Find best position for new widget

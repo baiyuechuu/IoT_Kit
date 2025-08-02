@@ -81,10 +81,22 @@ export function WidgetSettingsDialog({
 
 	useEffect(() => {
 		if (widget && settingsSchema) {
-			// Merge default values with existing widget props
+			// Get default values from schema
 			const defaultValues = getDefaultValues(settingsSchema);
+			
+			// Create a complete widget object with all properties
+			const completeWidget = {
+				...defaultValues,
+				...widget,
+				// Ensure props are properly merged
+				props: {
+					...defaultValues.props,
+					...widget.props,
+				},
+			};
+			
 			// Flatten nested objects for the form
-			const currentValues = flattenObject({ ...defaultValues, ...widget });
+			const currentValues = flattenObject(completeWidget);
 			setFormData(currentValues);
 			setValidationErrors([]);
 		}
@@ -160,9 +172,23 @@ export function WidgetSettingsDialog({
 	};
 
 	const handleReset = () => {
-		if (settingsSchema) {
+		if (settingsSchema && widget) {
+			// Get default values from schema
 			const defaultValues = getDefaultValues(settingsSchema);
-			const currentValues = flattenObject({ ...defaultValues, ...widget });
+			
+			// Create a complete widget object with all properties
+			const completeWidget = {
+				...defaultValues,
+				...widget,
+				// Ensure props are properly merged
+				props: {
+					...defaultValues.props,
+					...widget.props,
+				},
+			};
+			
+			// Flatten nested objects for the form
+			const currentValues = flattenObject(completeWidget);
 			setFormData(currentValues);
 			setValidationErrors([]);
 		}
