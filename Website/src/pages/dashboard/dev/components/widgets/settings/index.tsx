@@ -5,10 +5,6 @@ import { temperatureWidgetSettingsSchema } from './TemperatureWidgetSettings';
 // Widget settings registry
 export const WIDGET_SETTINGS_REGISTRY: Record<WidgetType, () => WidgetSettingsSchema> = {
   temperature: () => temperatureWidgetSettingsSchema,
-  sensor_data: () => ({ sections: [] }),
-  gauge: () => ({ sections: [] }),
-  chart: () => ({ sections: [] }),
-  text: () => ({ sections: [] }),
 };
 
 // Get settings schema for a widget type

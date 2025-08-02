@@ -3,7 +3,7 @@ import type {
   SimpleWidgetDefinition,
   WidgetComponent
 } from './types';
-import { TemperatureWidget } from '../TemperatureWidget';
+import { TemperatureWidget } from '../widget/TemperatureWidget';
 
 // Simple widget registry
 const WIDGET_REGISTRY: Partial<Record<WidgetType, SimpleWidgetDefinition>> = {
@@ -14,8 +14,13 @@ const WIDGET_REGISTRY: Partial<Record<WidgetType, SimpleWidgetDefinition>> = {
     component: TemperatureWidget,
     defaultProps: {
       unit: 'celsius',
-      showTrend: true,
       precision: 1,
+    },
+    defaultConstraints: {
+      minW: 3,
+      maxW: 4,
+      minH: 2,
+      maxH: 2,
     }
   }
 };
@@ -40,6 +45,17 @@ export function getAllWidgetTypes(): WidgetType[] {
 
 export function getAllWidgetDefinitions(): SimpleWidgetDefinition[] {
   return Object.values(WIDGET_REGISTRY);
+}
+
+// Get widget constraints (widget-specific or fallback to defaults)
+export function getWidgetConstraints(type: WidgetType) {
+  const definition = WIDGET_REGISTRY[type];
+  return definition?.defaultConstraints || {
+    minW: 1,
+    maxW: 6,
+    minH: 1,
+    maxH: 4,
+  };
 }
 
 // Export for backward compatibility

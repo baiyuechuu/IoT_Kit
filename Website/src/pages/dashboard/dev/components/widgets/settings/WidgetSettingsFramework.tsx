@@ -1,10 +1,8 @@
-import type { ReactNode } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Info } from 'lucide-react';
 
 // Base field configuration
 export interface BaseFieldConfig {
@@ -47,9 +45,6 @@ export interface TextareaFieldConfig extends BaseFieldConfig {
 
 export interface SectionConfig {
   type: 'section';
-  title: string;
-  description?: string;
-  icon?: ReactNode;
   fields: FieldConfig[];
   collapsible?: boolean;
   defaultExpanded?: boolean;
@@ -222,16 +217,6 @@ interface SectionRendererProps {
 function SectionRenderer({ section, values, onChange, disabled }: SectionRendererProps) {
   return (
     <div className="space-y-3 border-t pt-4">
-      <div className="flex items-center gap-2 mb-2">
-        {section.icon}
-        <Label className="text-sm font-medium">{section.title}</Label>
-        {section.description && (
-          <div className="flex items-center gap-1">
-            <Info className="w-3 h-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">{section.description}</span>
-          </div>
-        )}
-      </div>
       
       <div className="space-y-4">
         {section.fields.map((field) => (

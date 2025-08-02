@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import GridLayout, { type Layout } from "react-grid-layout";
-import { TemperatureWidget } from "./widgets";
+import { TemperatureWidget, getWidgetConstraints } from "./widgets";
 import type { WidgetConfig } from "./widgets";
 import "react-grid-layout/css/styles.css";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,8 @@ interface MainDashboardProps {
 	onShowAddDialog?: () => void;
 	width?: number;
 	cols?: number;
-	rowHeight?: number; margin?: [number, number]; }
+	rowHeight?: number; margin?: [number, number];
+}
 
 export function MainDashboard({
 	editMode,
@@ -31,7 +32,7 @@ export function MainDashboard({
 	rowHeight = 60,
 	margin = [10, 10],
 }: MainDashboardProps) {
-	
+
 	// Drag/resize preview state
 	const [dragPreview, setDragPreview] = useState<{
 		visible: boolean;
@@ -44,17 +45,19 @@ export function MainDashboard({
 
 	// Generate grid layout from widgets
 	const layout: Layout[] = widgets.map((widget) => {
-		// Use default constraints for all widgets
+		// Get widget-specific constraints or use defaults
+		const constraints = getWidgetConstraints(widget.type);
+		
 		return {
 			i: widget.i,
 			x: widget.x,
 			y: widget.y,
 			w: widget.w,
 			h: widget.h,
-			minW: 1,
-			maxW: 6,
-			minH: 1,
-			maxH: 4,
+			minW: widget.minW ?? constraints.minW ?? 1,
+			maxW: widget.maxW ?? constraints.maxW ?? 6,
+			minH: widget.minH ?? constraints.minH ?? 1,
+			maxH: widget.maxH ?? constraints.maxH ?? 4,
 			isDraggable: editMode,
 			isResizable: editMode,
 		};
@@ -323,9 +326,8 @@ function DashboardStyles({ editMode }: { editMode: boolean }) {
 				width: 100%;
 			}
 			
-			${
-				editMode
-					? `
+			${editMode
+				? `
 				.react-grid-item {
 					border: 2px dashed hsl(var(--border));
 					border-radius: 8px;
@@ -380,7 +382,7 @@ function DashboardStyles({ editMode }: { editMode: boolean }) {
 					border-bottom: 2px solid hsl(var(--muted-foreground));
 				}
 			`
-					: `
+				: `
 				.react-grid-item {
 					border: none;
 					background: transparent;

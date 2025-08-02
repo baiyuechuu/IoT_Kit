@@ -1,5 +1,6 @@
 import { createContext, useContext, useReducer, useCallback, useEffect, type ReactNode } from 'react';
 import type { WidgetConfig, WidgetType } from '@/pages/dashboard/dev/components/widgets';
+import { createWidgetConfig, getWidgetConstraints } from '@/pages/dashboard/dev/components/widgets';
 import { useDashboard } from '@/hooks/useDashboard';
 
 // Dashboard state types
@@ -224,16 +225,21 @@ export function DashboardProvider({ children, dashboardId }: DashboardProviderPr
     // Extract title and firebasePath from props if they exist
     const { title, firebasePath, ...widgetProps } = props;
     
+    // Get widget-specific constraints
+    const constraints = getWidgetConstraints(type);
+    
+    // Create widget config with constraints
     const newWidget: WidgetConfig = {
-      i: `${type}-${Date.now()}`,
-      type,
-      x: 0,
-      y: 0,
-      w: 2, // Default width
-      h: 2, // Default height
-      title: title as string || type.charAt(0).toUpperCase() + type.slice(1),
-      firebasePath: firebasePath as string,
-      props: widgetProps,
+      ...createWidgetConfig(type, {
+        title: title as string || type.charAt(0).toUpperCase() + type.slice(1),
+        firebasePath: firebasePath as string,
+        props: widgetProps,
+        // Apply widget-specific constraints
+        minW: constraints.minW,
+        maxW: constraints.maxW,
+        minH: constraints.minH,
+        maxH: constraints.maxH,
+      }),
     };
 
     // Find best position for new widget

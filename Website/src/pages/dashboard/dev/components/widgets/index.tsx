@@ -1,4 +1,4 @@
-export { TemperatureWidget } from "./TemperatureWidget";
+export { TemperatureWidget } from "./widget/TemperatureWidget";
 
 // Re-export standardized types
 export * from './core/types';
@@ -27,5 +27,6 @@ export {
 	getWidgetComponent,
 	getAllWidgetTypes,
 	getAllWidgetDefinitions,
-	registerWidget
+	registerWidget,
+	getWidgetConstraints
 } from './core/registry';
