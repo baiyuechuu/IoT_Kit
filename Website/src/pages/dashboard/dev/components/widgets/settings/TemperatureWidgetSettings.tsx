@@ -12,14 +12,6 @@ export const temperatureWidgetSettingsSchema: WidgetSettingsSchema = {
       defaultValue: 'Temperature',
       maxLength: 50,
     },
-    {
-      key: 'description',
-      type: 'textarea',
-      label: 'Description',
-      description: 'Optional description for the widget',
-      placeholder: 'Temperature sensor monitoring...',
-      rows: 2,
-    },
 
     // Firebase Configuration Section
     {

@@ -13,7 +13,7 @@ export function TemperatureWidget({
   className = ""
 }: WidgetProps) {
 
-  const { title, firebasePath, props: widgetProps } = config;
+  const { firebasePath, props: widgetProps } = config;
   
   // Firebase integration
   const {
