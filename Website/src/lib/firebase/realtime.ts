@@ -76,7 +76,7 @@ class RealtimeService {
 
     try {
       
-      variables.forEach((variable, index) => {
+      variables.forEach((variable) => {
         
         const subscription = this.subscribeToVariable(
           variable.path,
@@ -92,13 +92,13 @@ class RealtimeService {
         if (subscription) {
           subscriptions.push(subscription);
         } else {
-          console.error(`Firebase Realtime: Subscription ${index + 1} failed`);
+          console.error(`Firebase Realtime: Subscription failed`);
         }
       });
 
       return {
         unsubscribe: () => {
-          subscriptions.forEach((sub, index) => {
+          subscriptions.forEach((sub) => {
             sub.unsubscribe();
           });
         }
