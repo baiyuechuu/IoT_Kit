@@ -2,11 +2,15 @@ import type { WidgetType } from '../index';
 import type { WidgetSettingsSchema } from './WidgetSettingsFramework';
 import { temperatureWidgetSettingsSchema } from './TemperatureWidgetSettings';
 import { humidityWidgetSettingsSchema } from './HumidityWidgetSettings';
+import { temperatureChartWidgetSettingsSchema } from './TemperatureChartWidgetSettings';
+import { humidityChartWidgetSettingsSchema } from './HumidityChartWidgetSettings';
 
 // Widget settings registry
 export const WIDGET_SETTINGS_REGISTRY: Record<WidgetType, () => WidgetSettingsSchema> = {
   temperature: () => temperatureWidgetSettingsSchema,
   humidity: () => humidityWidgetSettingsSchema,
+  'temperature-chart': () => temperatureChartWidgetSettingsSchema,
+  'humidity-chart': () => humidityChartWidgetSettingsSchema,
 };
 
 // Get settings schema for a widget type
@@ -22,3 +26,5 @@ export function getWidgetSettingsSchema(widgetType: WidgetType): WidgetSettingsS
 export * from './WidgetSettingsFramework';
 export * from './TemperatureWidgetSettings';
 export * from './HumidityWidgetSettings';
+export * from './TemperatureChartWidgetSettings';
+export * from './HumidityChartWidgetSettings';

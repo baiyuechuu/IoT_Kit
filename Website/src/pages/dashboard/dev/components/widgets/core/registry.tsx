@@ -5,6 +5,8 @@ import type {
 } from './types';
 import { TemperatureWidget } from '../widget/TemperatureWidget';
 import { HumidityWidget } from '../widget/HumidityWidget';
+import { TemperatureChartWidget } from '../widget/TemperatureChartWidget';
+import { HumidityChartWidget } from '../widget/HumidityChartWidget';
 
 // Simple widget registry
 const WIDGET_REGISTRY: Partial<Record<WidgetType, SimpleWidgetDefinition>> = {
@@ -38,6 +40,38 @@ const WIDGET_REGISTRY: Partial<Record<WidgetType, SimpleWidgetDefinition>> = {
       maxW: 4,
       minH: 2,
       maxH: 2,
+    }
+  },
+  'temperature-chart': {
+    type: 'temperature-chart',
+    name: 'Temperature Chart',
+    description: 'Display temperature data as a line chart with unit conversion',
+    component: TemperatureChartWidget,
+    defaultProps: {
+      unit: 'celsius',
+      precision: 1,
+    },
+    defaultConstraints: {
+      minW: 4,
+      maxW: 6,
+      minH: 3,
+      maxH: 4,
+    }
+  },
+  'humidity-chart': {
+    type: 'humidity-chart',
+    name: 'Humidity Chart',
+    description: 'Display humidity data as a line chart with unit conversion',
+    component: HumidityChartWidget,
+    defaultProps: {
+      unit: 'percentage',
+      precision: 1,
+    },
+    defaultConstraints: {
+      minW: 4,
+      maxW: 6,
+      minH: 3,
+      maxH: 4,
     }
   }
 };

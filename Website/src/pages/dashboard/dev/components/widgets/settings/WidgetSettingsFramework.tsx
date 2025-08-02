@@ -33,6 +33,11 @@ export interface SelectFieldConfig extends BaseFieldConfig {
   options: Array<{ value: string; label: string }>;
 }
 
+export interface MultiSelectFieldConfig extends BaseFieldConfig {
+  type: 'multiSelect';
+  options: Array<{ value: string; label: string }>;
+}
+
 export interface BooleanFieldConfig extends BaseFieldConfig {
   type: 'boolean';
 }
@@ -54,6 +59,7 @@ export type FieldConfig =
   | TextFieldConfig 
   | NumberFieldConfig 
   | SelectFieldConfig 
+  | MultiSelectFieldConfig 
   | BooleanFieldConfig 
   | TextareaFieldConfig;
 
@@ -144,6 +150,44 @@ function SelectFieldRenderer({ field, value, onChange, disabled }: FieldRenderer
   );
 }
 
+function MultiSelectFieldRenderer({ field, value, onChange, disabled }: FieldRendererProps & { field: MultiSelectFieldConfig }) {
+  const selectedValues = Array.isArray(value) ? value : field.defaultValue || [];
+  
+  const handleToggle = (optionValue: string) => {
+    const newValues = selectedValues.includes(optionValue)
+      ? selectedValues.filter((v: string) => v !== optionValue)
+      : [...selectedValues, optionValue];
+    onChange(newValues);
+  };
+
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={field.key}>
+        {field.label}
+        {field.required && <span className="text-red-500 ml-1">*</span>}
+      </Label>
+      <div className="space-y-2">
+        {field.options.map((option) => (
+          <div key={option.value} className="flex items-center space-x-2">
+            <Switch
+              id={`${field.key}-${option.value}`}
+              checked={selectedValues.includes(option.value)}
+              onCheckedChange={() => handleToggle(option.value)}
+              disabled={disabled}
+            />
+            <Label htmlFor={`${field.key}-${option.value}`} className="text-sm">
+              {option.label}
+            </Label>
+          </div>
+        ))}
+      </div>
+      {field.description && (
+        <p className="text-xs text-muted-foreground">{field.description}</p>
+      )}
+    </div>
+  );
+}
+
 function BooleanFieldRenderer({ field, value, onChange, disabled }: FieldRendererProps & { field: BooleanFieldConfig }) {
   return (
     <div className="space-y-2">
@@ -197,6 +241,8 @@ function FieldRenderer({ field, value, onChange, disabled }: FieldRendererProps)
       return <NumberFieldRenderer field={field} value={value} onChange={onChange} disabled={disabled} />;
     case 'select':
       return <SelectFieldRenderer field={field} value={value} onChange={onChange} disabled={disabled} />;
+    case 'multiSelect':
+      return <MultiSelectFieldRenderer field={field} value={value} onChange={onChange} disabled={disabled} />;
     case 'boolean':
       return <BooleanFieldRenderer field={field} value={value} onChange={onChange} disabled={disabled} />;
     case 'textarea':
