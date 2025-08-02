@@ -7,6 +7,7 @@ import { TemperatureWidget } from '../widget/TemperatureWidget';
 import { HumidityWidget } from '../widget/HumidityWidget';
 import { TemperatureChartWidget } from '../widget/TemperatureChartWidget';
 import { HumidityChartWidget } from '../widget/HumidityChartWidget';
+import { ClockWidget } from '../widget/ClockWidget';
 
 // Simple widget registry
 const WIDGET_REGISTRY: Partial<Record<WidgetType, SimpleWidgetDefinition>> = {
@@ -73,7 +74,20 @@ const WIDGET_REGISTRY: Partial<Record<WidgetType, SimpleWidgetDefinition>> = {
       minH: 3,
       maxH: 4,
     }
-  }
+  },
+  clock: {
+    type: 'clock',
+    name: 'Clock',
+    description: 'Display the current time',
+    component: ClockWidget,
+    defaultProps: {},
+    defaultConstraints: {
+      minW: 3,
+      maxW: 4,
+      minH: 2,
+      maxH: 2,
+    }
+  },
 };
 
 // Simple registration function

@@ -15,7 +15,8 @@ const WIDGET_TYPES = [
 	{
 		type: "temperature" as WidgetType,
 		name: "Temperature",
-		description: "Display temperature data with unit conversion and color ranges",
+		description:
+			"Display temperature data with unit conversion and color ranges",
 	},
 	{
 		type: "humidity" as WidgetType,
@@ -25,12 +26,18 @@ const WIDGET_TYPES = [
 	{
 		type: "temperature-chart" as WidgetType,
 		name: "Temperature Chart",
-		description: "Display temperature data as a line chart with unit conversion",
+		description:
+			"Display temperature data as a line chart with unit conversion",
 	},
 	{
 		type: "humidity-chart" as WidgetType,
 		name: "Humidity Chart",
 		description: "Display humidity data as a line chart with unit conversion",
+	},
+	{
+		type: "clock" as WidgetType,
+		name: "Clock",
+		description: "Display the current time",
 	},
 ];
 
@@ -56,7 +63,7 @@ export function AddWidgetDialog({
 			title: widgetConfig.title,
 			firebasePath: widgetConfig.firebasePath,
 		};
-		
+
 		onAddWidget(widgetConfig.type, widgetProps);
 		setSelectedType(null);
 		setShowSettings(false);
@@ -71,7 +78,7 @@ export function AddWidgetDialog({
 	// Create a temporary widget config for settings dialog
 	const getTempWidgetConfig = (): WidgetConfig | null => {
 		if (!selectedType) return null;
-		
+
 		return {
 			i: `temp-${selectedType}-${Date.now()}`,
 			x: 0,
@@ -79,7 +86,8 @@ export function AddWidgetDialog({
 			w: 6,
 			h: 4,
 			type: selectedType,
-			title: WIDGET_TYPES.find(w => w.type === selectedType)?.name || selectedType,
+			title:
+				WIDGET_TYPES.find((w) => w.type === selectedType)?.name || selectedType,
 		};
 	};
 
@@ -89,10 +97,9 @@ export function AddWidgetDialog({
 				<Card className="w-full max-w-2xl mx-4 bg-background">
 					<CardHeader className="flex flex-row items-center justify-between">
 						<CardTitle>
-							{selectedType 
-								? `Configure ${WIDGET_TYPES.find(w => w.type === selectedType)?.name || 'Widget'}`
-								: "Add Widget"
-							}
+							{selectedType
+								? `Configure ${WIDGET_TYPES.find((w) => w.type === selectedType)?.name || "Widget"}`
+								: "Add Widget"}
 						</CardTitle>
 						<Button variant="ghost" size="icon" onClick={onClose}>
 							<X className="w-4 h-4" />

@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Simple widget type definition
-export type WidgetType = "temperature" | "humidity" | "temperature-chart" | "humidity-chart";
+export type WidgetType = "temperature" | "humidity" | "temperature-chart" | "humidity-chart" | "clock";
 
 // Simplified widget configuration
 export interface WidgetConfig {
@@ -81,6 +81,7 @@ export function getWidgetDisplayName(type: WidgetType): string {
     humidity: 'Humidity',
     'temperature-chart': 'Temperature Chart',
     'humidity-chart': 'Humidity Chart',
+    clock: 'Clock',
   };
   return names[type] || type;
 }

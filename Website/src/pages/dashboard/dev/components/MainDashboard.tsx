@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import GridLayout, { type Layout } from "react-grid-layout";
-import { TemperatureWidget, HumidityWidget, TemperatureChartWidget, HumidityChartWidget, getWidgetConstraints } from "./widgets";
+import { TemperatureWidget, HumidityWidget, TemperatureChartWidget, HumidityChartWidget, ClockWidget, getWidgetConstraints} from "./widgets";
 import type { WidgetConfig } from "./widgets";
 import "react-grid-layout/css/styles.css";
 import { Button } from "@/components/ui/button";
@@ -113,6 +113,8 @@ export function MainDashboard({
 				return <TemperatureChartWidget {...commonProps} config={widget as any} />;
 			case "humidity-chart":
 				return <HumidityChartWidget {...commonProps} config={widget as any} />;
+      case "clock":
+        return <ClockWidget {...commonProps} config={widget as any} />;
 			default:
 				return null;
 		}

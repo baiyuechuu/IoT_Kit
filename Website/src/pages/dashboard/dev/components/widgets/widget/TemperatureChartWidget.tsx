@@ -4,15 +4,10 @@ import { Button } from "@/components/ui/button";
 import Control from "../control/Control";
 import { useFirebaseSensors } from "@/hooks/useFirebaseSensors";
 import type { WidgetProps } from "../core/types";
-import { CiTempHigh } from "react-icons/ci";
-import { TbTemperatureCelsius } from "react-icons/tb";
-import { TbTemperatureFahrenheit } from "react-icons/tb";
 import {
 	LineChart,
 	Line,
 	XAxis,
-	YAxis,
-	CartesianGrid,
 	Tooltip,
 	ResponsiveContainer,
 	Legend,
