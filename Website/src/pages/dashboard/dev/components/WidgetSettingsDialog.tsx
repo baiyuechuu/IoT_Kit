@@ -60,6 +60,7 @@ interface WidgetSettingsDialogProps {
 	onSave: (widget: WidgetConfig) => void;
 	onDelete?: (widgetId: string) => void;
 	onDuplicate?: (widget: WidgetConfig) => void;
+	isAddMode?: boolean; // Controls button layout for add widget mode
 }
 
 export function WidgetSettingsDialog({
@@ -69,6 +70,7 @@ export function WidgetSettingsDialog({
 	onSave,
 	onDelete,
 	onDuplicate,
+	isAddMode = false,
 }: WidgetSettingsDialogProps) {
 	const [formData, setFormData] = useState<Record<string, any>>({});
 	const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -211,18 +213,31 @@ export function WidgetSettingsDialog({
 				{/* Action Buttons */}
 				<div className="flex-shrink-0 p-6 pt-0">
 					<div className="flex gap-2">
-						<Button onClick={handleSave} className="flex-1">
-							Save Changes
-						</Button>
-						<Button variant="outline" onClick={handleReset} size="sm">
-							Reset
-						</Button>
-						<Button variant="outline" onClick={handleDuplicate} size="sm">
-							Duplicate
-						</Button>
-						<Button variant="destructive" onClick={handleDelete} size="sm">
-							Delete
-						</Button>
+						{isAddMode ? (
+							<>
+								<Button onClick={handleSave} className="flex-1">
+									OK
+								</Button>
+								<Button variant="outline" onClick={onClose} className="flex-1">
+									Cancel
+								</Button>
+							</>
+						) : (
+							<>
+								<Button onClick={handleSave} className="flex-1">
+									Save Changes
+								</Button>
+								<Button variant="outline" onClick={handleReset} size="sm">
+									Reset
+								</Button>
+								<Button variant="outline" onClick={handleDuplicate} size="sm">
+									Duplicate
+								</Button>
+								<Button variant="destructive" onClick={handleDelete} size="sm">
+									Delete
+								</Button>
+							</>
+						)}
 					</div>
 				</div>
 			</Card>

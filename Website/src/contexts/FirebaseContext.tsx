@@ -106,12 +106,12 @@ export function FirebaseProvider({ children }: FirebaseProviderProps) {
       const testSubscription = realtimeService.subscribeToVariable(
         'test_connection_status',
         (value) => {
-          console.log('✅ Firebase: Real connection test successful, received value:', value);
+          console.log('Firebase: Real connection test successful, received value:', value);
           setConnected(true);
           setError(null);
         },
         (error) => {
-          console.log('❌ Firebase: Real connection test failed:', error.message);
+          console.log('Firebase: Real connection test failed:', error.message);
           setConnected(false);
           setError('Connection test failed');
         }
@@ -126,7 +126,7 @@ export function FirebaseProvider({ children }: FirebaseProviderProps) {
 
       return true;
     } catch (error) {
-      console.error('❌ Firebase: Real connection test error:', error);
+      console.error('Firebase: Real connection test error:', error);
       return false;
     }
   }, [configured]);

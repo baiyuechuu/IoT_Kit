@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Widget type definitions
-export type WidgetType = "temperature" | "sensor_data" | "gauge" | "chart" | "text";
+export type WidgetType = "temperature";
 
 // Base widget configuration interface
 export interface BaseWidgetConfig {
@@ -63,72 +63,8 @@ export interface TemperatureWidgetConfig extends BaseWidgetConfig {
   };
 }
 
-export interface SensorDataWidgetConfig extends BaseWidgetConfig {
-  type: 'sensor_data';
-  props?: {
-    sensors?: string[];
-    layout?: 'vertical' | 'horizontal' | 'grid';
-    showLabels?: boolean;
-    showUnits?: boolean;
-    precision?: number;
-  };
-}
-
-export interface GaugeWidgetConfig extends BaseWidgetConfig {
-  type: 'gauge';
-  props?: {
-    min?: number;
-    max?: number;
-    unit?: string;
-    precision?: number;
-    segments?: Array<{
-      min: number;
-      max: number;
-      color: string;
-      label?: string;
-    }>;
-    showValue?: boolean;
-    showMinMax?: boolean;
-  };
-}
-
-export interface ChartWidgetConfig extends BaseWidgetConfig {
-  type: 'chart';
-  props?: {
-    chartType?: 'line' | 'bar' | 'area' | 'pie';
-    timeRange?: number; // in minutes
-    maxDataPoints?: number;
-    showGrid?: boolean;
-    showLegend?: boolean;
-    colors?: string[];
-    yAxis?: {
-      min?: number;
-      max?: number;
-      unit?: string;
-    };
-  };
-}
-
-export interface TextWidgetConfig extends BaseWidgetConfig {
-  type: 'text';
-  props?: {
-    fontSize?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-    fontWeight?: 'normal' | 'medium' | 'semibold' | 'bold';
-    textAlign?: 'left' | 'center' | 'right';
-    format?: string; // Format string for displaying values
-    prefix?: string;
-    suffix?: string;
-  };
-}
-
-
 // Union type for all widget configurations
-export type WidgetConfig = 
-  | TemperatureWidgetConfig
-  | SensorDataWidgetConfig
-  | GaugeWidgetConfig
-  | ChartWidgetConfig
-  | TextWidgetConfig;
+export type WidgetConfig = TemperatureWidgetConfig;
 
 // Widget constraints configuration
 export interface WidgetConstraints {
@@ -216,30 +152,10 @@ export function isTemperatureWidget(config: WidgetConfig): config is Temperature
   return config.type === 'temperature';
 }
 
-export function isSensorDataWidget(config: WidgetConfig): config is SensorDataWidgetConfig {
-  return config.type === 'sensor_data';
-}
-
-export function isGaugeWidget(config: WidgetConfig): config is GaugeWidgetConfig {
-  return config.type === 'gauge';
-}
-
-export function isChartWidget(config: WidgetConfig): config is ChartWidgetConfig {
-  return config.type === 'chart';
-}
-
-export function isTextWidget(config: WidgetConfig): config is TextWidgetConfig {
-  return config.type === 'text';
-}
-
 // Utility functions for widget configuration
 export function getWidgetDisplayName(type: WidgetType): string {
   const names: Record<WidgetType, string> = {
     temperature: 'Temperature',
-    sensor_data: 'Sensor Data',
-    gauge: 'Gauge',
-    chart: 'Chart',
-    text: 'Text Display',
   };
   return names[type];
 }
@@ -247,10 +163,6 @@ export function getWidgetDisplayName(type: WidgetType): string {
 export function getWidgetIcon(type: WidgetType): string {
   const icons: Record<WidgetType, string> = {
     temperature: '🌡️',
-    sensor_data: '📊',
-    gauge: '📊',
-    chart: '📈',
-    text: '📝',
   };
   return icons[type];
 }
@@ -300,73 +212,6 @@ export function createDefaultWidgetConfig(type: WidgetType, overrides?: Partial<
           ...baseConfig.props,
         },
       } as TemperatureWidgetConfig;
-    
-    case 'sensor_data':
-      return {
-        ...baseConfig,
-        type: 'sensor_data',
-        w: 3,
-        h: 2,
-        firebaseConfig: {
-          path: '/sensors',
-          dataType: 'object',
-          updateInterval: 1000,
-          enabled: true,
-        },
-        props: {
-          sensors: ['temperature'],
-          layout: 'vertical',
-          showLabels: true,
-          showUnits: true,
-          precision: 1,
-          ...baseConfig.props,
-        },
-      } as SensorDataWidgetConfig;
-    
-    case 'gauge':
-      return {
-        ...baseConfig,
-        type: 'gauge',
-        w: 3,
-        h: 3,
-        props: {
-          min: 0,
-          max: 100,
-          unit: '',
-          precision: 1,
-          showValue: true,
-          showMinMax: true,
-          ...baseConfig.props,
-        },
-      } as GaugeWidgetConfig;
-    
-    case 'chart':
-      return {
-        ...baseConfig,
-        type: 'chart',
-        w: 4,
-        h: 3,
-        props: {
-          chartType: 'line',
-          timeRange: 60,
-          maxDataPoints: 100,
-          showGrid: true,
-          showLegend: true,
-          ...baseConfig.props,
-        },
-      } as ChartWidgetConfig;
-    
-    case 'text':
-      return {
-        ...baseConfig,
-        type: 'text',
-        props: {
-          fontSize: 'md',
-          fontWeight: 'medium',
-          textAlign: 'center',
-          ...baseConfig.props,
-        },
-      } as TextWidgetConfig;
     
     default:
       return baseConfig as WidgetConfig;
