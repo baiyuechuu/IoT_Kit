@@ -1,4 +1,5 @@
 export { TemperatureWidget } from "./widget/TemperatureWidget";
+export { HumidityWidget } from "./widget/HumidityWidget";
 
 // Re-export standardized types
 export * from './core/types';

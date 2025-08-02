@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Simple widget type definition
-export type WidgetType = "temperature";
+export type WidgetType = "temperature" | "humidity";
 
 // Simplified widget configuration
 export interface WidgetConfig {
@@ -78,6 +78,7 @@ export function createWidgetConfig(type: WidgetType, overrides?: Partial<WidgetC
 export function getWidgetDisplayName(type: WidgetType): string {
   const names: Record<WidgetType, string> = {
     temperature: 'Temperature',
+    humidity: 'Humidity',
   };
   return names[type] || type;
 }

@@ -4,6 +4,7 @@ import type {
   WidgetComponent
 } from './types';
 import { TemperatureWidget } from '../widget/TemperatureWidget';
+import { HumidityWidget } from '../widget/HumidityWidget';
 
 // Simple widget registry
 const WIDGET_REGISTRY: Partial<Record<WidgetType, SimpleWidgetDefinition>> = {
@@ -14,6 +15,22 @@ const WIDGET_REGISTRY: Partial<Record<WidgetType, SimpleWidgetDefinition>> = {
     component: TemperatureWidget,
     defaultProps: {
       unit: 'celsius',
+      precision: 1,
+    },
+    defaultConstraints: {
+      minW: 3,
+      maxW: 4,
+      minH: 2,
+      maxH: 2,
+    }
+  },
+  humidity: {
+    type: 'humidity',
+    name: 'Humidity',
+    description: 'Display humidity data with unit conversion and color ranges',
+    component: HumidityWidget,
+    defaultProps: {
+      unit: 'percentage',
       precision: 1,
     },
     defaultConstraints: {

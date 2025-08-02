@@ -17,6 +17,11 @@ const WIDGET_TYPES = [
 		name: "Temperature",
 		description: "Display temperature data with unit conversion and color ranges",
 	},
+	{
+		type: "humidity" as WidgetType,
+		name: "Humidity",
+		description: "Display humidity data with unit conversion and color ranges",
+	},
 ];
 
 export function AddWidgetDialog({
